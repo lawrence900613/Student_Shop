@@ -33,14 +33,7 @@
             </list>
         
         </div>
-        <!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Home Page</title>
-</head>
-<body> -->
+<!-- Code for adding and accessing into the database -->
     <h1>Adding new item in Database</h1>
     <form action="#" method="post" th:action="@{/afterSubmitNewItem}" th:object="${item}">
         <input type="text" th:field=*{name} placeholder="Name"><br>
@@ -53,8 +46,7 @@
         <br>
         <input type="submit" value="Add New Item">
     </form>
-<!-- </body>
-</html> -->
+
 
 
     </div>

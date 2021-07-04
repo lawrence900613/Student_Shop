@@ -26,6 +26,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jdk.internal.jshell.tool.resources.l10n;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -78,30 +83,31 @@ public class Main {
     public String getNewItem(Map<String, Object> model){
       Item newItem = new Item();    //creates a new empty Item object
       model.put("item", newItem);
-      return "sellerHome"; 
+      return "homeSeller"; 
     }
 
-  // @PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  // public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
-  //   //saving the data obtained into databse
-  //   try (Connection connection = dataSource.getConnection()) {
-  //     Statement stmt = connection.createStatement();
-  //     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Item (name varchar(80), category varchar(20), description varchar(200))");
-  //     //line below, item.getName etc.. all from parameters
-  //     String sql = "INSERT INTO Item (name, category, description) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "')";
-  //     stmt.executeUpdate(sql);
-  //     System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
-  //     return "redirect:/itemAdd/success";
-  // }
-  // catch(Exception e){
-  //   model.put("message", e.getMessage());
-  //   return "error";
-  // }
+  @PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
+    //saving the data obtained into databse
+    try (Connection connection = dataSource.getConnection()) {
+      Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200))");
+      //line below, item.getName etc.. all from parameters
+      String sql = "INSERT INTO Items (name, category, description) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "')";
+      stmt.executeUpdate(sql);
+      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
+      return "redirect:/itemAdd/success";
+  }
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
 
-  // @GetMapping("/itemAdd/success")
-  // public String itemAddedSuccess(){
-  //   return "success";
-  // }
+  @GetMapping("/itemAdd/success")
+  public String itemAddedSuccess(){
+    return "success";
+  }
 
   @Bean
   public DataSource dataSource() throws SQLException {

@@ -24,6 +24,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.sql.DataSource;
@@ -51,6 +52,13 @@ public class Main {
   @RequestMapping("/")
   String index() {
     return "login";
+  }
+
+ @GetMapping(
+   path = "/create"
+ )
+  String getNewAcc() {
+    return "create";
   }
 
   @RequestMapping("/db")

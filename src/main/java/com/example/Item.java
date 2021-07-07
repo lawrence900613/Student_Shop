@@ -3,6 +3,7 @@ package com.example;
 public class Item {
     private String Name;
     private String Description;
+    private String Category;
     private Double Price;
     private Integer ID;
     private Integer Stock;
@@ -13,6 +14,10 @@ public class Item {
 
     public String getDescription() {
         return this.Description;
+    }
+
+    public String getCategory() {
+        return this.Category;
     }
 
     public Double getPrice() {
@@ -33,6 +38,10 @@ public class Item {
 
     public void setDescription(String d) {
         this.Description = d;
+    }
+
+    public void setCategory(String c) {
+        this.Category = c;
     }
 
     public void setPrice(Double p) {

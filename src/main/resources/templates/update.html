@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="../public/stylesheets/homeSeller.css">
-    <title>Your Page</title>
+    <title>Update item</title>
 </head>
 
 <body>
@@ -21,18 +21,17 @@
             </thead>
         </table>
 
-        <h2>Welcome to your Page</h2>
+        <h2>Update your item</h2>
         <div class="GreyBox">
-            <h3>What you are selling:</h3>
+            <h3>What you are updating:</h3>
             <table class="TableFormat" id="Table">
                 <thead>
                     <tr class="RowOne">
                         <th>Name</th>
-                        <th></th>
-                        <th>Message</th>
-                        <th>Width (cm)</th>
-                        <th>Height (cm)</th>
-                        <th>Delete Row</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
                     </tr>
                 </thead>
 
@@ -41,16 +40,34 @@
                         <tr th:each="record : ${ret}" >
                             <td th:utext="${record.getName()}"></td>
                             <td th:utext="${record.getDescription()}"></td>
+                            <td th:utext="${record.getCategory()}"></td>
                             <td th:utext="${record.getPrice()}"></td>
                             <td th:utext="${record.getStock()}"></td>
-                            
-                            <form action="#" method="post" th:action="@{/UPDATE/{id}(id=${record.getID()})}"> <!-- redirect to new info page-->
-                                <td><input type="submit" class="btnUpdate" value="UPDATE"></td>
+                        </tr>
+                        <tr>
+                            <form action="#" method="post" th:action="@{/UpdateSuccess}" id="update"> <!-- redirect to new info page-->
+                                <td><input class = "updateTxt" type="text" th:field=*{Name} th:value="${record.getName()}"> </td>
+                                <td><textarea class = "textarea" th:field=*{Description} th:value="${record.getDescription()}">
+                                    </textarea>
+                                </td>
+                                <td><select th:field=*{Category} th:value="${record.getCategory()}"> 
+                                        <option value="Food">Food</option> 
+                                        <option value="Technology">Technology</option>
+                                        <option value="Household">Household</option>
+                                        <option value="Miscellaneous">Miscellaneous</option>   
+                                    </select>
+                                </td>
+                                <td><input class = "updateTxt" type="number" th:field=*{Price} th:value="${record.getPrice()}"></td>
+                                <td><input class = "updateTxt" type="number" th:field=*{Stock} th:value="${record.getStock()}"></td>
+
+                                
                             </form> <!-- impliment update-->
+                            
                         </tr>
                     </tbody>
                 </tbody>
             </table>
+            <input form="update" type="submit" class="btnUpdate" value="UPDATE"></td>
         
         </div>
     </div>

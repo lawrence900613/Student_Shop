@@ -35,11 +35,11 @@ body{
     padding: 13px;
     border: 1px solid #cbcdce;
     margin: auto;
-    max-width: 830px;
+    
     margin-left: 20px;
     position:relative;
     display: block;
-    overflow: hidden
+    overflow: auto;
   
   }
   
@@ -70,26 +70,11 @@ body{
   }
   
   .TableFormat{
-    width:100%;
     border-collapse: collapse;
     border: 2px solid #bfbebe;
     text-align: left;
   }
   
-  .Textbox{
-    border: 1.5px solid #d7dadb;
-    width:85px;
-    height:30px;
-    margin-top: 5px;
-  }
-  
-  .TextboxP{
-    background: none;
-    border:none;
-    appearance: none;
-    width:75px;
-    font-weight: 700;
-  }
   
   .RowOne{
     background-color: #dddddd;
@@ -118,6 +103,18 @@ body{
     margin-top: 7px;
     font-size: 20px;
   
+  }
+
+  .updateTxt{
+    width:100px;
+    height: 30px;
+    padding: 5px;
+  }
+
+  .textarea{
+    width:200px;
+    height:100px;
+
   }
   
   

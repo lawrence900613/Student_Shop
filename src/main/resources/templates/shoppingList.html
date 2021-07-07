@@ -2,7 +2,7 @@
 <html lan="en">
 
 <head>
-    <link rel="stylesheet" href="./stylesheets/shoppingList.css">
+    <link rel="stylesheet" href="./stylesheets/shoppingList.css"/>
     <title>Shopping List</title>
 </head>
 
@@ -13,7 +13,7 @@
             <thead>
                 <tr>
                     <th><a href="/Home.html">Home</a></th>
-                    <th><a href="/About">About</a></th>
+                    <th><a href="/About.html">About</a></th>
                     <th><a href="/shoppingList">Shopping List</a></th>
                     <th><a href="/Login">Login</a></th>
                     <th><a href="/Browse">Browse</a></th>
@@ -24,27 +24,9 @@
 
         <div class="GreyBox">
 
-            
                 <table class="AddTable" id="Table">
                     <thead>
-                        <tr class="RowOne">
-                            <th>Name</th>
-                        </tr>
-                    </thead>
-                    <form id = "rec-form" action="#" method="post" th:action="@{/rectangle}" th:object="${rectangle}">
-                        <tbody>
-                            <tr>
-                                <td><input type="text" th:field=*{Name} placeholder=" name" class="Textbox" maxlength="20" required></td> 
-                            </tr>
-                        </tbody>
-            
-                    </form>    
-                </table>
-                <input type="submit" value="Submit" class="btn" form="rec-form">
-
-                <table class="AddTable" id="Table">
-                    <thead>
-                        <tr class="RowOne">
+                        <tr >
                             <th>Item</th>
                             <th>Description</th>
                             <th>Price</th>
@@ -60,8 +42,27 @@
                             <td th:utext="${record.getPrice()}"></td>  -->
 
                             <td> test </td>
-                            <td> This is the first test </td>
+                            <td> image + This is the first test </td>
                             <td> $420 </td>
+
+                            <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
+                                <td><input type="submit" class="btnDelete" value="DELETE"></td>
+                            </form>
+
+                            <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
+                                <td><input type="submit" class="btnBUY" value="BUY"></td>
+                            </form>
+                        </tr>
+                        <tr th:each="record : ${records}" >
+                            <!-- 
+                            <td><a href="#" th:href="@{/profile/{uid}(uid=${record.getID()})}" th:utext="${record.getName()}"></a></td>
+                            <td th:utext="${record.getName()}" th:style="'background-color:' + ${record.getColour()}"></td>
+                            <td th:utext="${record.getDescription()}"></td>
+                            <td th:utext="${record.getPrice()}"></td>  -->
+
+                            <td> test2 </td>
+                            <td> This is the first test2 </td>
+                            <td> $42022 </td>
 
                             <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
                                 <td><input type="submit" class="btnDelete" value="DELETE"></td>

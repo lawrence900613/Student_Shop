@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lan="en">
+
+<head>
+    <link rel="stylesheet" href="./stylesheets/search.css">
+    <title>Shopping List</title>
+</head>
+
+<body>
+    <div class="WhiteBox">
+
+        <table id="links" class="Links">
+            <thead>
+                <tr>
+                    <th><a href="/Home.html">Home</a></th>
+                    <th><a href="/About">About</a></th>
+                    <th><a href="/shoppingList">Shopping List</a></th>
+                    <th><a href="/Login">Login</a></th>
+                    <th><a href="/Browse">Browse</a></th>
+                    
+                </tr>
+            </thead>
+        </table>
+
+        <div class="GreyBox">
+                    <form class="example" method="post" action="@{/searchitem}"th:action="@{search}">
+                        <input type="text" placeholder="Search.." name="search">
+                        <button type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+        </div>
+    </div>
+</body>
+</html>

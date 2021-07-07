@@ -77,30 +77,82 @@ public class Main {
     }
   }
 
-  @GetMapping(path = "/sellerHome")
+  @GetMapping(path = "/search")
+    public String getSearch(Map<String, Object> model){
+      Searchname item = new Searchname() ;   //creates a new empty Item object
+      model.put("item", item);
+      return "search"; 
+    }
+
+  @PostMapping(path = "/searchitem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String handleNewItem(Map<String, Object> model, Searchname item) throws Exception{
+    //saving the data obtained into databse
+    try (Connection connection = dataSource.getConnection()) {
+      Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS productdatabase (id serial, name varchar(20), description varchar, price numeric, stock real)");
+      ResultSet rs = stmt.executeQuery("SELECT * FROM productdatabase");
+      ArrayList<Item> output = new ArrayList<Item>();
+      String searchname = item.getName();
+      searchname = searchname.toLowerCase();
+      while (rs.next()) {
+        String productname = rs.getString("name");
+        productname = productname.toLowerCase();
+        if(productname.contains(searchname)){
+        Item product = new Item();
+        product.setName(rs.getString("name"));
+        product.setDescription(rs.getString("description"));
+        product.setPrice(rs.getDouble("price"));
+        product.setStock(rs.getInt("stock"));
+        product.setID(rs.getInt("id"));
+        output.add(product);
+      }
+    }
+    model.put("product", output);
+    return "search";
+  }
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+
+}
+
+    @GetMapping(path = "/sellerHome")
     public String getNewItem(Map<String, Object> model){
       Item newItem = new Item();    //creates a new empty Item object
       model.put("item", newItem);
       return "homeSeller"; 
     }
 
-  @PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
-    //saving the data obtained into databse
-    try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200))");
-      //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (name, category, description) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "')";
-      stmt.executeUpdate(sql);
-      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
-      return "redirect:/itemAdd/success";
-  }
-  catch (Exception e) {
-    model.put("message", e.getMessage());
-    return "error";
-  }
-}
+  @GetMapping(path = "/main")
+    public String getmain(Map<String, Object> model){
+      return "main"; 
+    }
+
+    @GetMapping(path="/shoppingList")
+    public String updateShoppingList(Map<String, Object> model) throws Exception{
+      try (Connection connection = dataSource.getConnection()) {
+        Statement stmt = connection.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS recs (id serial, Name varchar(50), Description varchar(100), Price real)");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM db");
+        ArrayList<Item> output2 = new ArrayList<Item>();
+        while(rs.next()){
+          Item output = new Item();
+          output.setName("" + rs.getObject("Name"));
+          output.setDescription("" + rs.getObject("Description"));
+          output.setPrice(rs.getDouble("Price"));
+          output.setID(rs.getInt("id"));
+    
+          output2.add(output);
+        }  
+    
+        model.put("records", output2);
+        return "View";
+      }catch (Exception e) {
+        model.put("message", e.getMessage());
+        return "error";
+      }
+    }
 
   @GetMapping("/itemAdd/success")
   public String itemAddedSuccess(){

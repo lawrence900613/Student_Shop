@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="./stylesheets/search.css">
-    <title>Shopping List</title>
+    <title>Search</title>
 </head>
 
 <body>
@@ -23,10 +23,23 @@
         </table>
 
         <div class="GreyBox">
-                    <form class="example" method="post" action="@{/searchitem}"th:action="@{search}">
-                        <input type="text" placeholder="Search.." name="search">
-                        <button type="submit"><i class="fa fa-search"></i></button>
-                    </form>
+            <form class="example" method="post" action="@{/searchitem}" th:action="@{search}">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        <table id="myTable" class="myTable">
+            <tr>
+                <td>Name</td>
+                <td>Price</td>
+                <td>Description</td>
+            </tr>
+            <tr th:each="product : ${product}">
+                <td th:text="${product.getID()}"></td>
+                <td th:text="${product.getName()}"></td>
+                <td th:text="${product.getPrice}"></td>
+                <td th:text="${product.getDescription}"></td>
+            </tr>
+        </table>
         </div>
     </div>
 </body>

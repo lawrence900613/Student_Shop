@@ -179,12 +179,27 @@ div.item2 {
   margin-left:500px;
 }
 
-div.item3 {
+div.Electronics {
   vertical-align: top;
   display: inline-block;
   width: 120px;
   margin-left:100px;
 }
+
+div.HouseHold {
+  vertical-align: top;
+  display: inline-block;
+  width: 120px;
+  margin-left:100px;
+}
+
+div.Furniture {
+  vertical-align: top;
+  display: inline-block;
+  width: 120px;
+  margin-left:100px;
+}
+
 
 
 img {

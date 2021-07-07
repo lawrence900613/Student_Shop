@@ -23,8 +23,8 @@
         </table>
 
         <div class="GreyBox">
-            <form class="example" method="post" action="@{/searchitem}" th:action="@{search}">
-                <input type="text" placeholder="Search.." name="search">
+            <form class="example" method="post" th:action="@{/searchitem}" th:object="${item}">
+                <input type="text" th:field=*{name} placeholder="Search.." name="search">
                 <button type="submit"><i class="fa fa-search"></i></button>
             </form>
         <table id="myTable" class="myTable">

@@ -108,7 +108,7 @@ public class Main {
       }
     }
     model.put("product", output);
-    return "search";
+    return "redirect:/search";
   }
   catch (Exception e) {
     model.put("message", e.getMessage());
@@ -116,6 +116,14 @@ public class Main {
   }
 
 }
+
+@GetMapping(path = "/success/search")
+public String getsearchagain(Map<String, Object> model){
+  Searchname item = new Searchname() ;   //creates a new empty Item object
+  model.put("item", item);
+  return "search"; 
+}
+
 
     @GetMapping(path = "/sellerHome")
     public String getNewItem(Map<String, Object> model){

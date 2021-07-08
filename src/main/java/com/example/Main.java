@@ -94,6 +94,7 @@ public class Main {
       ArrayList<Item> output = new ArrayList<Item>();
       String searchname = item.getName();
       searchname = searchname.toLowerCase();
+      System.out.println(searchname);
       while (rs.next()) {
         String productname = rs.getString("name");
         productname = productname.toLowerCase();
@@ -132,9 +133,9 @@ public String getsearchagain(Map<String, Object> model){
       return "homeSeller"; 
     }
 
-  @GetMapping(path = "/main")
+  @GetMapping(path = "/home")
     public String getmain(Map<String, Object> model){
-      return "main"; 
+      return "home"; 
     }
 
     @GetMapping(path="/shoppingList")

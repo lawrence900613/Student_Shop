@@ -7,21 +7,34 @@
 </head>
 
 <body>
+    <header>
+        <div class="container">
+          <h1 class="logo"></h1>
+          <nav>
+            <ul>
+              <li><a href="./home">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Shoppinglist</a></li>
+              <li><a href="#">Login</a></li>
+              <li><a href="./search">Search</a></li>
+              <li>
+                <div class="dropdown">
+                    <button class="dropbtn">More
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#">Link 1</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                    </div>
+                    </li>
+              <li>
+            </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
     <div class="WhiteBox">
-
-        <table id="links" class="Links">
-            <thead>
-                <tr>
-                    <th><a href="/Home.html">Home</a></th>
-                    <th><a href="/About">About</a></th>
-                    <th><a href="/shoppingList">Shopping List</a></th>
-                    <th><a href="/Login">Login</a></th>
-                    <th><a href="/Browse">Browse</a></th>
-                    
-                </tr>
-            </thead>
-        </table>
-
         <div class="GreyBox">
             <form class="example" method="post" th:action="@{/searchitem}" th:object="${item}">
                 <input type="text" th:field=*{name} placeholder="Search.." name="search">

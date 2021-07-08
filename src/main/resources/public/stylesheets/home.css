@@ -2,7 +2,6 @@
 body {
 	margin: 0;
 	background: #222;
-	font-family: 'Work Sans', sans-serif;
 	font-weight: 800;
 }
 
@@ -201,12 +200,16 @@ div.Furniture {
 }
 
 
-
 img {
     width: 250px;
     height: 250px;
     margin-top: 20px;
     background-color: grey;
+}
+
+input[type='image'] {
+  height:150px;
+  width: 150px;
 }
 
 .caption {
@@ -240,11 +243,18 @@ h2{
   font-weight:600;
 }
 
-
-
-.food{
-  width: 150px;
-  height: 150px;
+.GreyBox{
+  background-color:#e9eff1;
+  border-radius: 5px;
+  padding: 13px;
+  border: 1px solid #cbcdce;
+  margin: auto;
+  max-width: 1800px;
+  margin-left: 20px;
+  position:relative;
+  display: block;
+  margin-top: 30px;
+  height: auto;
+  overflow: auto;
 }
-
   

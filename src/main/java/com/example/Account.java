@@ -1,8 +1,13 @@
 package com.example;
 
-class Account {
+public class Account {
     private String username;
     private String password;
+
+    public Account() {
+        this.username = "";
+        this.password = "";
+    }
 
     public Account(String username, String password) {
         this.username = username;

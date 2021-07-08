@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -53,6 +54,15 @@ public class Main {
 
   @RequestMapping("/")
   String index() {
+    return "index";
+  }
+
+  @GetMapping(
+    path = "/login"
+  )
+  public String getLoginForm(Map<String, Object> model) {
+    Account account = new Account();
+    model.put("account", account);
     return "login";
   }
 
@@ -61,13 +71,33 @@ public class Main {
     consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
   )
   public String handleUserLogin(Map<String, Object> model, Account account) throws Exception {
+    try(Connection connection = dataSource.getConnection()) {
+      Statement stmt = connection.createStatement();
+      String sql = "SELECT * FROM Accounts WHERE username ='"+account.getUser()+"'AND password ='"+account.getPassword()+"' ";
+      ResultSet rs = stmt.executeQuery(sql);
+      if(rs.next()){
+        System.out.println("Success");
+        return "success";
+      }
+      return "login";
+    } catch (Exception e) {
+      model.put("message", e.getMessage());
+      return "error";
+    }
+  }
+
+  @PostMapping(
+    path = "/create",
+    consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
+  )
+  public String handleCreate(Map<String, Object> model, Account account) throws Exception {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Accounts (username varchar(20), password varchar(16))");
       String sql = "INSERT INTO Accounts (username, password) VALUES ('" + account.getUser() + "','" + account.getPassword() + "')";
       stmt.executeUpdate(sql);
       System.out.println(account.getUser());
-      return "redirect:/login/success";
+      return "redirect:/create";
     }
     catch (Exception e) {
       model.put("message", e.getMessage());

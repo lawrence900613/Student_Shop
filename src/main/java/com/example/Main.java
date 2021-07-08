@@ -77,7 +77,7 @@ public class Main {
       ResultSet rs = stmt.executeQuery(sql);
       if(rs.next()){
         System.out.println("Success");
-        return "success";
+        return "redirect:/login/success";
       }
       return "login";
     } catch (Exception e) {
@@ -85,6 +85,15 @@ public class Main {
       return "error";
     }
   }
+
+  @GetMapping(
+    path = "/create"
+  )
+   String getNewAcc(Map<String, Object> model) {
+     Account account = new Account();
+     model.put("account", account);
+     return "create";
+   }
 
   @PostMapping(
     path = "/create",
@@ -97,7 +106,7 @@ public class Main {
       String sql = "INSERT INTO Accounts (username, password) VALUES ('" + account.getUser() + "','" + account.getPassword() + "')";
       stmt.executeUpdate(sql);
       System.out.println(account.getUser());
-      return "redirect:/create";
+      return "redirect:/login/success";
     }
     catch (Exception e) {
       model.put("message", e.getMessage());
@@ -111,13 +120,6 @@ public class Main {
 String getLoginSuccess() {
   return "success";
 }
-
- @GetMapping(
-   path = "/create"
- )
-  String getNewAcc() {
-    return "create";
-  }
 
   @RequestMapping("/db")
   String db(Map<String, Object> model) {

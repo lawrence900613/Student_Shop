@@ -138,35 +138,7 @@ public String getsearchagain(Map<String, Object> model){
       return "home"; 
     }
 
-    @GetMapping(path="/shoppingList")
-    public String updateShoppingList(Map<String, Object> model) throws Exception{
-      try (Connection connection = dataSource.getConnection()) {
-        Statement stmt = connection.createStatement();
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS recs (id serial, Name varchar(50), Description varchar(100), Price real)");
-        ResultSet rs = stmt.executeQuery("SELECT * FROM db");
-        ArrayList<Item> output2 = new ArrayList<Item>();
-        while(rs.next()){
-          Item output = new Item();
-          output.setName("" + rs.getObject("Name"));
-          output.setDescription("" + rs.getObject("Description"));
-          output.setPrice(rs.getDouble("Price"));
-          output.setID(rs.getInt("id"));
-    
-          output2.add(output);
-        }  
-    
-        model.put("records", output2);
-        return "View";
-      }catch (Exception e) {
-        model.put("message", e.getMessage());
-        return "error";
-      }
-    }
-
-  @GetMapping("/itemAdd/success")
-  public String itemAddedSuccess(){
-    return "success";
-  }
+   
 
   @Bean
   public DataSource dataSource() throws SQLException {

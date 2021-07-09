@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lan="en">
+
+<head>
+    <link rel="stylesheet" href="./stylesheets/search.css">
+    <title>Search</title>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+          <h1 class="logo"></h1>
+          <nav>
+            <ul>
+              <li><a href="./home">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Shoppinglist</a></li>
+              <li><a href="#">Login</a></li>
+              <li><a href="./search">Search</a></li>
+              <li>
+                <div class="dropdown">
+                    <button class="dropbtn">More
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#">Link 1</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                    </div>
+                    </li>
+              <li>
+            </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+    <div class="WhiteBox">
+        <div class="GreyBox">
+            <form class="example" method="post" th:action="@{/searchitem}" th:object="${item}">
+                <input type="text" th:field=*{name} placeholder="Search.." name="search">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        <table id="myTable" class="myTable">
+            <tr>
+                <td>Name</td>
+                <td>Price</td>
+                <td>Description</td>
+            </tr>
+            <tr th:each="product : ${product}">
+                <td th:text="${product.getID()}"></td>
+                <td th:text="${product.getName()}"></td>
+                <td th:text="${product.getPrice}"></td>
+                <td th:text="${product.getDescription}"></td>
+            </tr>
+        </table>
+        </div>
+    </div>
+</body>
+</html>

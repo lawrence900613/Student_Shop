@@ -29,12 +29,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-<<<<<<< HEAD
-=======
+
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
->>>>>>> f3afc3853e3226ac255a7cecd18aec999d9818bd
+
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -136,6 +135,7 @@ public String myPage(@PathVariable("id") Integer recieveID, Map<String, Object> 
   }
 }
 
+
 @GetMapping(path = "/myPage/add/{id}")
 public String addPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
   return "/add";
@@ -213,12 +213,7 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
 
   }
 
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> f3afc3853e3226ac255a7cecd18aec999d9818bd
   @GetMapping(
     path = "/login"
   )
@@ -304,30 +299,72 @@ String getLoginSuccess() {
     }
   }
 
+
   @GetMapping(path = "/sellerHome")
     public String getNewItem(Map<String, Object> model){
       Item newItem = new Item();    //creates a new empty Item object
       model.put("item", newItem);
-      return "homeSeller"; 
+      return "homeSeller";
     }
 
-  @PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
+  @GetMapping(path = "/search")
+    public String getSearch(Map<String, Object> model){
+      Searchname item = new Searchname() ;   //creates a new empty Item object
+      model.put("item", item);
+      return "search"; 
+
+    }
+
+  @PostMapping(path = "/searchitem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String handleNewItem(Map<String, Object> model, Searchname item) throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
+
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200), url varchar(200))");
       //line below, item.getName etc.. all from parameters
       String sql = "INSERT INTO Items (name, category, description, url) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "','"+item.getUrl()+ "')";
       stmt.executeUpdate(sql);
       System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
       return "redirect:/itemAdd/success";
+
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS productdatabase (id serial, name varchar(20), description varchar, price numeric, stock real)");
+      ResultSet rs = stmt.executeQuery("SELECT * FROM productdatabase");
+      ArrayList<Item> output = new ArrayList<Item>();
+      String searchname = item.getName();
+      searchname = searchname.toLowerCase();
+      System.out.println(searchname);
+      while (rs.next()) {
+        String productname = rs.getString("name");
+        productname = productname.toLowerCase();
+        if(productname.contains(searchname)){
+        Item product = new Item();
+        product.setName(rs.getString("name"));
+        product.setDescription(rs.getString("description"));
+        product.setPrice(rs.getDouble("price"));
+        product.setStock(rs.getInt("stock"));
+        product.setID(rs.getInt("id"));
+        output.add(product);
+      }
+    }
+    model.put("product", output);
+    return "redirect:/search";
+
   }
   catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
   }
+
 }
+
+@GetMapping(path = "/success/search")
+public String getsearchagain(Map<String, Object> model){
+  Searchname item = new Searchname() ;   //creates a new empty Item object
+  model.put("item", item);
+  return "search"; 
+}
+
 
 
   public void getImageFromLaptop(java.awt.event.ActionEvent evt){
@@ -351,10 +388,17 @@ String getLoginSuccess() {
     return "success";
   }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> f3afc3853e3226ac255a7cecd18aec999d9818bd
+
+
+  @GetMapping(path = "/home")
+    public String getmain(Map<String, Object> model){
+      return "home"; 
+    }
+
+   
+
+
   @Bean
   public DataSource dataSource() throws SQLException {
     if (dbUrl == null || dbUrl.isEmpty()) {

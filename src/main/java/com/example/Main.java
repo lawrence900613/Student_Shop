@@ -30,12 +30,23 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
 import javax.sql.DataSource;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+
+import java.awt.Image;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
+
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+import javax.swing.event.*;
 
 @Controller
 @SpringBootApplication
@@ -89,9 +100,9 @@ public class Main {
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200))");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200), url varchar(200))");
       //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (name, category, description) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "')";
+      String sql = "INSERT INTO Items (name, category, description, url) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "','"+item.getUrl()+ "')";
       stmt.executeUpdate(sql);
       System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
       return "redirect:/itemAdd/success";
@@ -102,10 +113,28 @@ public class Main {
   }
 }
 
+
+  public void getImageFromLaptop(java.awt.event.ActionEvent evt){
+    JFileChooser chooser = new JFileChooser();
+    chooser.showOpenDialog(null);
+    File f = chooser.getSelectedFile();
+    String filename = f.getAbsolutePath();
+    // System.out.println(filename);
+    // chooser.setText(filename);
+    // Image getAbsolutePath = null;
+    // ImageIcon icon = new ImageIcon(filename);
+    // Image image = icon.getImage().getScaledInstance(lbl_image.getWidth(), lbl_image.getHeight(), Image.SCALE_SMOOTH);
+    // lbl_image.setIcon(icon);
+    // System.out.println("Successfull completed import image");
+
+  } 
+
+
   @GetMapping("/itemAdd/success")
   public String itemAddedSuccess(){
     return "success";
   }
+
 
   @Bean
   public DataSource dataSource() throws SQLException {

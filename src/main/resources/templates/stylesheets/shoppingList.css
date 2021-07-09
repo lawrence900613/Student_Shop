@@ -1,0 +1,108 @@
+body{
+    background-color:#a9182a;
+    margin: 0;
+  }
+  
+  .Links{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    padding: 10px;
+  
+  }
+  
+  .GreyBox{
+    background-color:#e9eff1;
+    border-radius: 5px;
+    padding: 13px;
+    border: 1px solid #cbcdce;
+    margin: auto;
+    max-width: 830px;
+    margin-left: 20px;
+    position:relative;
+    display: block;
+    margin-top: 30px;
+    height: auto;
+    overflow: auto;
+  }
+  
+  .WhiteBox{
+    border-top:#3a3834 20px solid;
+    border-bottom:#3a3834 35px solid ;
+    background-color:#ffffff;
+    padding-bottom: 20px;
+    margin:auto;
+    max-height: auto;
+    max-width: 1000px;
+    display: block
+    
+  }
+  
+  table, th, td{
+    border-collapse: collapse;
+    padding: 5px;
+    border: 2px solid #bfbebe;
+    text-align: left;
+    font-weight: 700;
+  }
+
+  .AddTable{
+    width:100%;
+    border-collapse: collapse;
+    border: 2px solid #bfbebe;
+    text-align: left;
+  }
+  
+  .Textbox{
+    border: 1.5px solid #d7dadb;
+    width:85px;
+    height:30px;
+    margin-top: 5px;
+  }
+  
+  .RowOne{
+    background-color: #dddddd;
+  }
+
+  .btn{
+    width:90px;
+    background-color:#b81013;
+    color:#f8fafe;
+    border-radius:5px;
+    padding:5px;
+    margin-right:10px;
+    border:none;
+    pointer-events:visiblePainted;
+    margin-top: 10px;
+    height: 30px;
+    float:right;
+  }
+  
+  .btn:hover {
+    background-color: #af4253;
+  }
+
+  .btnDelete{
+    width:90px;
+    background-color:#b81013;
+    color:#f8fafe;
+    border-radius:5px;
+    padding:5px;
+    float:none;
+    border:none;
+    pointer-events:visiblePainted;
+  }
+
+  .btnBUY{
+    width:90px;
+    background-color:#27c834;
+    color:#f8fafe;
+    border-radius:5px;
+    padding:5px;
+
+    border:none;
+    pointer-events:visiblePainted;
+  }
+
+  
+  

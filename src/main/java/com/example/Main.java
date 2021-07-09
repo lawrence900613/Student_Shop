@@ -126,12 +126,6 @@ public String getsearchagain(Map<String, Object> model){
 }
 
 
-    @GetMapping(path = "/sellerHome")
-    public String getNewItem(Map<String, Object> model){
-      Item newItem = new Item();    //creates a new empty Item object
-      model.put("item", newItem);
-      return "homeSeller"; 
-    }
 
   @GetMapping(path = "/home")
     public String getmain(Map<String, Object> model){

@@ -146,6 +146,27 @@ public String test() throws Exception{
   return "homeSeller";
 }
 
+@PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
+    //saving the data obtained into databse
+    try (Connection connection = dataSource.getConnection()) {
+      Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200))");
+      //line below, item.getName etc.. all from parameters
+      String sql = "INSERT INTO Items (name, category, description) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "')";
+      stmt.executeUpdate(sql);
+      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
+      return "redirect:/itemAdd/success";
+  }
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+
+
+
 @GetMapping(path="/shoppingList")
 public String updateShoppingList(Map<String, Object> model) throws Exception{
   try (Connection connection = dataSource.getConnection()) {
@@ -306,7 +327,6 @@ String getLoginSuccess() {
       model.put("item", newItem);
       return "homeSeller";
     }
-
   @GetMapping(path = "/search")
     public String getSearch(Map<String, Object> model){
       Searchname item = new Searchname() ;   //creates a new empty Item object
@@ -316,18 +336,10 @@ String getLoginSuccess() {
     }
 
   @PostMapping(path = "/searchitem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String handleNewItem(Map<String, Object> model, Searchname item) throws Exception{
+  public String searchItem(Map<String, Object> model, Searchname item) throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200), url varchar(200))");
-      //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (name, category, description, url) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "','"+item.getUrl()+ "')";
-      stmt.executeUpdate(sql);
-      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
-      return "redirect:/itemAdd/success";
-
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS productdatabase (id serial, name varchar(20), description varchar, price numeric, stock real)");
       ResultSet rs = stmt.executeQuery("SELECT * FROM productdatabase");
       ArrayList<Item> output = new ArrayList<Item>();

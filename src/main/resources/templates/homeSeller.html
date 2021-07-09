@@ -2,7 +2,7 @@
 <html lan="en">
 
 <head>
-    <link rel="stylesheet" href="./stylesheets/homeSeller.css">
+    <link rel="stylesheet" href="../public/stylesheets/homeSeller.css">
     <title>Home: Seller</title>
 </head>
 
@@ -12,11 +12,11 @@
         <table id="links" class="Links">
             <thead>
                 <tr>
-                    <th><a href="/Home.html">Home</a></th>
-                    <th><a href="/About">About</a></th>
+                    <th><a href="/Home.html">Home</a></th> <!-- may have different home page-->
+                    <th><a href="/About.html">About</a></th>
                     <th><a href="/shoppingList">Shopping List</a></th>
                     <th><a href="/Login">Login</a></th>
-                    <th><a href="/Browse">Browse</a></th>
+                    <th><a href="/Search">Search</a></th>
                 </tr>
             </thead>
         </table>
@@ -25,10 +25,10 @@
         <div class="GreyBox">
             <h3>What you can do:</h3>
             <list id="definition">
-                <ul>
-                    <li><a href="/page.html">View Seller Home Page</a></li>
-                    <li><a href="/page/add.html">Sell an item</a></li>
-                    <li><a href="/msg.html">Check customer messages</a></li>
+                <ul th:each="record : ${ret}">
+                    <li><a href="#" th:href="@{/myPage/{uid}(uid=${record.getID()})}" th:utext=" 'View '+ ${record.getUsername()} + ' Page'"></a></li>
+                    <li><a href="#" th:href="@{/myPage/add/{uid}(uid=${record.getID()})}">Sell an item</a></li>
+                    <li><a href="/msg">Check customer messages</a></li> <!-- not done-->
                 </ul>
             </list>
         

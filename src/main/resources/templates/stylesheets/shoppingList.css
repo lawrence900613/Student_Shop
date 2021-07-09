@@ -38,17 +38,23 @@ body{
     
   }
   
-  table, th, td{
+   th, td{
     border-collapse: collapse;
     padding: 5px;
     border: 2px solid #bfbebe;
     text-align: left;
     font-weight: 700;
+    border: none;
+  }
+
+  tr{
+    
+    border-bottom: solid 1px #bfbebe;
   }
 
   .AddTable{
     width:100%;
-    border-collapse: collapse;
+    border-collapse:collapse;
     border: 2px solid #bfbebe;
     text-align: left;
   }

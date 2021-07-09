@@ -1,0 +1,121 @@
+body{
+    background-color:#a9182a;
+    margin: 0;
+  }
+  
+  h2{
+    text-align: left;
+    margin-left: 20px;
+    margin-top: 70px;
+    font-family:Verdana;
+    font-size:27px;
+    font-weight:600;
+  }
+  h3{
+    color:#b81b41;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 21px;
+  }
+  h4{
+    font-size: 15px;
+  }
+  
+  .Links{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    padding: 10px;
+  
+  }
+  
+  .GreyBox{
+    background-color:#e9eff1;
+    border-radius: 5px;
+    padding: 13px;
+    border: 1px solid #cbcdce;
+    margin: auto;
+    max-width: 830px;
+    margin-left: 20px;
+    position:relative;
+    display: block;
+    overflow: hidden
+  
+  }
+  
+  .WhiteBox{
+    border-top:#3a3834 20px solid;
+    border-bottom:#3a3834 35px solid ;
+    background-color:#ffffff;
+    padding-bottom: 20px;
+    margin:auto;
+    max-height: auto;
+    max-width: 1000px;
+    display: block
+    
+  }
+  
+  .measurementImg{
+    display: block;
+    margin-left: 50px;
+    width:250px;
+  }
+  
+  table, th, td{
+    border-collapse: collapse;
+    padding: 5px;
+    border: 2px solid #bfbebe;
+    text-align: left;
+    font-weight: 700;
+  }
+  
+  .TableFormat{
+    width:100%;
+    border-collapse: collapse;
+    border: 2px solid #bfbebe;
+    text-align: left;
+  }
+  
+  .Textbox{
+    border: 1.5px solid #d7dadb;
+    width:85px;
+    height:30px;
+    margin-top: 5px;
+  }
+  
+  .TextboxP{
+    background: none;
+    border:none;
+    appearance: none;
+    width:75px;
+    font-weight: 700;
+  }
+  
+  .RowOne{
+    background-color: #dddddd;
+  }
+  
+  .btn{
+    width:90px;
+    background-color:#b81013;
+    color:#f8fafe;
+    border-radius:5px;
+    padding:5px;
+    float:none;
+    margin-right:10px;
+    border:none;
+    pointer-events:visiblePainted;
+    margin-bottom:10px;
+    float:right;
+  }
+  
+  .btn:hover {
+    background-color: #af4253;
+  }
+  
+  .result{
+    margin-bottom: 5px;
+    margin-top: 7px;
+    font-size: 20px;
+  
+  }

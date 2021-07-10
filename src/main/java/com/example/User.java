@@ -7,7 +7,7 @@ public class User {
     private String Role; //Seller , Customer , Admin, Guest?
     private Integer ID;
     //private Item[] SellingList;
-    //private Item[] ShoppingList; //chnage to array
+    //private Item[] ShoppingList; //chnage to array  -= testing for JP branch =-
 
     public String getUsername() {
         return this.Username;

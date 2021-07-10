@@ -45,9 +45,9 @@
         <textarea name="description" cols="30" rows="10" placeholder="Enter the description for the item" th:field = *{description}></textarea>
         <br>
        
-        <input type="text" th:field = *{url} placeholder="Paste the URL of your picture">
-        <!-- <button type="button" onclick="">Import Image</button> 
-  -->
+        <input type="file" name="file" id="file" accept= "image/*"><br>
+        <input type="submit" value="Add New Item">
+
         
         <br>
         <input type="submit" value="Add New Item">

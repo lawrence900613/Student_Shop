@@ -43,14 +43,10 @@
                 </select><br>
                 <textarea name="description" cols="30" rows="10" placeholder="Enter the description for the item" th:field = *{Description}></textarea>
                 <input type="number" th:field=*{Price} step="any" placeholder="$00.00"><br>
+                <input type="file" name="file" id="file" accept= "image/*"><br>
                 <input type="number" th:field=*{Stock} placeholder="2"><br>
                 <br>
-                <!--
-                <input type="text" th:field = *{url} placeholder="Paste the URL of your picture"> 
-                    <button type="button" onclick="">Import Image</button> 
-
                 
-                    <br> -->
                 <input type="submit" value="Add New Item">
             </form>
         

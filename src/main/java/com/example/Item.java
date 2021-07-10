@@ -5,6 +5,7 @@ public class Item {
     private String Description;
     private String Category;
     private float Price;
+    private byte[] image;
     private Integer ID;
     private Integer Stock;
 
@@ -24,6 +25,10 @@ public class Item {
         return this.Price;
     }
 
+    public byte[] getImage(){
+        return this.image;
+    }
+
     public Integer getID() {
         return this.ID;
     }
@@ -31,6 +36,8 @@ public class Item {
     public Integer getStock() {
         return this.Stock;
     }
+
+
 
     public void setName(String n) {
         this.Name = n;
@@ -46,6 +53,10 @@ public class Item {
 
     public void setPrice(Float p) {
         this.Price = p;
+    }
+
+    public void setImage(byte[] image){
+        this.image = image;
     }
 
     public void setID(Integer i) {

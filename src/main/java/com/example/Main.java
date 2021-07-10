@@ -379,20 +379,6 @@ public String getsearchagain(Map<String, Object> model){
 
 
 
-  // public void getImageFromLaptop(java.awt.event.ActionEvent evt){
-  //   JFileChooser chooser = new JFileChooser();
-  //   chooser.showOpenDialog(null);
-  //   File f = chooser.getSelectedFile();
-  //   String filename = f.getAbsolutePath();
-  //   // System.out.println(filename);
-  //   // chooser.setText(filename);
-  //   // Image getAbsolutePath = null;
-  //   // ImageIcon icon = new ImageIcon(filename);
-  //   // Image image = icon.getImage().getScaledInstance(lbl_image.getWidth(), lbl_image.getHeight(), Image.SCALE_SMOOTH);
-  //   // lbl_image.setIcon(icon);
-  //   // System.out.println("Successfull completed import image");
-
-  // } 
 
 
   @GetMapping("/itemAdd/success")

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 public class User {
     private String Username;
     private String Password;
-    private String Role; //Seller , Customer , Admin, Guest?
+    private String Role; //Seller , Customer
     private Integer ID;
-    //private Item[] SellingList;
-    //private Item[] ShoppingList; //chnage to array
+    private Item[] SellingList;
+    private Item[] ShoppingList; 
 
     public String getUsername() {
         return this.Username;
@@ -24,7 +24,7 @@ public class User {
     public Integer getID() {
         return this.ID;
     }
-    /*
+    
 
     public Item[] getShoppingList() {
         return this.ShoppingList;
@@ -33,25 +33,6 @@ public class User {
     public Item[] getSellingList() {
         return this.SellingList;
     }
-
-    
-
-    public void addToShopList(Item in){
-        this.ShoppingList.add(in); // must chnage method!!!!!!!!!!!!!
-    }
-
-    public void removeFromShopList(Item out){
-        this.ShoppingList.remove(out);
-    }
-
-    public void addToSellList(Item in){
-        this.SellingList.add(in);
-    }
-
-    public void removeFromSellList(Item out){
-        this.SellingList.remove(out);
-    }
-    */
 
     public void setName(String n) {
         this.Username = n;
@@ -69,7 +50,7 @@ public class User {
         this.ID = i;
     }
 
-/*
+
     public void setShoppingList( Item[] in) { //shallow copy ?????????????
         this.ShoppingList = in;
     }
@@ -77,5 +58,4 @@ public class User {
     public void getSellingList( Item[] in) {
         this.SellingList = in;
     }
-    */
 }

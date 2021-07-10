@@ -7,18 +7,25 @@
   <link rel="stylesheet" href="./stylesheets/login.css">
   <title>Create Account</title>
 </head>
-<form action="/create" method="post">
+<form method="post" th:action="@{/create}" th:object="${account}" >
     <div class="container">
         <label for="username"><b>Username</b></label>
 
         <!--<input type="text" th:field=*{username} placeholder="Enter Username" required> --->
 
-        <input type ="text" placeholder="Enter username" name = "username" required>
+        <input type ="text" placeholder="Enter username" th:field=*{username} required>
+
         <label for="password"><b>Password</b></label>
 
         <!--<input type="password" th:field=*{password} placeholder="Enter Password" required> --->
 
-        <input type ="password" placeholder="Enter password" name = "password" required>
+        <input type ="password" placeholder="Enter password" th:field=*{password} required>
+        <label for="role">Choose a role:</label>
+        <select th:field=*{role} id="role">
+            <option value="customer">customer</option>
+            <option value="seller">seller</option>
+        </select>
+        <br><br>
         <button type="submit">Create Account</button>
     </div>
 

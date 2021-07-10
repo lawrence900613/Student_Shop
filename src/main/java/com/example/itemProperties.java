@@ -39,4 +39,8 @@ package com.example;
     }
 
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master/master

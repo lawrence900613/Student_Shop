@@ -2,7 +2,7 @@
 <html lan="en">
 
 <head>
-    <link rel="stylesheet" href="./stylesheets/homeSeller.css">
+    <link rel="stylesheet" href="../stylesheets/homeSeller.css">
     <title>Home: Seller</title>
 </head>
 
@@ -30,14 +30,20 @@
                     <li><a href="#" th:href="@{/myPage/add/{uid}(uid=${record.getID()})}">Sell an item</a></li>
                     <li><a href="/msg">Check customer messages</a></li> <!-- not done-->
                 </ul>
-            </list>
+            </list> -->
         
         </div>
 <!-- Code for adding and accessing into the database -->
     <h1>Adding new item in Database</h1>
+<<<<<<< HEAD
     <form action="#" method="post" th:action="@{/afterSubmitNewItem}" th:object="${item}" enctype="multipart/form-data">
         <input type="text" th:field=*{name} placeholder="Name"><br>
         <select th:field = *{category}>
+=======
+    <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${item}">
+        <input type="text" th:field=*{Name} placeholder="Name"><br>
+        <select th:field = *{Category}>
+>>>>>>> master/master
             <option value="electronics" selected>Electronics</option>
             <option value="food">Food</option>
             <option value="kitchen">Kitchen</option>
@@ -53,7 +59,6 @@
 
 
 
-    </div>
 </body>
 
 

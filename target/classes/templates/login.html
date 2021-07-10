@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="./stylesheets/login.css">
   <title>Login</title>
 </head>
-<form action="/login" method="post">
+<form action="/Login" method="post">
     <div class="container">
         <label for="username"><b>Username</b></label>
 
@@ -24,8 +24,8 @@
     </div>
 
     <div class="container">
-        <button type="button" class="cancel">Cancel</button>
-        <span class="create"><a th:href="@{/create}">Create Account</a></span>
+        <button type="button" class="cancel" onclick="location.href='/Home'">Cancel</button>
+        <span class="create"><a th:href="@{/Create}">Create Account</a></span>
     </div>
 </form>
 </html>

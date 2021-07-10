@@ -4,12 +4,13 @@ public class Account {
     private String username;
     private String password;
     private String role = "";
-
+    private Integer ID;
+    private Integer[] SellingList;
+    private Integer[] ShoppingList; 
 
     public String getUsername() {
         return username;
     }
-
 
     public void setUsername(String username) {
         this.username = username;
@@ -30,4 +31,31 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
+
+     public Integer getID() {
+        return this.ID;
+    }
+
+    public Integer[] getShoppingList() {
+        return this.ShoppingList;
+    }
+
+    public Integer[] getSellingList() {
+        return this.SellingList;
+    }
+
+     public void setID(Integer i) {
+        this.ID = i;
+    }
+
+    public void setShoppingList( Integer[] in) { //shallow copy ?????????????
+        this.ShoppingList = in;
+    }
+
+    public void setSellingList( Integer[] in) {
+        this.SellingList = in;
+    }
+
+
+
 }

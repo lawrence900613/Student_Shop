@@ -4,7 +4,9 @@ package com.example;
     private String name;
     private String category;
     private String description;
-    private String url;
+    private byte[] image;
+
+
 
     public String getName(){
         return this.name;
@@ -15,9 +17,11 @@ package com.example;
     public String getDescription(){
         return this.description;
     }
-    public String getUrl(){
-        return this.url;
+    public byte[] getImage(){
+        return this.image;
     }
+    
+
 
     public void setName(String n){
         this.name = n;
@@ -30,8 +34,9 @@ package com.example;
     public void setDescription( String d){
         this.description = d;
     }
-    public void setUrl( String u){
-        this.url = u;
+    public void setImage(byte[] image){
+        this.image = image;
     }
+
 
 }

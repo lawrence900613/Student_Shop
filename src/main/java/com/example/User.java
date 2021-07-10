@@ -6,6 +6,7 @@ public class User {
     private String Password;
     private String Role; //Seller , Customer , Admin, Guest?
     private Integer ID;
+    private Integer testvar;
     //private Item[] SellingList;
     //private Item[] ShoppingList; // something else
 

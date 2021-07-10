@@ -111,6 +111,7 @@ public class Main {
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Accounts (username varchar(20), password varchar(16))");
       String sql = "INSERT INTO Accounts (username, password) VALUES ('" + account.getUser() + "','" + account.getPassword() + "')";
       stmt.executeUpdate(sql);
+      
       System.out.println(account.getUser());
       return "redirect:/login/success";
     }

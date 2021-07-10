@@ -12,11 +12,11 @@
           <h1 class="logo"></h1>
           <nav>
             <ul>
-                <li><a href="./home">Home</a></li>
-                <li><a href="./about">About</a></li>
-                <li><a href="./shoppingList.html">Shoppinglist</a></li>
-                <li><a href="./login.html">Login</a></li>
-                <li><a href="./search.html">Search</a></li>
+                <li><a href="./Home">Home</a></li>
+                <li><a href="./About">About</a></li>
+                <li><a href="./ShoppingList">Shoppinglist</a></li>
+                <li><a href="./Login">Login</a></li>
+                <li><a href="./Search">Search</a></li>
                 <li>
                 <div class="dropdown">
                     <button class="dropbtn">More
@@ -36,9 +36,9 @@
       </header>
     <div class="WhiteBox">
         <div class="GreyBox">
-            <form class="example" method="post" th:action="@{/searchitem}" th:object="${item}">
+            <form class="example" method="post" th:action="@{/Searchitem}" th:object="${item}">
                 <input type="text" th:field=*{name} placeholder="Search.." name="search">
-                <button type="submit"><i class="fa fa-search"></i></button>
+                <button type="submit"><i class="fa fa-search"></i>Search</button>
             </form>
         <table id="myTable" class="myTable">
             <tr>

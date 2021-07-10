@@ -12,9 +12,9 @@
         <table id="links" class="Links">
             <thead>
                 <tr>
-                    <th><a href="/Home.html">Home</a></th> <!-- may have different home page-->
-                    <th><a href="/About.html">About</a></th>
-                    <th><a href="/shoppingList">Shopping List</a></th>
+                    <th><a href="/Home">Home</a></th> <!-- may have different home page-->
+                    <th><a href="/About">About</a></th>
+                    <th><a href="/ShoppingList">Shopping List</a></th>
                     <th><a href="/Login">Login</a></th>
                     <th><a href="/Search">Search</a></th>
                 </tr>
@@ -43,10 +43,10 @@
                             <td th:utext="${record.getDescription()}"></td>
                             <td th:utext="${record.getPrice()}"></td>
                             <td th:utext="${record.getStock()}"></td>
-                            <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
+                            <form action="#" method="post" th:action="@{/DELETEmp/{id}(id=${record.getID()})}">
                                 <td><input type="submit" class="btnDelete" value="DELETE"></td>
                             </form>
-                            <form action="#" method="post" th:action="@{/UPDATE/{id}(id=${record.getID()})}">
+                            <form action="#" method="post" th:action="@{/UPDATEmp/{id}(id=${record.getID()})}">
                                 <td><input type="submit" class="btnUpdate" value="UPDATE"></td>
                             </form> <!-- impliment update-->
                         </tr>

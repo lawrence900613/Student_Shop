@@ -42,6 +42,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Array; //this fix 
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -70,12 +71,17 @@ public class Main {
     return "home";  //basic landing of user
   }
 
+  @GetMapping( path = "/About")
+  String about() {
+    return "About";  
+  }
+
  @GetMapping(path ="/Home/{id}")
   public String landingSpecialized(@PathVariable("id") Integer recieveID, Map<String, Object> model) {
     
     try (Connection connection = dataSource.getConnection()){
       Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM DBNAME"); //change name
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + recieveID); 
       
       User output = new User(); // store data
 
@@ -89,14 +95,12 @@ public class Main {
       }
 
       switch(output.getRole()){
-        case "Seller":
+        case "seller":
           return "homeSeller";
-        case "Customer":
+        case "customer":
           return "home";
         case "Guest":
-          return "home"; //??
-        case "Admin":
-          return "homeAdmin"; //??
+          return "home"; //?? Guest ID SETUP
       }
 
      throw new Exception("testing"); //!!!!!!!!!!!!!!!!!!!!
@@ -109,21 +113,25 @@ public class Main {
   }
   
 
-@GetMapping(path = "/myPage/{id}")
+@GetMapping(path = "/MyPage/{id}")
 public String myPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
 
   try (Connection connection = dataSource.getConnection()){
     Statement stmt = connection.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT * FROM DBNAME WHERE ID =" + recieveID); //change name
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE ID =" + recieveID); //change name
     
-    User output = new User(); // store data
+    Account output = new Account(); // store data
 
     if(recieveID == (rs.getInt("id"))){
-      output.setName("" + rs.getObject("Username"));
+      output.setUsername("" + rs.getObject("Username"));
       output.setRole("" + rs.getObject("Role"));
       output.setID(rs.getInt("id"));
-      //output.setSellingList(rs.getArray("SellingList")); //not sure
-      model.put("dblist", rs.getObject("SellingList"));
+      Array temp = rs.getArray("SellingList");
+      if(temp != null){
+        Integer[] temp2 = (Integer[]) temp.getArray();
+        output.setSellingList(temp2);
+      }
+      
       model.put("ret", output);
       }
 
@@ -138,31 +146,30 @@ public String myPage(@PathVariable("id") Integer recieveID, Map<String, Object> 
 }
 
 
-@GetMapping(path = "/myPage/add/{id}")
+@GetMapping(path = "/MyPage/add/{id}")
 public String addPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
-  return "/add";
+  return "/add"; // NEED ADDING PAGE -- currently add on home seller
 }
 
-@GetMapping(path ="/homeSeller")
-public String test() throws Exception{
-  return "homeSeller";
-}
+@GetMapping(path = "/HomeSeller")
+  public String getHomeSellerNOID(Map<String, Object> model){
+    Item item = new Item();
+    model.put("Item", item);
+    return "homeSeller"; 
+  }
 
-@PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String handleNewItem(Map<String, Object> model, Items item, @RequestParam("file") MultipartFile file) throws Exception{
+@PostMapping(path = "/afterSubmitNewItem", 
+consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200), image)");
-      if (!file.isEmpty()) {
-        byte[] fileBytes = file.getBytes();
-        item.setImage(fileBytes);
-      }
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price numeric, Stock Integer)");
       //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (name, category, description, image) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "','" + item.getImage() +"')";
+      String sql = "INSERT INTO Items (Name, Category, Description, Price, Stock) VALUES ('" + item.getName() +"','"+item.getCategory() + "','" + item.getDescription() + "','" + item.getPrice() + "','" + item.getStock() + "')";
       stmt.executeUpdate(sql);
-      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
-      return "redirect:/itemAdd/success";
+      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getPrice()+" "+ item.getStock());
+      return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"
   }
   catch (Exception e) {
     model.put("message", e.getMessage());
@@ -171,103 +178,22 @@ public String test() throws Exception{
 }
 
 
-
-@GetMapping(path="/shoppingList")
-public String updateShoppingList(Map<String, Object> model) throws Exception{
-  try (Connection connection = dataSource.getConnection()) {
-    Statement stmt = connection.createStatement();
-    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS recs (id serial, Name varchar(50), Description varchar(100), Price real)");
-    ResultSet rs = stmt.executeQuery("SELECT * FROM db");
-    ArrayList<Item> output2 = new ArrayList<Item>();
-    while(rs.next()){
-      Item output = new Item();
-      output.setName("" + rs.getObject("Name"));
-      output.setDescription("" + rs.getObject("Description"));
-      output.setPrice(rs.getDouble("Price"));
-      output.setID(rs.getInt("id"));
-
-      output2.add(output);
-    }  
-
-    model.put("records", output2);
-    return "View";
-  }catch (Exception e) {
-    model.put("message", e.getMessage());
-    return "error";
-  }
-}
-
 @PostMapping(
-  path = "/DELETE/{id}",
+  path = "/DELETEsp/{id}",
   consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
 )
-public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception {
+public String handleDeleteButtonForShoppingList(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception {
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
-    stmt.executeUpdate("DELETE FROM DBNAME WHERE id=" + recID + ";"); //chnage dbname
-    return "redirect:/rectangle/successD"; // sure u wanna redirect?
+    stmt.executeUpdate("DELETE FROM DBNAME WHERE id=" + recID + ";"); //THIS NEEDS TO GO INTO USER ARRAY TO DELETE NUMBER
+    return "redirect:/successDeleteShoppingList";
   } catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
   }
-
 }
 
-  @PostMapping( //create update handle !!!!!!!!!!!
-    path = "/UPDATE/{id}",
-    consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
-  )
-  public String handleUpdateButton(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception {
-    try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM DBNAME WHERE ID =" + recieveID); //chnage dbname
-
-      Item output = new Item();
-      output.setName("" + rs.getObject("Name"));
-      output.setDescription("" + rs.getObject("Description"));
-      output.setPrice(rs.getDouble("Price"));
-      output.setStock(rs.getInt("Stock"));
-      output.setID(rs.getInt("id"));
-
-      model.put("ret",output);
-
-      return "/update"; // sure u wanna redirect?
-    } catch (Exception e) {
-      model.put("message", e.getMessage());
-      return "error";
-    }
-
-  }
-  
-
-@GetMapping(path = "/myPage/{id}")
-public String myPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
-
-  try (Connection connection = dataSource.getConnection()){
-    Statement stmt = connection.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT * FROM DBNAME WHERE ID =" + recieveID); //change name
-    
-    User output = new User(); // store data
-
-    if(recieveID == (rs.getInt("id"))){
-      output.setName("" + rs.getObject("Username"));
-      output.setRole("" + rs.getObject("Role"));
-      output.setID(rs.getInt("id"));
-      //output.setSellingList(rs.getArray("SellingList")); //not sure
-      model.put("dblist", rs.getObject("SellingList"));
-      model.put("ret", output);
-      }
-
-      return "/myPage";
-    }
-
-
-  catch (Exception e) {
-    model.put("message", e.getMessage());
-    return "error";
-  }
-}
-
+<<<<<<< HEAD
 
 @GetMapping(path = "/myPage/add/{id}")
 public String addPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
@@ -305,23 +231,39 @@ public String test() throws Exception{
 
 @GetMapping(path="/shoppingList")
 public String updateShoppingList(Map<String, Object> model) throws Exception{
+=======
+@GetMapping(path="/ShoppingList")
+public String getShoppingListNoID(Map<String, Object> model) throws Exception{
+  return "shoppingList";
+}
+
+ 
+@GetMapping(path="/ShoppingList/{id}")
+public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception{
+>>>>>>> master
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
-    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS recs (id serial, Name varchar(50), Description varchar(100), Price real)");
-    ResultSet rs = stmt.executeQuery("SELECT * FROM items");
-    ArrayList<Item> output2 = new ArrayList<Item>();
-    while(rs.next()){
-      Item output = new Item();
-      output.setName("" + rs.getObject("Name"));
-      output.setDescription("" + rs.getObject("Description"));
-      output.setPrice(rs.getDouble("Price"));
-      output.setID(rs.getInt("id"));
-
-      output2.add(output);
-    }  
-
-    model.put("records", output2);
-    return "View";
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + recID);
+    Account outputAcc = new Account();
+    Array temp = rs.getArray("ShoppingList");
+    outputAcc.setID(rs.getInt("ID"));
+    Integer temp2[] = {};
+    if(temp != null){
+      temp2 = (Integer[]) temp.getArray();
+    }
+    Integer[] tempArr = temp2;
+    ArrayList<Item> storeItem = new ArrayList<Item>();
+    for(int i = 0; i < tempArr.length; i++){
+      ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //if ID has been deleted we need to move on ***
+      Item outputItem = new Item();
+      outputItem.setName(rs2.getString("Name"));
+      outputItem.setDescription(rs2.getString("Description"));
+      outputItem.setPrice(rs2.getDouble("Price"));
+      outputItem.setID(rs2.getInt("ID"));
+      storeItem.add(outputItem);
+    }
+    model.put("records", storeItem); //iterate all shopping list item and link them to respective page ***
+    return "shoppingList";
   }catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
@@ -329,29 +271,28 @@ public String updateShoppingList(Map<String, Object> model) throws Exception{
 }
 
 @PostMapping(
-  path = "/DELETE/{id}",
+  path = "/DELETEmp/{id}",
   consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
 )
-public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception {
+public String handleDeleteButtonForMyPage(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception {
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
-    stmt.executeUpdate("DELETE FROM DBNAME WHERE id=" + recID + ";"); //chnage dbname
-    return "redirect:/rectangle/successD"; // sure u wanna redirect?
+    stmt.executeUpdate("DELETE FROM Items WHERE id=" + recID);
+    return "redirect:/successDeleteMyPage";
   } catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
   }
-
 }
 
   @PostMapping( //create update handle !!!!!!!!!!!
-    path = "/UPDATE/{id}",
+    path = "/UPDATEmp/{id}",
     consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
   )
-  public String handleUpdateButton(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception {
+  public String handleUpdateButtonforMyPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM DBNAME WHERE ID =" + recieveID); //chnage dbname
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE ID =" + recieveID);
 
       Item output = new Item();
       output.setName("" + rs.getObject("Name"));
@@ -362,7 +303,7 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
 
       model.put("ret",output);
 
-      return "/update"; // sure u wanna redirect?
+      return "/update"; // return to correct return page 
     } catch (Exception e) {
       model.put("message", e.getMessage());
       return "error";
@@ -370,10 +311,8 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
 
   }
 
-
-
   @GetMapping(
-    path = "/login"
+    path = "/Login"
   )
   public String getLoginForm(Map<String, Object> model) {
     Account account = new Account();
@@ -382,24 +321,24 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
   }
 
   @PostMapping(
-    path = "/login",
+    path = "/Login",
     consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
   )
   public String handleUserLogin(Map<String, Object> model, Account account) throws Exception {
     try(Connection connection = dataSource.getConnection()) {
       System.out.println(account.getRole());
       Statement stmt = connection.createStatement();
-      String sql = "SELECT * FROM Account WHERE username ='"+account.getUsername()+"'AND password ='"+account.getPassword() + "' ";
+      String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
       ResultSet rs = stmt.executeQuery(sql);
       if(rs.next()){
-        String role = rs.getString("role");
+        String role = rs.getString("Role");
         if(role.equals("customer")){
           System.out.println(account.getRole());
           System.out.println("Success");
-          return "redirect:/home";
+          return "redirect:/Home";
         }else{
           System.out.println("Success123");
-          return "redirect:/homeSeller";
+          return "redirect:/HomeSeller";
         }
       }
       return "login";
@@ -410,7 +349,7 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
   }
 
   @GetMapping(
-    path = "/create"
+    path = "/Create"
   )
    String getNewAcc(Map<String, Object> model) {
      Account account = new Account();
@@ -419,24 +358,24 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
    }
 
   @PostMapping(
-    path = "/create",
+    path = "/Create",
     consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
   )
   public String handleCreate(Map<String, Object> model, Account account) throws Exception {
     System.out.println(account.getUsername());
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      String sql = "SELECT * FROM Account WHERE username ='"+account.getUsername()+"'AND password ='"+account.getPassword() + "' ";
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Accounts (Id serial, Username varchar(20), Password varchar(16), Role varchar(16),Shoppinglist Integer[],Sellinglist Integer[])");
+      String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+ "' ";
       ResultSet rs = stmt.executeQuery(sql);
       if(rs.next()){
-        return "accounterror";
+        return "AccountError";
       }else{
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Account (username varchar(20), password varchar(16), role varchar(16))");
-        sql = "INSERT INTO Account (username, password,role) VALUES ('" + account.getUsername() + "','" + account.getPassword() + "','" + account.getRole() + "')";
+        sql = "INSERT INTO Accounts (Username, Password,Role) VALUES ('" + account.getUsername() + "','" + account.getPassword() + "','" + account.getRole() + "')";
         stmt.executeUpdate(sql);
       }
-      
-      return "success2";
+
+      return "SuccessCreate";
     }
     catch (Exception e) {
       model.put("message", e.getMessage());
@@ -445,7 +384,7 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
   }
 
 @GetMapping(
-  path = "/login/success"
+  path = "/Login/success"
 )
 String getLoginSuccess() {
   return "success";
@@ -472,14 +411,7 @@ String getLoginSuccess() {
     }
   }
 
-
-  @GetMapping(path = "/sellerHome")
-    public String getNewItem(Map<String, Object> model){
-      Items newItem = new Items();    //creates a new empty Item object
-      model.put("item", newItem);
-      return "homeSeller";
-    }
-  @GetMapping(path = "/search")
+  @GetMapping(path = "/Search")
     public String getSearch(Map<String, Object> model){
       Searchname item = new Searchname() ;   //creates a new empty Item object
       model.put("item", item);
@@ -487,7 +419,7 @@ String getLoginSuccess() {
 
     }
 
-  @PostMapping(path = "/searchitem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  @PostMapping(path = "/Searchitem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
   public String searchItem(Map<String, Object> model, Searchname item) throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
@@ -512,7 +444,7 @@ String getLoginSuccess() {
       }
     }
     model.put("product", output);
-    return "redirect:/search";
+    return "redirect:/Search";
 
   }
   catch (Exception e) {
@@ -522,14 +454,7 @@ String getLoginSuccess() {
 
 }
 
-@GetMapping(path = "/success/search")
-public String getsearchagain(Map<String, Object> model){
-  Searchname item = new Searchname() ;   //creates a new empty Item object
-  model.put("item", item);
-  return "search"; 
-}
-
-@GetMapping(path = "/success/search")
+@GetMapping(path = "/Success/search")
 public String getsearchagain(Map<String, Object> model){
   Searchname item = new Searchname() ;   //creates a new empty Item object
   model.put("item", item);
@@ -537,7 +462,7 @@ public String getsearchagain(Map<String, Object> model){
 }
 
 
-  @GetMapping("/itemAdd/success")
+  @GetMapping("/ItemAdd/success")
   public String itemAddedSuccess(){
     return "success";
   }
@@ -545,8 +470,8 @@ public String getsearchagain(Map<String, Object> model){
 
 
 
-  @GetMapping(path = "/home")
-    public String getmain(Map<String, Object> model){
+  @GetMapping(path = "/Home")
+    public String getHomeNOID(Map<String, Object> model){
       return "home"; 
     }
 

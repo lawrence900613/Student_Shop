@@ -4,7 +4,7 @@ public class Item {
     private String Name;
     private String Description;
     private String Category;
-    private Double Price;
+    private float Price;
     private Integer ID;
     private Integer Stock;
 
@@ -20,7 +20,7 @@ public class Item {
         return this.Category;
     }
 
-    public Double getPrice() {
+    public Float getPrice() {
         return this.Price;
     }
 
@@ -44,7 +44,7 @@ public class Item {
         this.Category = c;
     }
 
-    public void setPrice(Double p) {
+    public void setPrice(Float p) {
         this.Price = p;
     }
 

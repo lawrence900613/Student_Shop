@@ -164,7 +164,7 @@ consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price numeric, Stock Integer)");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, Stock Integer)");
       //line below, item.getName etc.. all from parameters
       String sql = "INSERT INTO Items (Name, Category, Description, Price, Stock) VALUES ('" + item.getName() +"','"+item.getCategory() + "','" + item.getDescription() + "','" + item.getPrice() + "','" + item.getStock() + "')";
       stmt.executeUpdate(sql);
@@ -218,7 +218,7 @@ public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Obj
       Item outputItem = new Item();
       outputItem.setName(rs2.getString("Name"));
       outputItem.setDescription(rs2.getString("Description"));
-      outputItem.setPrice(rs2.getDouble("Price"));
+      outputItem.setPrice(rs2.getFloat("Price"));
       outputItem.setID(rs2.getInt("ID"));
       storeItem.add(outputItem);
     }
@@ -257,7 +257,7 @@ public String handleDeleteButtonForMyPage(@PathVariable("id") Integer recID, Map
       Item output = new Item();
       output.setName("" + rs.getObject("Name"));
       output.setDescription("" + rs.getObject("Description"));
-      output.setPrice(rs.getDouble("Price"));
+      output.setPrice(rs.getFloat("Price"));
       output.setStock(rs.getInt("Stock"));
       output.setID(rs.getInt("id"));
 
@@ -397,7 +397,7 @@ String getLoginSuccess() {
         Item product = new Item();
         product.setName(rs.getString("name"));
         product.setDescription(rs.getString("description"));
-        product.setPrice(rs.getDouble("price"));
+        product.setPrice(rs.getFloat("price"));
         product.setStock(rs.getInt("stock"));
         product.setID(rs.getInt("id"));
         output.add(product);

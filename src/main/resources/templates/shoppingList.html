@@ -12,11 +12,11 @@
         <table id="links" class="Links">
             <thead>
                 <tr>
-                    <th><a href="/Home.html">Home</a></th>
-                    <th><a href="/About.html">About</a></th>
-                    <th><a href="/shoppingList">Shopping List</a></th>
+                    <th><a href="/Home">Home</a></th>
+                    <th><a href="/About">About</a></th>
+                    <th><a href="/ShoppingList">Shopping List</a></th>
                     <th><a href="/Login">Login</a></th>
-                    <th><a href="/Browse">Browse</a></th>
+                    <th><a href="/Search">Search</a></th>
                     
                 </tr>
             </thead>
@@ -45,11 +45,11 @@
                             <td> image + This is the first test </td>
                             <td> $420 </td>
 
-                            <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
+                            <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}">
                                 <td><input type="submit" class="btnDelete" value="DELETE"></td>
                             </form>
 
-                            <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
+                            <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}"> <!-- buy button to implement-->
                                 <td><input type="submit" class="btnBUY" value="BUY"></td>
                             </form>
                         </tr>
@@ -64,11 +64,11 @@
                             <td> This is the first test2 </td>
                             <td> $42022 </td>
 
-                            <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
+                            <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}">
                                 <td><input type="submit" class="btnDelete" value="DELETE"></td>
                             </form>
 
-                            <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
+                            <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}">
                                 <td><input type="submit" class="btnBUY" value="BUY"></td>
                             </form>
                         </tr>

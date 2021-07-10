@@ -40,7 +40,7 @@ body{
     position:relative;
     display: block;
     overflow: hidden
-  
+
   }
   
   .WhiteBox{
@@ -71,11 +71,13 @@ body{
   
   .TableFormat{
     width:100%;
+
     border-collapse: collapse;
     border: 2px solid #bfbebe;
     text-align: left;
   }
   
+
   .Textbox{
     border: 1.5px solid #d7dadb;
     width:85px;
@@ -90,7 +92,7 @@ body{
     width:75px;
     font-weight: 700;
   }
-  
+
   .RowOne{
     background-color: #dddddd;
   }
@@ -119,5 +121,22 @@ body{
     font-size: 20px;
   
   }
+
   
   
+
+
+  .updateTxt{
+    width:100px;
+    height: 30px;
+    padding: 5px;
+  }
+
+  .textarea{
+    width:200px;
+    height:100px;
+
+  }
+  
+  
+

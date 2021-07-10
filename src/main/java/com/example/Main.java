@@ -65,7 +65,7 @@ public class Main {
 
   @RequestMapping("/")
   String landing() {
-    return "login";  //basic landing of user
+    return "home";  //basic landing of user
   }
 
  @GetMapping(path ="/Home/{id}")
@@ -104,6 +104,134 @@ public class Main {
       model.put("message", e.getMessage());
       return "error";
     }
+  }
+  
+
+@GetMapping(path = "/myPage/{id}")
+public String myPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
+
+  try (Connection connection = dataSource.getConnection()){
+    Statement stmt = connection.createStatement();
+    ResultSet rs = stmt.executeQuery("SELECT * FROM DBNAME WHERE ID =" + recieveID); //change name
+    
+    User output = new User(); // store data
+
+    if(recieveID == (rs.getInt("id"))){
+      output.setName("" + rs.getObject("Username"));
+      output.setRole("" + rs.getObject("Role"));
+      output.setID(rs.getInt("id"));
+      //output.setSellingList(rs.getArray("SellingList")); //not sure
+      model.put("dblist", rs.getObject("SellingList"));
+      model.put("ret", output);
+      }
+
+      return "/myPage";
+    }
+
+
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+
+@GetMapping(path = "/myPage/add/{id}")
+public String addPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
+  return "/add";
+}
+
+@GetMapping(path ="/homeSeller")
+public String test() throws Exception{
+  return "homeSeller";
+}
+
+@PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
+    //saving the data obtained into databse
+    try (Connection connection = dataSource.getConnection()) {
+      Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200))");
+      //line below, item.getName etc.. all from parameters
+      String sql = "INSERT INTO Items (name, category, description) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "')";
+      stmt.executeUpdate(sql);
+      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
+      return "redirect:/itemAdd/success";
+  }
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+
+
+
+@GetMapping(path="/shoppingList")
+public String updateShoppingList(Map<String, Object> model) throws Exception{
+  try (Connection connection = dataSource.getConnection()) {
+    Statement stmt = connection.createStatement();
+    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS recs (id serial, Name varchar(50), Description varchar(100), Price real)");
+    ResultSet rs = stmt.executeQuery("SELECT * FROM db");
+    ArrayList<Item> output2 = new ArrayList<Item>();
+    while(rs.next()){
+      Item output = new Item();
+      output.setName("" + rs.getObject("Name"));
+      output.setDescription("" + rs.getObject("Description"));
+      output.setPrice(rs.getDouble("Price"));
+      output.setID(rs.getInt("id"));
+
+      output2.add(output);
+    }  
+
+    model.put("records", output2);
+    return "View";
+  }catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+@PostMapping(
+  path = "/DELETE/{id}",
+  consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
+)
+public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception {
+  try (Connection connection = dataSource.getConnection()) {
+    Statement stmt = connection.createStatement();
+    stmt.executeUpdate("DELETE FROM DBNAME WHERE id=" + recID + ";"); //chnage dbname
+    return "redirect:/rectangle/successD"; // sure u wanna redirect?
+  } catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+
+}
+
+  @PostMapping( //create update handle !!!!!!!!!!!
+    path = "/UPDATE/{id}",
+    consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
+  )
+  public String handleUpdateButton(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception {
+    try (Connection connection = dataSource.getConnection()) {
+      Statement stmt = connection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM DBNAME WHERE ID =" + recieveID); //chnage dbname
+
+      Item output = new Item();
+      output.setName("" + rs.getObject("Name"));
+      output.setDescription("" + rs.getObject("Description"));
+      output.setPrice(rs.getDouble("Price"));
+      output.setStock(rs.getInt("Stock"));
+      output.setID(rs.getInt("id"));
+
+      model.put("ret",output);
+
+      return "/update"; // sure u wanna redirect?
+    } catch (Exception e) {
+      model.put("message", e.getMessage());
+      return "error";
+    }
+
   }
   
 
@@ -235,6 +363,7 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
   }
 
 
+
   @GetMapping(
     path = "/login"
   )
@@ -338,7 +467,7 @@ String getLoginSuccess() {
 
   @GetMapping(path = "/sellerHome")
     public String getNewItem(Map<String, Object> model){
-      Item newItem = new Item();    //creates a new empty Item object
+      sellerItem newItem = new sellerItem();    //creates a new empty Item object
       model.put("item", newItem);
       return "homeSeller";
     }
@@ -392,22 +521,15 @@ public String getsearchagain(Map<String, Object> model){
   return "search"; 
 }
 
+@GetMapping(path = "/success/search")
+public String getsearchagain(Map<String, Object> model){
+  Searchname item = new Searchname() ;   //creates a new empty Item object
+  model.put("item", item);
+  return "search"; 
+}
 
 
-  // public void getImageFromLaptop(java.awt.event.ActionEvent evt){
-  //   JFileChooser chooser = new JFileChooser();
-  //   chooser.showOpenDialog(null);
-  //   File f = chooser.getSelectedFile();
-  //   String filename = f.getAbsolutePath();
-  //   // System.out.println(filename);
-  //   // chooser.setText(filename);
-  //   // Image getAbsolutePath = null;
-  //   // ImageIcon icon = new ImageIcon(filename);
-  //   // Image image = icon.getImage().getScaledInstance(lbl_image.getWidth(), lbl_image.getHeight(), Image.SCALE_SMOOTH);
-  //   // lbl_image.setIcon(icon);
-  //   // System.out.println("Successfull completed import image");
 
-  // } 
 
 
   @GetMapping("/itemAdd/success")

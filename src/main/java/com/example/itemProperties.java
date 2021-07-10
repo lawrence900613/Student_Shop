@@ -1,10 +1,10 @@
 package com.example;
 
-//  class Item{
-//     private String name;
-//     private String category;
-//     private String description;
-//     private String url;
+ class sellerItem{
+    private String name;
+    private String category;
+    private String description;
+    private String url;
 
 //     public String getName(){
 //         return this.name;

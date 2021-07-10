@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
+import org.springframework.web.multipart.MultipartFile;
+
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -147,13 +149,17 @@ public String test() throws Exception{
 }
 
 @PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
+  public String handleNewItem(Map<String, Object> model, Items item, @RequestParam("file") MultipartFile file) throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200))");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200), image)");
+      if (!file.isEmpty()) {
+        byte[] fileBytes = file.getBytes();
+        item.setImage(fileBytes);
+      }
       //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (name, category, description) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "')";
+      String sql = "INSERT INTO Items (name, category, description, image) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "','" + item.getImage() +"')";
       stmt.executeUpdate(sql);
       System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
       return "redirect:/itemAdd/success";
@@ -163,7 +169,6 @@ public String test() throws Exception{
     return "error";
   }
 }
-
 
 
 
@@ -467,7 +472,7 @@ String getLoginSuccess() {
 
   @GetMapping(path = "/sellerHome")
     public String getNewItem(Map<String, Object> model){
-      sellerItem newItem = new sellerItem();    //creates a new empty Item object
+      Items newItem = new Items();    //creates a new empty Item object
       model.put("item", newItem);
       return "homeSeller";
     }

@@ -4,16 +4,12 @@ public class Account {
     private String username;
     private String password;
     private String role = "";
-    private Integer ID ;
 
 
     public String getUsername() {
         return username;
     }
 
-    public Integer getID() {
-        return username;
-    }
 
     public void setUsername(String username) {
         this.username = username;

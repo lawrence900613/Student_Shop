@@ -289,9 +289,15 @@ public String handleDeleteButton(@PathVariable("id") Integer recID, Map<String, 
     System.out.println(account.getUsername());
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Account (username varchar(20), password varchar(16), role varchar(16))");
-      String sql = "INSERT INTO Account (username, password,role) VALUES ('" + account.getUsername() + "','" + account.getPassword() + "','" + account.getRole() + "')";
-      stmt.executeUpdate(sql);
+      String sql = "SELECT * FROM Account WHERE username ='"+account.getUsername()+"'AND password ='"+account.getPassword() + "' ";
+      ResultSet rs = stmt.executeQuery(sql);
+      if(rs.next()){
+        return "accounterror";
+      }else{
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Account (username varchar(20), password varchar(16), role varchar(16))");
+        sql = "INSERT INTO Account (username, password,role) VALUES ('" + account.getUsername() + "','" + account.getPassword() + "','" + account.getRole() + "')";
+        stmt.executeUpdate(sql);
+      }
       
       return "success2";
     }

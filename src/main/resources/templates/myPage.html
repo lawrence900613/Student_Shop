@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lan="en">
+
+<head>
+    <link rel="stylesheet" href="../public/stylesheets/homeSeller.css">
+    <title>Your Page</title>
+</head>
+
+<body>
+    <div class="WhiteBox">
+
+        <table id="links" class="Links">
+            <thead>
+                <tr>
+                    <th><a href="/Home.html">Home</a></th> <!-- may have different home page-->
+                    <th><a href="/About.html">About</a></th>
+                    <th><a href="/shoppingList">Shopping List</a></th>
+                    <th><a href="/Login">Login</a></th>
+                    <th><a href="/Search">Search</a></th>
+                </tr>
+            </thead>
+        </table>
+
+        <h2>Welcome to your Page</h2>
+        <div class="GreyBox">
+            <h3>What you are selling:</h3>
+            <table class="TableFormat" id="Table">
+                <thead>
+                    <tr class="RowOne">
+                        <th>Name</th>
+                        <th></th>
+                        <th>Message</th>
+                        <th>Width (cm)</th>
+                        <th>Height (cm)</th>
+                        <th>Delete Row</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tbody>
+                        <tr th:each="record : ${dblist}" >
+                            <td th:utext="${record.getName()}"></td>
+                            <td th:utext="${record.getDescription()}"></td>
+                            <td th:utext="${record.getPrice()}"></td>
+                            <td th:utext="${record.getStock()}"></td>
+                            <form action="#" method="post" th:action="@{/DELETE/{id}(id=${record.getID()})}">
+                                <td><input type="submit" class="btnDelete" value="DELETE"></td>
+                            </form>
+                            <form action="#" method="post" th:action="@{/UPDATE/{id}(id=${record.getID()})}">
+                                <td><input type="submit" class="btnUpdate" value="UPDATE"></td>
+                            </form> <!-- impliment update-->
+                        </tr>
+                    </tbody>
+                </tbody>
+            </table>
+        
+        </div>
+    </div>
+</body>
+
+
+</html>

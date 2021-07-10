@@ -1,0 +1,205 @@
+body{
+    background-color:#a9182a;
+    margin: 0;
+  }
+  
+  .Links{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    padding: 10px;
+  
+  }
+  
+  .GreyBox{
+    background-color:#e9eff1;
+    border-radius: 5px;
+    padding: 13px;
+    border: 1px solid #cbcdce;
+    margin: auto;
+    max-width: 830px;
+    margin-left: 20px;
+    position:relative;
+    display: block;
+    margin-top: 30px;
+    height: auto;
+    overflow: auto;
+  }
+  
+  .WhiteBox{
+    border-top:#3a3834 20px solid;
+    border-bottom:#3a3834 35px solid ;
+    background-color:#ffffff;
+    padding-bottom: 20px;
+    margin:auto;
+    max-height: auto;
+    max-width: 1000px;
+    display: block
+    
+  }
+
+  table, th, td{
+    border-collapse: collapse;
+    padding: 5px;
+    border: 2px solid #bfbebe;
+    text-align: left;
+    font-weight: 700;
+  }
+
+  form.example input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 80%;
+    background: #f1f1f1;
+  }
+  
+  form.example button {
+    float: left;
+    width:30px;
+    height:42px;
+    padding: 10px;
+    background: #2196F3;
+    color: white;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none;
+    cursor: pointer;
+  }
+  
+  form.example button:hover {
+    background: #0b7dda;
+  }
+  
+  form.example::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  .container {
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  header {
+    background: #55d6aa;
+  }
+  
+  header::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+  
+  .logo {
+    float: left;
+    padding: 10px 0;
+  }
+  
+  nav {
+      float:left;
+  }
+  
+  nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  nav li {
+    display: inline-block;
+    margin-left: 30px;
+    padding-top: 23px;
+  
+    position: relative;
+  }
+  
+  nav a {
+    color: #444;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  
+  nav a:hover {
+    color: #000;
+  }
+  
+  nav a::before {
+    content: '';
+    display: block;
+    height: 5px;
+    background-color: #444;
+  
+    position: absolute;
+    top: 0;
+    width: 0%;
+  
+    transition: all ease-in-out 250ms;
+  }
+  
+  nav a:hover::before {
+    width: 100%;
+  }
+  
+    .container input[type=text] {
+      padding: 6px;
+      font-size: 17px;
+      border: none;
+    }
+  
+    .container .search-container button {
+      float: right;
+      padding: 6px 10px;
+      background: #ddd;
+      font-size: 17px;
+      border: none;
+      cursor: pointer;
+    }
+  
+    .dropdown .dropbtn {
+      font-size: 17px;  
+      border: none;
+      outline: none;
+      color: #444;
+      padding: 14px 16px;
+      background-color: inherit;
+      font-family: inherit;
+      margin: 0;
+    }
+    
+    .navbar a:hover, .dropdown:hover .dropbtn {
+      background-color: red;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+    
+    .dropdown-content a {
+      float: none;
+      color: black;
+      padding-top: 16px;
+      text-decoration: none;
+      text-transform: uppercase;
+      display: block;
+      text-align: left;
+    }
+    
+    .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+    .dropdown-content a:hover:before { 
+      width: 50%;
+    }
+    
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }

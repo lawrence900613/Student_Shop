@@ -2,7 +2,7 @@
 <html lan="en">
 
 <head>
-    <link rel="stylesheet" href="./stylesheets/homeSeller.css">
+    <link rel="stylesheet" href="../stylesheets/homeSeller.css">
     <title>Home: Seller</title>
 </head>
 
@@ -12,11 +12,11 @@
         <table id="links" class="Links">
             <thead>
                 <tr>
-                    <th><a href="/Home.html">Home</a></th>
-                    <th><a href="/About">About</a></th>
+                    <th><a href="/Home.html">Home</a></th> <!-- may have different home page-->
+                    <th><a href="/About.html">About</a></th>
                     <th><a href="/shoppingList">Shopping List</a></th>
                     <th><a href="/Login">Login</a></th>
-                    <th><a href="/Browse">Browse</a></th>
+                    <th><a href="/Search">Search</a></th>
                 </tr>
             </thead>
         </table>
@@ -24,20 +24,20 @@
         <h2>Welcome to the Seller Landing Page</h2>
         <div class="GreyBox">
             <h3>What you can do:</h3>
-            <list id="definition">
-                <ul>
-                    <li><a href="/page.html">View Seller Home Page</a></li>
-                    <li><a href="/page/add.html">Sell an item</a></li>
-                    <li><a href="/msg.html">Check customer messages</a></li>
+            <!-- <list id="definition">
+                <ul th:each="record : ${ret}">
+                    <li><a href="#" th:href="@{/myPage/{uid}(uid=${record.getID()})}" th:utext=" 'View '+ ${record.getUsername()} + ' Page'"></a></li>
+                    <li><a href="#" th:href="@{/myPage/add/{uid}(uid=${record.getID()})}">Sell an item</a></li>
+                    <li><a href="/msg">Check customer messages</a></li> 
                 </ul>
-            </list>
+            </list> -->
         
         </div>
 <!-- Code for adding and accessing into the database -->
-    <h1>Adding new item in Database</h1>
-    <form action="#" method="post" th:action="@{/afterSubmitNewItem}" th:object="${item}">
-        <input type="text" th:field=*{name} placeholder="Name"><br>
-        <select th:field = *{category}>
+    <!-- <h1>Adding new item in Database</h1>
+    <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${item}">
+        <input type="text" th:field=*{Name} placeholder="Name"><br>
+        <select th:field = *{Category}>
             <option value="electronics" selected>Electronics</option>
             <option value="food">Food</option>
             <option value="kitchen">Kitchen</option>
@@ -45,17 +45,17 @@
         <textarea name="description" cols="30" rows="10" placeholder="Enter the description for the item" th:field = *{description}></textarea>
         <br>
        
-        <input type="text" th:field = *{url} placeholder="Paste the URL of your picture">
+        <input type="text" th:field = *{url} placeholder="Paste the URL of your picture"> -->
         <!-- <button type="button" onclick="">Import Image</button> 
   -->
         
-        <br>
+        <!-- <br>
         <input type="submit" value="Add New Item">
-    </form>
+    </form> -->
 
 
 
-    </div>
+    <!-- </div> -->
 </body>
 
 

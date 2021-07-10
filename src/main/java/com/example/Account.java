@@ -3,27 +3,32 @@ package com.example;
 public class Account {
     private String username;
     private String password;
+    private String role = "";
+    private Integer ID ;
 
-    public Account() {
-        this.username = "";
-        this.password = "";
-    }
 
-    public Account(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public String getUser() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUser(String username) {
+    public Integer getID() {
+        return username;
+    }
+
+    public void setUsername(String username) {
         this.username = username;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public void setRole(String role){
+        this.role = role;
+    }
+
+    public String getRole() {
+        return this.role;
     }
 
     public void setPassword(String password) {

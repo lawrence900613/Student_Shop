@@ -35,11 +35,19 @@ body{
     padding: 13px;
     border: 1px solid #cbcdce;
     margin: auto;
+<<<<<<< HEAD
     
     margin-left: 20px;
     position:relative;
     display: block;
     overflow: auto;
+=======
+    max-width: 830px;
+    margin-left: 20px;
+    position:relative;
+    display: block;
+    overflow: hidden
+>>>>>>> 37c71448bf1a824a63556f30017d9c815d1d8a10
   
   }
   
@@ -70,11 +78,32 @@ body{
   }
   
   .TableFormat{
+<<<<<<< HEAD
+=======
+    width:100%;
+>>>>>>> 37c71448bf1a824a63556f30017d9c815d1d8a10
     border-collapse: collapse;
     border: 2px solid #bfbebe;
     text-align: left;
   }
   
+<<<<<<< HEAD
+=======
+  .Textbox{
+    border: 1.5px solid #d7dadb;
+    width:85px;
+    height:30px;
+    margin-top: 5px;
+  }
+  
+  .TextboxP{
+    background: none;
+    border:none;
+    appearance: none;
+    width:75px;
+    font-weight: 700;
+  }
+>>>>>>> 37c71448bf1a824a63556f30017d9c815d1d8a10
   
   .RowOne{
     background-color: #dddddd;
@@ -104,6 +133,7 @@ body{
     font-size: 20px;
   
   }
+<<<<<<< HEAD
 
   .updateTxt{
     width:100px;
@@ -118,3 +148,7 @@ body{
   }
   
   
+=======
+  
+  
+>>>>>>> 37c71448bf1a824a63556f30017d9c815d1d8a10

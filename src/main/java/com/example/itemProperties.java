@@ -1,6 +1,6 @@
 package com.example;
 
- class sellerItem{
+ class Items{
     private String name;
     private String category;
     private String description;

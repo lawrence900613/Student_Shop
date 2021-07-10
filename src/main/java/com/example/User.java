@@ -6,8 +6,10 @@ public class User {
     private String Password;
     private String Role; //Seller , Customer , Admin, Guest?
     private Integer ID;
+    private Integer testvar2;
+    private Integer testvar;
     //private Item[] SellingList;
-    //private Item[] ShoppingList; //chnage to array  -= testing for JP branch =- (inserted conflict here) updated in git lab
+    //private Item[] ShoppingList; // something else
 
     public String getUsername() {
         return this.Username;

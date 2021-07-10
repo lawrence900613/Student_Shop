@@ -193,45 +193,6 @@ public String handleDeleteButtonForShoppingList(@PathVariable("id") Integer recI
   }
 }
 
-<<<<<<< HEAD
-
-@GetMapping(path = "/myPage/add/{id}")
-public String addPage(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
-  return "/add";
-}
-
-@GetMapping(path ="/homeSeller")
-public String test() throws Exception{
-  return "homeSeller";
-}
-
-@PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
-    //saving the data obtained into databse
-    try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (name varchar(80), category varchar(20), description varchar(200), image)");
-      if (!file.isEmpty()) {
-        byte[] fileBytes = file.getBytes();
-        item.setImage(fileBytes);
-      }
-      //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (name, category, description, image) VALUES ('" + item.getName()+"','"+item.getCategory() + "','" + item.getDescription()+ "','" + item.getImage() +"')";
-      stmt.executeUpdate(sql);
-      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getDescription());
-      return "redirect:/itemAdd/success";
-  }
-  catch (Exception e) {
-    model.put("message", e.getMessage());
-    return "error";
-  }
-}
-
-
-
-@GetMapping(path="/shoppingList")
-public String updateShoppingList(Map<String, Object> model) throws Exception{
-=======
 @GetMapping(path="/ShoppingList")
 public String getShoppingListNoID(Map<String, Object> model) throws Exception{
   return "shoppingList";
@@ -240,7 +201,6 @@ public String getShoppingListNoID(Map<String, Object> model) throws Exception{
  
 @GetMapping(path="/ShoppingList/{id}")
 public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception{
->>>>>>> master
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
     ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + recID);

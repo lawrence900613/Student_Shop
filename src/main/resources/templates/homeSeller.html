@@ -35,7 +35,7 @@
         </div>
 <!-- Code for adding and accessing into the database -->
     <h1>Adding new item in Database</h1>
-    <form action="#" method="post" th:action="@{/afterSubmitNewItem}" th:object="${item}">
+    <form action="#" method="post" th:action="@{/afterSubmitNewItem}" th:object="${item}" enctype="multipart/form-data">
         <input type="text" th:field=*{name} placeholder="Name"><br>
         <select th:field = *{category}>
             <option value="electronics" selected>Electronics</option>
@@ -49,8 +49,6 @@
         <input type="submit" value="Add New Item">
 
         
-        <br>
-        <input type="submit" value="Add New Item">
     </form>
 
 

@@ -328,7 +328,7 @@ String getLoginSuccess() {
 
   @GetMapping(path = "/sellerHome")
     public String getNewItem(Map<String, Object> model){
-      sellerItem newItem = new sellerItem();    //creates a new empty Item object
+      Items newItem = new Items();    //creates a new empty Item object
       model.put("item", newItem);
       return "homeSeller";
     }

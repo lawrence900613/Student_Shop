@@ -34,7 +34,7 @@
             </list> -->
              
             <h1>Adding new item in Database</h1>
-            <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${Item}">
+            <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${Item}" enctype="multipart/form-data">
                 <input type="text" th:field=*{Name} placeholder="Name"><br>
                 <select th:field = *{Category}>
                     <option value="electronics" selected>Electronics</option>
@@ -43,7 +43,7 @@
                 </select><br>
                 <textarea name="description" cols="30" rows="10" placeholder="Enter the description for the item" th:field = *{Description}></textarea>
                 <input type="number" th:field=*{Price} step="any" placeholder="$00.00"><br>
-                <!-- <input type="file" name="file" id="file"  accept= "image/png, image/jpg"><br> -->
+                <input type="file" name="file" id="file"  accept= "image/*"><br>
                 <input type="number" th:field=*{Stock} placeholder="2"><br>
                 <br>
                 

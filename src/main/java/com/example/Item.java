@@ -25,9 +25,9 @@ public class Item {
         return this.Price;
     }
 
-    // public byte[] getImage(){
-    //     return this.Image;
-    // }
+    public byte[] getImage(){
+        return this.Image;
+    }
 
     public Integer getID() {
         return this.ID;
@@ -55,9 +55,9 @@ public class Item {
         this.Price = p;
     }
 
-    // public void setImage(byte[] image){
-    //     this.Image = image;
-    // }
+    public void setImage(byte[] image){
+        this.Image = image;
+    }
 
     public void setID(Integer i) {
         this.ID = i;

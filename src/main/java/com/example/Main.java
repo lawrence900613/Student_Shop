@@ -34,8 +34,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -160,18 +160,18 @@ public String addPage(@PathVariable("id") Integer recieveID, Map<String, Object>
 
 @PostMapping(path = "/afterSubmitNewItem", 
 consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item item) throws Exception{
+  public String handleNewItem(Map<String, Object> model, Item item, @RequestParam("file") MultipartFile file)  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float,  Stock Integer)");
-      // if (!file.isEmpty()) {
-      //   byte[] fileBytes = file.getBytes();
-      //   item.setImage(fileBytes);
-      // }
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float,  image bytea, Stock Integer)");
+      if (!file.isEmpty()) {
+        byte[] fileBytes = file.getBytes();
+        item.setImage(fileBytes);
+      }
       
       //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (Name, Category, Description, Price, Stock) VALUES ('" + item.getName() +"','"+item.getCategory() + "','" + item.getDescription() + "','" + item.getPrice() + "','" +  item.getStock() + "')";
+      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + item.getName() +"','"+item.getCategory() + "','" + item.getDescription() + "','" + item.getPrice() + "','" + item.getImage() + "','" +  item.getStock() + "')";
       stmt.executeUpdate(sql);
       System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getPrice()+" "+ item.getStock());
       return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"

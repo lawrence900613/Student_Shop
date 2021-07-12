@@ -159,7 +159,7 @@ public String addPage(@PathVariable("id") Integer recieveID, Map<String, Object>
   }
 
 @PostMapping(path = "/afterSubmitNewItem", 
-consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   public String handleNewItem(Map<String, Object> model, Item item, @RequestParam("file") MultipartFile file)  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {

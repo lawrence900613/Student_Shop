@@ -52,6 +52,16 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+
+
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+
+
 @Controller
 @SpringBootApplication
 public class Main {
@@ -158,8 +168,7 @@ public String addPage(@PathVariable("id") Integer recieveID, Map<String, Object>
     return "homeSeller"; 
   }
 
-@PostMapping(path = "/afterSubmitNewItem", 
-consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+@PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   public String handleNewItem(Map<String, Object> model, Item item, @RequestParam("file") MultipartFile file)  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
@@ -170,6 +179,9 @@ consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
         item.setImage(fileBytes);
       }
       
+        
+
+
       //line below, item.getName etc.. all from parameters
       String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + item.getName() +"','"+item.getCategory() + "','" + item.getDescription() + "','" + item.getPrice() + "','" + item.getImage() + "','" +  item.getStock() + "')";
       stmt.executeUpdate(sql);

@@ -37,33 +37,36 @@
     <div class="WhiteBox">
         <h2>Welcome to the Seller Landing Page</h2>
         <div class="GreyBox">
-            <h3>What you can do:</h3>
-            <!--
-            <list id="definition">
-                <ul th:each="record : ${ret}">
-                    <li><a href="#" th:href="@{/MyPage/{uid}(uid=${record.getID()})}" th:utext=" 'View '+ ${record.getUsername()} + ' Page'"></a></li>
-                    <li><a href="#" th:href="@{/MyPage/Add/{uid}(uid=${record.getID()})}">Sell an item</a></li>
-                    <li><a href="/Msg">Check customer messages</a></li> 
-                </ul>
-            </list> -->
-             
-            <h1>Adding new item in Database</h1>
-            <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${Item}" enctype="multipart/form-data">
-                <input type="text" th:field=*{Name} placeholder="Name"><br>
-                <select th:field = *{Category}>
-                    <option value="electronics" selected>Electronics</option>
-                    <option value="food">Food</option>
-                    <option value="kitchen">Kitchen</option>
-                </select><br>
-                <textarea name="description" cols="30" rows="10" placeholder="Enter the description for the item" th:field = *{Description}></textarea>
-                <input type="number" th:field=*{Price} step="any" placeholder="$00.00"><br>
-                <input type="file" name="file" id="file"  accept= "image/*"><br>
-                <input type="number" th:field=*{Stock} placeholder="2"><br>
-                <br>
-                
-                <input type="submit" value="Add New Item">
-            </form>
         
+             
+            <h1>Item For Sale</h1>
+            <div class="listingBox">
+          
+            <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${Item}" enctype="multipart/form-data">
+                
+                    <input type="text" th:field=*{Name} placeholder="Product Name" class="sameSize"><br><br>
+                    <select th:field = *{Category} class="itemCategory">
+                        <option value="" disabled selected hidden>Choose A Category</option>
+                        <option value="electronics" selected>Electronics</option>
+                        <option value="food">Food</option>
+                        <option value="kitchen">Kitchen</option>
+                    </select><br><br>
+                    <textarea name="description" cols="30" rows="10" style="width: 300px; height: 200px; font-size: 20px;" placeholder="Enter a Description of the Item" th:field = *{Description}></textarea><br><br>
+                    
+                    <input type="number" th:field=*{Price} step="any" placeholder="Price per Unit" class="sameSize"><br><br>
+                    <input type="number" th:field=*{Stock} placeholder="Number of Units in Stock" class="sameSize"><br>
+                    <p class="listingHeading">Upload Image of Item:</p>
+                    <input type="file" name="file" id="file"  accept= "image/*" class="sameSize"><br>
+                    <br>
+                    
+                    <input type="submit" value="Add New Item" class="sameSize">
+               
+            </form>
+          </div>
+          <div class="nextToListingBox">
+
+          </div>
+
         </div>
 
 </body>

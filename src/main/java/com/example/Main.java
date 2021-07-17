@@ -105,8 +105,8 @@ public class Main {
       }
 
       switch(output.getRole()){
-        case "seller":
-          return "homeSeller";
+        // case "seller":
+        //   return "homeSeller";
         case "customer":
           return "home";
         case "Guest":
@@ -150,35 +150,35 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
   }
 }
 
-@GetMapping(path = "/HomeSeller/{id}")
-  public String getHomeSellerNOID(@PathVariable("id") Integer recID, Map<String, Object> model){
-    try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT SellingList FROM Accounts WHERE ID =" + recID);
-      ArrayList<Item> storeItem = new ArrayList<Item>();
-      Array temp = rs.getArray("SellingList");
-      Integer temp2[] = {};
-      if(temp != null){
-        temp2 = (Integer[]) temp.getArray();
-      }
-      Integer[] tempArr = temp2;
-      for(int i = 0; i < tempArr.length; i++){
-        ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //implement move on when empty ID
-        Item outputItem = new Item();
-        outputItem.setName(rs2.getString("Name"));
-        outputItem.setCategory(rs2.getString("Category"));
-        outputItem.setStock(rs2.getInt("Stock"));
-        outputItem.setID(rs2.getInt("ID"));
-        storeItem.add(outputItem);
-      }
+// @GetMapping(path = "/HomeSeller/{id}")
+//   public String getHomeSellerNOID(@PathVariable("id") Integer recID, Map<String, Object> model){
+//     try (Connection connection = dataSource.getConnection()) {
+//       Statement stmt = connection.createStatement();
+//       ResultSet rs = stmt.executeQuery("SELECT SellingList FROM Accounts WHERE ID =" + recID);
+//       ArrayList<Item> storeItem = new ArrayList<Item>();
+//       Array temp = rs.getArray("SellingList");
+//       Integer temp2[] = {};
+//       if(temp != null){
+//         temp2 = (Integer[]) temp.getArray();
+//       }
+//       Integer[] tempArr = temp2;
+//       for(int i = 0; i < tempArr.length; i++){
+//         ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //implement move on when empty ID
+//         Item outputItem = new Item();
+//         outputItem.setName(rs2.getString("Name"));
+//         outputItem.setCategory(rs2.getString("Category"));
+//         outputItem.setStock(rs2.getInt("Stock"));
+//         outputItem.setID(rs2.getInt("ID"));
+//         storeItem.add(outputItem);
+//       }
 
-      model.put("records", storeItem);
-      return "homeSeller";
-    }catch (Exception e) {
-      model.put("message", e.getMessage());
-      return "error";
-    } 
-  }
+//       model.put("records", storeItem);
+//       return "homeSeller";
+//     }catch (Exception e) {
+//       model.put("message", e.getMessage());
+//       return "error";
+//     } 
+//   }
 
 @PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
   public String handleNewItem(Map<String, Object> model, Item item, @RequestParam("file") MultipartFile file)  throws Exception{
@@ -191,14 +191,12 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
         item.setImage(fileBytes);
       }
       
-        
-
-
+    
       //line below, item.getName etc.. all from parameters
       String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + item.getName() +"','"+item.getCategory() + "','" + item.getDescription() + "','" + item.getPrice() + "','" + item.getImage() + "','" +  item.getStock() + "')";
       stmt.executeUpdate(sql);
       System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getPrice()+" "+ item.getStock());
-      return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"
+      return "redirect:/HomeSeller"; //return "redirect :/itemAdd/success"
   }
   catch (Exception e) {
     model.put("message", e.getMessage());
@@ -317,11 +315,11 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
     try(Connection connection = dataSource.getConnection()) {
       System.out.println(account.getRole());
       Statement stmt = connection.createStatement();
-      String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
-      ResultSet rs = stmt.executeQuery(sql);
-      if(rs.next()){
-        String role = rs.getString("Role");
-        if(role.equals("customer")){
+        String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
+        ResultSet rs = stmt.executeQuery(sql);
+        if(rs.next()){
+          String role = rs.getString("Role");
+          if(role.equals("customer")){
           System.out.println(account.getRole());
           System.out.println("Success");
           return "redirect:/Home";

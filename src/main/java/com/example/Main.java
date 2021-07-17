@@ -133,16 +133,17 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
     Item output = new Item(); // store data
 
     if(recieveID == (rs.getInt("id"))){
-      output.setName("" + rs.getObject("Mame"));
+      output.setName("" + rs.getObject("Name"));
       output.setDescription("" + rs.getObject("Description"));
       output.setCategory("" + rs.getObject("Category"));
-      output.setPrice("" + rs.getFloat("Price"));
-      output.setStock("" + rs.getFloat("Stock"));
-      output.setImage("" + rs.getFloat("Image"));
+      output.setPrice(rs.getFloat("Price"));
+      output.setStock(rs.getInt("Stock"));
+      output.setImage( rs.getBytes("Image"));
       output.setID(rs.getInt("id"));  
     }
     model.put("ret", output);
     return "/myItem";
+  }
   catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
@@ -166,7 +167,7 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
         Item outputItem = new Item();
         outputItem.setName(rs2.getString("Name"));
         outputItem.setCategory(rs2.getString("Category"));
-        outputItem.setStock(rs2.getFloat("Stock"));
+        outputItem.setStock(rs2.getInt("Stock"));
         outputItem.setID(rs2.getInt("ID"));
         storeItem.add(outputItem);
       }
@@ -329,7 +330,7 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
           return "redirect:/HomeSeller";
         }
       }
-      return "login";
+      return "badlogin";
     } catch (Exception e) {
       model.put("message", e.getMessage());
       return "error";

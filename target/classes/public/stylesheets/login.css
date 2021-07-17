@@ -32,3 +32,8 @@ button {
 .container {
     padding: 16px;
 }
+
+.incorrectNotice{
+    background-color: rgb(252, 38, 38);
+    color: white;
+}

@@ -38,11 +38,31 @@
         <h2>Welcome to the Seller Landing Page</h2>
         <div class="GreyBox">
         
-             
-            <h1>Item For Sale</h1>
+            <h3>All Your Listed Items</h3>
+            <div>
+              <table class="TableFormat" id="Table">
+                <thead>
+                    <tr class="RowOne">
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tbody>
+                        <tr th:each="record : ${records}" >
+                            <td><a href="#" th:href="@{/myItem/{uid}(uid=${record.getID()})}" th:utext="${record.getName()}"></a></td>
+                            <td th:utext="${record.getCategory()}"></td>
+                            <td th:utext="${record.getStock()}"></td>
+                        </tr>
+                    </tbody>
+                </tbody>
+              </table>
+            </div>
+            <h3>Add an Item For Sale</h3>
             <div class="listingBox">
           
-            <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${Item}" enctype="multipart/form-data">
+              <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${Item}" enctype="multipart/form-data">
                 
                     <input type="text" th:field=*{Name} placeholder="Product Name" id="gettingName" class="sameSize" onkeyup="nameUpdate()"><br><br>
                     <select  th:field = *{Category} class="categoryBox">
@@ -83,9 +103,14 @@
 
           </div>
 
+<<<<<<< HEAD
         </div>
       </div>
 <script type="text/javascript" src="./homeSeller.js"></script>
+=======
+    </div>
+
+>>>>>>> master
 </body>
 
 

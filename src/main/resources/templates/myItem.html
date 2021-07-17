@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lan="en"> <!-- renamed to Item page, used to be myPage -->
+
+<head>
+    <link rel="stylesheet" href="../stylesheets/myPage.css">
+    <title>Your Page</title>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+          <h1 class="logo"></h1>
+          <nav>
+            <ul>
+              <li><a href="./Home">Home</a></li>
+              <li><a href="./About">About</a></li>
+              <li><a href="./ShoppingList">Shoppinglist</a></li>
+              <li><a href="./Login">Login</a></li>
+              <li><a href="./Search">Search</a></li>
+              <li>
+                <div class="dropdown">
+                    <button class="dropbtn">More
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#">Link 1</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                    </div>
+                    </li>
+              <li>
+            </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+    <div class="WhiteBox">
+
+        <h2>Item Profile Page</h2>
+        <div class="GreyBox">
+
+            <div id="colouredProfile" class="colouredProfile">
+                <!-- add your image here -->
+            </div>
+
+
+            <table th:each="record : ${ret}" class ="TableFormat">
+                
+                <tr>
+                    <th>Name</th>
+                    <td th:utext="${record.getName()}" id="nameIn"></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td th:utext="${record.getDescription()}" id="descriptionIn"></td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td th:utext="${record.getCategory()}" id="categoryIn"></td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td th:utext="${record.getPrice()}" id="priceIn"></td>
+                </tr>
+                <tr>
+                    <th>Stock</th>
+                    <td th:utext="${record.getStock()}" id="stockIn"></td>
+                </tr>
+            </table>
+
+            <input type="button" class="btn" value="Back" onclick="location.href='/homeSeller'">
+            
+            <form action="#" method="post" th:action="@{/DELETEmp/{id}(id=${record.getID()})}">
+                <input type="submit" class="btnDelete" value="DELETE"></td>
+            </form>
+            <form action="#" method="post" th:action="@{/UPDATEmp/{id}(id=${record.getID()})}"> <!-- not done working on updating-->
+                <input type="submit" class="btnUpdate" value="UPDATE"></td>
+            </form> 
+        
+        </div>
+    </div>
+</body>
+
+
+</html>

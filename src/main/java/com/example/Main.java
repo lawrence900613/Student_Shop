@@ -330,7 +330,7 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
           return "redirect:/HomeSeller";
         }
       }
-      return "login";
+      return "badlogin";
     } catch (Exception e) {
       model.put("message", e.getMessage());
       return "error";

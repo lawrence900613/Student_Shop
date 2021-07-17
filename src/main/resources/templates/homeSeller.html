@@ -44,16 +44,18 @@
           
             <form method="post" th:action="@{/afterSubmitNewItem}" th:object="${Item}" enctype="multipart/form-data">
                 
-                    <input type="text" th:field=*{Name} placeholder="Product Name" class="sameSize"><br><br>
-                    <select th:field = *{Category} class="itemCategory">
-                        <option value="" disabled selected hidden>Choose A Category</option>
-                        <option value="electronics" selected>Electronics</option>
+                    <input type="text" th:field=*{Name} placeholder="Product Name" id="gettingName" class="sameSize" onkeyup="nameUpdate()"><br><br>
+                    <select  th:field = *{Category} class="categoryBox">
+                        <option value=""  selected hidden style="color: gray;">Choose Category..</option>
+                        <option value="electronics" >Electronics</option>
                         <option value="food">Food</option>
                         <option value="kitchen">Kitchen</option>
                     </select><br><br>
-                    <textarea name="description" cols="30" rows="10" style="width: 300px; height: 200px; font-size: 20px;" placeholder="Enter a Description of the Item" th:field = *{Description}></textarea><br><br>
+
+                    <textarea name="description" onkeyup="descriptionUpdate()" cols="30" rows="10" id="gettingDescription" style="width: 300px; height: 200px; font-size: 20px;" placeholder="Enter a Description of the Item" th:field = *{Description}></textarea><br><br>
                     
-                    <input type="number" th:field=*{Price} step="any" placeholder="Price per Unit" class="sameSize"><br><br>
+
+                    <input type="number" th:field=*{Price} onkeyup="priceUpdate()" id="gettingPrice" step="any" value="Price per Unit" class="sameSize"><br><br>
                     <input type="number" th:field=*{Stock} placeholder="Number of Units in Stock" class="sameSize"><br>
                     <p class="listingHeading">Upload Image of Item:</p>
                     <input type="file" name="file" id="file"  accept= "image/*" class="sameSize"><br>
@@ -63,12 +65,27 @@
                
             </form>
           </div>
-          <div class="nextToListingBox">
+          <div class="nextToListingBox" >
+            <p style="font-size: 30px;">Preview</p>
+            <div class="pictureDiv">
+              <h1>THIS IS THE PLACEHOLDER FOR PICTURE</h1>
+            </div>
+                <br>
+            <div class="liveUpdate">
+              THis is the liveupdate section
+              <h3 id="titleplaceholder" class="listingsize" >Title</h3>
+              <h3 id="priceplaceholder" class="listingsize">Price</h3>
+              
+              <h3 class="listingsize">Details:</h3>
+              <p id="descriptionplaceholder" class="descriptionsize"></p>
+
+            </div>
 
           </div>
 
         </div>
-
+      </div>
+<script type="text/javascript" src="./homeSeller.js"></script>
 </body>
 
 

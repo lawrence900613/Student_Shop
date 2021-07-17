@@ -257,7 +257,8 @@ h2{
   display: block;
   margin-top: 30px;
   height: auto;
-  overflow: auto;
+  overflow: hidden;
+
 }
   
 .listingBox{
@@ -269,6 +270,7 @@ h2{
   padding-bottom: 35px;
   width: 350px;
   background-color: rgb(146, 167, 167);
+  float: left;
 
 }
 
@@ -282,14 +284,50 @@ h2{
   font-size: 20px;
 }
 
-  select:invalid{
-    color:gray
-  }
-  /* option{
-    color: black;
-  } */
+/* select option { color: black; }
 
+  select option:first-child { color: grey; }
+select.empty { color: grey; } */
+.categoryBox{
+  width: 310px;
+  height: 30px;
+  font-size: 20px;
+}
 
 .nextToListingBox{
+  border-radius: 5px;
+  /* position: relative; */
+  margin: 20px;
+  padding-top: 35px;
+  padding-left: 35px;
+  padding-bottom: 35px;
+  padding-right: 35px;
+  width: 800px;
+  background-color: rgb(146, 167, 167);
+  /* overflow: hidden; */
+  float: left;
+}
 
+.pictureDiv{
+  float: left;
+  border-radius: 5px;
+  width: 100%;
+  background-color: rgb(177, 207, 207);
+
+}
+
+.liveUpdate{
+  border-radius: 5px;
+  text-align: left;
+  width: 50%;
+  background-color: rgb(196, 156, 219);
+  float: left;
+  padding: 35px
+}
+.descriptionsize{
+  font-size: 16px;
+}
+
+.listingsize{
+  font-size: 20px;
 }

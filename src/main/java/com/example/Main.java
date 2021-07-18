@@ -150,11 +150,16 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
   }
 }
 
-@GetMapping(path = "/HomeSeller/{id}")
-  public String getHomeSellerNOID(@PathVariable("id") Integer recID, Map<String, Object> model){
+@GetMapping(path = {"/HomeSeller/{id}", "/HomeSeller"})
+  public String getHomeSellerWithID(@PathVariable (required = false) Integer id, Map<String, Object> model){
     try (Connection connection = dataSource.getConnection()) {
+      if(id == null){
+        Item in = new Item(); 
+        model.put("Item", in);
+        return "homeSeller";
+      }
       Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT SellingList FROM Accounts WHERE ID =" + recID);
+      ResultSet rs = stmt.executeQuery("SELECT SellingList FROM Accounts WHERE ID =" + id);
       ArrayList<Item> storeItem = new ArrayList<Item>();
       Array temp = rs.getArray("SellingList");
       Integer temp2[] = {};
@@ -172,6 +177,9 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
         storeItem.add(outputItem);
       }
 
+      Item in = new Item(); 
+      model.put("Item", in);
+
       model.put("records", storeItem);
       return "homeSeller";
     }catch (Exception e) {
@@ -180,23 +188,32 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
     } 
   }
 
+
 @PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item item, @RequestParam("file") MultipartFile file)  throws Exception{
+  public String handleNewItem(Map<String, Object> model, Item Item, @RequestParam("file") MultipartFile file)  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float,  image bytea, Stock Integer)");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
       if (!file.isEmpty()) {
         byte[] fileBytes = file.getBytes();
-        item.setImage(fileBytes);
+        Item.setImage(fileBytes);
       }
       
+<<<<<<< HEAD
     
+=======
+>>>>>>> master
       //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + item.getName() +"','"+item.getCategory() + "','" + item.getDescription() + "','" + item.getPrice() + "','" + item.getImage() + "','" +  item.getStock() + "')";
+      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + Item.getName() +"','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "')";
       stmt.executeUpdate(sql);
+<<<<<<< HEAD
       System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getPrice()+" "+ item.getStock());
       return "redirect:/HomeSeller"; //return "redirect :/itemAdd/success"
+=======
+      System.out.println(Item.getName()+" "+ Item.getCategory()+" "+ Item.getPrice()+" "+ Item.getStock());
+      return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"
+>>>>>>> master
   }
   catch (Exception e) {
     model.put("message", e.getMessage());

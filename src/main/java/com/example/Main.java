@@ -200,20 +200,11 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
         Item.setImage(fileBytes);
       }
       
-<<<<<<< HEAD
-    
-=======
->>>>>>> master
       //line below, item.getName etc.. all from parameters
       String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + Item.getName() +"','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "')";
       stmt.executeUpdate(sql);
-<<<<<<< HEAD
-      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getPrice()+" "+ item.getStock());
-      return "redirect:/HomeSeller"; //return "redirect :/itemAdd/success"
-=======
       System.out.println(Item.getName()+" "+ Item.getCategory()+" "+ Item.getPrice()+" "+ Item.getStock());
       return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"
->>>>>>> master
   }
   catch (Exception e) {
     model.put("message", e.getMessage());

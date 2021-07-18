@@ -138,7 +138,7 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
       output.setCategory("" + rs.getObject("Category"));
       output.setPrice(rs.getFloat("Price"));
       output.setStock(rs.getInt("Stock"));
-      output.setImage( rs.getBytes("Image"));
+      output.setImage(rs.getBytes("Image"));
       output.setID(rs.getInt("id"));  
     }
     model.put("ret", output);
@@ -200,11 +200,20 @@ public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> 
         Item.setImage(fileBytes);
       }
       
+<<<<<<< HEAD
+    
+=======
+>>>>>>> master
       //line below, item.getName etc.. all from parameters
       String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + Item.getName() +"','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "')";
       stmt.executeUpdate(sql);
+<<<<<<< HEAD
+      System.out.println(item.getName()+" "+ item.getCategory()+" "+ item.getPrice()+" "+ item.getStock());
+      return "redirect:/HomeSeller"; //return "redirect :/itemAdd/success"
+=======
       System.out.println(Item.getName()+" "+ Item.getCategory()+" "+ Item.getPrice()+" "+ Item.getStock());
       return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"
+>>>>>>> master
   }
   catch (Exception e) {
     model.put("message", e.getMessage());
@@ -323,11 +332,11 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
     try(Connection connection = dataSource.getConnection()) {
       System.out.println(account.getRole());
       Statement stmt = connection.createStatement();
-      String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
-      ResultSet rs = stmt.executeQuery(sql);
-      if(rs.next()){
-        String role = rs.getString("Role");
-        if(role.equals("customer")){
+        String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
+        ResultSet rs = stmt.executeQuery(sql);
+        if(rs.next()){
+          String role = rs.getString("Role");
+          if(role.equals("customer")){
           System.out.println(account.getRole());
           System.out.println("Success");
           return "redirect:/Home";

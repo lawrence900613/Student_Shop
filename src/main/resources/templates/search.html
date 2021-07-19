@@ -2,7 +2,7 @@
 <html lan="en">
 
 <head>
-    <link rel="stylesheet" href="./stylesheets/search.css">
+    <link rel="stylesheet" href="../stylesheets/search.css">
     <title>Search</title>
 </head>
 
@@ -36,21 +36,28 @@
       </header>
     <div class="WhiteBox">
         <div class="GreyBox">
-            <form class="example" method="post" th:action="@{/Searchitem}" th:object="${item}">
-                <input type="text" th:field=*{name} placeholder="Search.." name="search">
-                <button type="submit"><i class="fa fa-search"></i>Search</button>
-            </form>
-        <table id="myTable" class="myTable">
+            <table id="myTable" class="myTable">
+                <tr th:each="userID: ${userID}">
+
+                    <form class="example" method="post" th:action="@{/Searchitem/{id}(id=${userID.getUserID()})}" th:object="${item}">
+                        <input type="text" th:field=*{name} placeholder="Search.." name="search">
+                        <button type="submit"><i class="fa fa-search"></i>Search</button>
+                    </form>
             <tr>
                 <td>Name</td>
                 <td>Price</td>
                 <td>Description</td>
             </tr>
             <tr th:each="product : ${product}">
-                <td th:text="${product.getID()}"></td>
                 <td th:text="${product.getName()}"></td>
-                <td th:text="${product.getPrice}"></td>
-                <td th:text="${product.getDescription}"></td>
+                <td th:text="${product.getPrice()}"></td>
+                <td th:text="${product.getDescription()}"></td>
+                <!--
+                <form class="AddShoppingList" method="post" th:action="@{/AddShoppingList}" th:object="${ID}">
+                    <input type="hidden"  th:value="${product.getID()}" id="clientName" name="ID" />
+                    <button type="submit"><i class="fa fa-search"></i>add into shopping list</button>
+                </form>
+                -->
             </tr>
         </table>
         </div>

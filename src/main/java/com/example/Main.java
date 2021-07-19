@@ -248,7 +248,12 @@ public String getShoppingListNoID(Map<String, Object> model) throws Exception{
 public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception{
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + recID);
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts");
+    while (rs.next()) {
+      if(rs.getInt("Id") == recID){
+        break;
+      }
+    }
     Account outputAcc = new Account();
     Array temp = rs.getArray("ShoppingList");
     outputAcc.setID(rs.getInt("ID"));
@@ -257,11 +262,10 @@ public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Obj
       temp2 = (Integer[]) temp.getArray();
     }
     Integer[] tempArr = temp2;
+    Item outputItem = new Item();
     ArrayList<Item> storeItem = new ArrayList<Item>();
     for(int i = 0; i < tempArr.length; i++){
-      ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //if ID has been deleted we need to move on *** //item not there -- prob have to tell user (alert)& delete it from their shopping list
-    
-      Item outputItem = new Item();
+      ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); 
       outputItem.setName(rs2.getString("Name"));
       outputItem.setDescription(rs2.getString("Description"));
       outputItem.setPrice(rs2.getFloat("Price"));
@@ -409,21 +413,52 @@ String getLoginSuccess() {
     }
   }
 
-  @GetMapping(path = "/Search")
-    public String getSearch(Map<String, Object> model){
-      Searchname item = new Searchname() ;   //creates a new empty Item object
-      model.put("item", item);
-      return "search"; 
+  @GetMapping(path = {"/Search/{id}","/Search"})
+    public String getSearch(@PathVariable (required = false) Integer id, Map<String, Object> model){
+      try (Connection connection = dataSource.getConnection()) {
+        if(id == null){
+          Searchname item = new Searchname() ;
+          ItemID ID = new ItemID();
+          UserID userID = new UserID();
+          userID.setUserID(0);
+          System.out.println(userID.getUserID());
 
+          model.put("userID",userID);    //creates a new empty Item object
+          model.put("item", item);
+          model.put("ID", ID);
+          return "search"; 
+        }else{
+          Statement stmt = connection.createStatement();
+          String sql = "SELECT * FROM Accounts WHERE ID ='"+ id + "' ";
+          ResultSet rs = stmt.executeQuery(sql);
+          if(rs.next()){
+            UserID userID = new UserID();
+            Searchname item = new Searchname() ;
+            ItemID ID = new ItemID();
+            userID.setUserID(rs.getInt("Id"));
+            System.out.println(userID.getUserID());
+            model.put("userID", userID);
+            model.put("item", item);
+            model.put("ID", ID);
+            return "search";
+          }else{
+            System.out.println("Success123");
+            return "redirect:/HomeSeller";
+          }
+        }
+      }catch (Exception e) {
+        model.put("message", e.getMessage());
+        return "error";
+      }
     }
 
-  @PostMapping(path = "/Searchitem", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String searchItem(Map<String, Object> model, Searchname item) throws Exception{
+  @PostMapping(path = {"/Searchitem/{id}","/Searchitem"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String searchItem(Map<String, Object> model, @PathVariable (required = false) Integer id, Searchname item) throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS productdatabase (id serial, name varchar(20), description varchar, price numeric, stock real)");
-      ResultSet rs = stmt.executeQuery("SELECT * FROM productdatabase");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
       ArrayList<Item> output = new ArrayList<Item>();
       String searchname = item.getName();
       searchname = searchname.toLowerCase();
@@ -441,8 +476,15 @@ String getLoginSuccess() {
         output.add(product);
       }
     }
+    Searchname item2 = new Searchname() ;
+    UserID userID = new UserID();
+    ItemID ID = new ItemID();
+    userID.setUserID(id);
+    model.put("userID", userID);
+    model.put("item", item2);
     model.put("product", output);
-    return "redirect:/Search";
+    model.put("ID", ID);
+    return "search";
 
   }
   catch (Exception e) {
@@ -451,6 +493,12 @@ String getLoginSuccess() {
   }
 
 }
+
+
+
+
+
+
 
 @GetMapping(path = "/Success/search")
 public String getsearchagain(Map<String, Object> model){

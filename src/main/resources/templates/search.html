@@ -12,11 +12,11 @@
           <h1 class="logo"></h1>
           <nav>
             <ul>
-                <li><a href="./Home">Home</a></li>
-                <li><a href="./About">About</a></li>
-                <li><a href="./ShoppingList">Shoppinglist</a></li>
-                <li><a href="./Login">Login</a></li>
-                <li><a href="./Search">Search</a></li>
+                <li><a href="../Home">Home</a></li>
+                <li><a href="../About">About</a></li>
+                <li><a href="../ShoppingList">Shoppinglist</a></li>
+                <li><a href="../Login">Login</a></li>
+                <li><a href="../Search">Search</a></li>
                 <li>
                 <div class="dropdown">
                     <button class="dropbtn">More
@@ -35,10 +35,9 @@
         </div>
       </header>
     <div class="WhiteBox">
-        <div class="GreyBox">
+        <div class="GreyBox" th:each="userID: ${userID}" >
             <table id="myTable" class="myTable">
-                <tr th:each="userID: ${userID}">
-
+                <tr>
                     <form class="example" method="post" th:action="@{/Searchitem/{id}(id=${userID.getUserID()})}" th:object="${item}">
                         <input type="text" th:field=*{name} placeholder="Search.." name="search">
                         <button type="submit"><i class="fa fa-search"></i>Search</button>
@@ -52,12 +51,11 @@
                 <td th:text="${product.getName()}"></td>
                 <td th:text="${product.getPrice()}"></td>
                 <td th:text="${product.getDescription()}"></td>
-                <!--
-                <form class="AddShoppingList" method="post" th:action="@{/AddShoppingList}" th:object="${ID}">
+
+                <form class="AddShoppingList" method="post" th:action="@{/AddShoppingList/{id}(id=${userID.getUserID()})}" th:object="${ID}">
                     <input type="hidden"  th:value="${product.getID()}" id="clientName" name="ID" />
                     <button type="submit"><i class="fa fa-search"></i>add into shopping list</button>
                 </form>
-                -->
             </tr>
         </table>
         </div>

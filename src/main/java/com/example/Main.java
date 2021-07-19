@@ -124,26 +124,36 @@ public class Main {
   
 
 @GetMapping(path = "/MyItem/{id}")
-public String myItem(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception{
+public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> model) throws Exception{
 
   try (Connection connection = dataSource.getConnection()){
     Statement stmt = connection.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE ID =" + recieveID); //change name
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
     
     Item output = new Item(); // store data
 
-    if(recieveID == (rs.getInt("id"))){
-      output.setName("" + rs.getObject("Name"));
-      output.setDescription("" + rs.getObject("Description"));
-      output.setCategory("" + rs.getObject("Category"));
-      output.setPrice(rs.getFloat("Price"));
-      output.setStock(rs.getInt("Stock"));
-      output.setImage(rs.getBytes("Image"));
-      output.setID(rs.getInt("id"));  
+    while (rs.next()) {
+      if(rs.getInt("Id") == receiveID){
+        break;
+      }
     }
-    model.put("ret", output);
-    return "/myItem";
-  }
+
+    output.setName("" + rs.getObject("Name"));
+    output.setDescription("" + rs.getObject("Description"));
+    output.setCategory("" + rs.getObject("Category"));
+    output.setPrice(rs.getFloat("Price"));
+    output.setStock(rs.getInt("Stock"));
+    output.setID(rs.getInt("Id"));
+    output.setImage(rs.getBytes("image")); 
+    
+    model.put("ret", output); //to display existing 
+
+    Item in = new Item(); //to update
+    model.put("Item", in);
+
+    return "myItem";
+  } 
+    
   catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
@@ -249,13 +259,15 @@ public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Obj
     Integer[] tempArr = temp2;
     ArrayList<Item> storeItem = new ArrayList<Item>();
     for(int i = 0; i < tempArr.length; i++){
-      ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //if ID has been deleted we need to move on ***
+      ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //if ID has been deleted we need to move on *** //item not there -- prob have to tell user (alert)& delete it from their shopping list
+    
       Item outputItem = new Item();
       outputItem.setName(rs2.getString("Name"));
       outputItem.setDescription(rs2.getString("Description"));
       outputItem.setPrice(rs2.getFloat("Price"));
       outputItem.setID(rs2.getInt("ID"));
       storeItem.add(outputItem);
+      
     }
     model.put("records", storeItem); //iterate all shopping list item and link them to respective page ***
     return "shoppingList";
@@ -266,7 +278,7 @@ public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Obj
 }
 
 @PostMapping(
-  path = "/DELETEmp/{id}",
+  path = "/DELETEmi/{id}",
   consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
 )
 public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception {
@@ -280,25 +292,16 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
   }
 }
 
-  @PostMapping( //create update handle !!!!!!!!!!!
-    path = "/UPDATEmp/{id}",
+  @PostMapping( 
+    path = "/UPDATEmi/{id}",
     consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
   )
-  public String handleUpdateButtonforMyItem(@PathVariable("id") Integer recieveID, Map<String, Object> model) throws Exception {
+  public String handleUpdateButtonforMyItem(@PathVariable("id") Integer receiveID, Map<String, Object> model, Item item) throws Exception {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE ID =" + recieveID);
-
-      Item output = new Item();
-      output.setName("" + rs.getObject("Name"));
-      output.setDescription("" + rs.getObject("Description"));
-      output.setPrice(rs.getFloat("Price"));
-      output.setStock(rs.getInt("Stock"));
-      output.setID(rs.getInt("id"));
-
-      model.put("ret",output);
-
-      return "/update"; // return to correct return page 
+      System.out.println(item.getName());
+      stmt.executeUpdate("UPDATE Items SET Name ='" + item.getName() + "', Category = '" + item.getCategory() + "', Description = '" + item.getDescription() + "', Price = '" + item.getPrice() + "', Stock = '" + item.getStock() + "' WHERE id =" + receiveID + ";");
+      return "successUpdate"; 
     } catch (Exception e) {
       model.put("message", e.getMessage());
       return "error";

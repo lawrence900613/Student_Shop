@@ -50,7 +50,6 @@ public class User {
         this.ID = i;
     }
 
-
     public void setShoppingList( Item[] in) { //shallow copy ?????????????
         this.ShoppingList = in;
     }

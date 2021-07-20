@@ -2,7 +2,7 @@
 <html lan="en">
 
 <head>
-    <link rel="stylesheet" href="./stylesheets/shoppingList.css"/>
+    <link rel="stylesheet" href="../stylesheets/shoppingList.css"/>
     <title>Shopping List</title>
 </head>
 
@@ -48,13 +48,11 @@
                     </thead>
                     
                     <tbody>
+                        <!--
+                        <td> test </td>
+                        <td> image + This is the first test </td>
+                        <td> $420 </td>-->
                         <tr th:each="record : ${records}" >
-                            <!-- 
-                            <td><a href="#" th:href="@{/profile/{uid}(uid=${record.getID()})}" th:utext="${record.getName()}"></a></td>
-                            <td th:utext="${record.getName()}" th:style="'background-color:' + ${record.getColour()}"></td>
-                            <td th:utext="${record.getDescription()}"></td>
-                            <td th:utext="${record.getPrice()}"></td>  -->
-
                             <td> test </td>
                             <td> image + This is the first test </td>
                             <td> $420 </td>
@@ -68,16 +66,9 @@
                             </form>
                         </tr>
                         <tr th:each="record : ${records}" >
-                            <!-- 
-                            <td><a href="#" th:href="@{/profile/{uid}(uid=${record.getID()})}" th:utext="${record.getName()}"></a></td>
-                            <td th:utext="${record.getName()}" th:style="'background-color:' + ${record.getColour()}"></td>
-                            <td th:utext="${record.getDescription()}"></td>
-                            <td th:utext="${record.getPrice()}"></td>  -->
-
                             <td> test2 </td>
                             <td> This is the first test2 </td>
                             <td> $42022 </td>
-
                             <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}">
                                 <td><input type="submit" class="btnDelete" value="DELETE"></td>
                             </form>

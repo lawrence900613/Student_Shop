@@ -39,7 +39,7 @@
         <h2>Item Profile Page</h2>
         <div class="GreyBox">
 
-            <div id="colouredProfile" class="colouredProfile">
+            <div>
                 <!-- add your image here -->
             </div>
 
@@ -68,14 +68,45 @@
                 </tr>
             </table>
 
-            <input type="button" class="btn" value="Back" onclick="location.href='/homeSeller'">
-            
-            <form action="#" method="post" th:action="@{/DELETEmp/{id}(id=${record.getID()})}">
-                <input type="submit" class="btnDelete" value="DELETE"></td>
-            </form>
-            <form action="#" method="post" th:action="@{/UPDATEmp/{id}(id=${record.getID()})}"> <!-- not done working on updating-->
+            <div id = "outer">
+
+                <input type="button" class="btn" value="Back" onclick="location.href='/HomeSeller'">
+                
+                <form action="#" method="post" th:each="record : ${ret}" th:action="@{/DELETEmi/{id}(id=${record.getID()})}">
+                    <input type="submit" class="btnDelete" value="DELETE"></td>
+                </form>
+
+                <form action="#" method="post" th:each="record : ${ret}" th:action="@{/]AddToSLmi/{id}(id=${record.getID()})}"> <!-- not done working adding to shopping list-->
+                    <input type="submit" class="btnAdd" value="Add to Shopping List"></td>
+                </form>
+            </div>
+
+            <h2>Update Item Information</h2>
+
+            <form action="#" method="post" th:each="record : ${ret}" th:action="@{/UPDATEmi/{id}(id=${record.getID()})}" th:object="${Item}">
+
+                <div>Place Old Image here Placeholder</div><br><br> <!-- fix needed -->
+
+                <input type="text" th:value="${record.getName()}" name="Name" id ="Name"><br><br>
+
+                <textarea type="text" th:text="${record.getDescription()}"  name = "Description" id = "Description" cols="30" rows="10" style="width: 300px; height: 200px; font-size: 20px;"></textarea> <br><br>
+
+                <select name ="Category" id ="Cataegory">
+                    <option value=""  selected hidden style="color: gray;" th:text="${record.getCategory()}">Choose Category..</option>
+                    <option value="electronics" >Electronics</option>
+                    <option value="food">Food</option>
+                    <option value="kitchen">Kitchen</option>
+                </select><br><br>
+
+                <input type="number" th:value="${record.getPrice()}" name="Price" id = "Price" step="any"> <br><br>
+
+                <input type="number" th:value="${record.getStock()}" name="Stock" id = "Stock" step="1"> <br>
+
+                <p class="listingHeading">Upload Image of Item:</p>
+                <input type="file" name="file" id="file"  accept= "image/*" class="sameSize"><br><br> <!-- not sure how image upload works-->
+
                 <input type="submit" class="btnUpdate" value="UPDATE"></td>
-            </form> 
+            </form>
         
         </div>
     </div>

@@ -257,4 +257,63 @@ h2{
   height: auto;
   overflow: auto;
 }
+
+#outer div{
+  display:inline-block;
+}
+
+.btnDelete{
+  width:90px;
+  background-color:#b81013;
+  color:#f8fafe;
+  border-radius:5px;
+  padding:5px;
+  float:none;
+  border:none;
+  pointer-events:visiblePainted;
+  display: inline-block;
+  margin: 2px;
+}
+
+.btnDelete:hover{
+  background-color:#c9393c;
+}
+
+.btnAdd{
+  width:auto;
+  background-color:#04a004;
+  color:#f8fafe;
+  border-radius:5px;
+  padding:5px;
+  float:none;
+  border:none;
+  pointer-events:visiblePainted;
+  display: inline-block;
+  margin: 2px;
+}
+
+.btnAdd:hover{
+  background-color:#2ddd2d;
+}
+
+.btnUpdate{
+  width:90px;
+  background-color:#FAD02C;
+  color:#f8fafe;
+  border-radius:5px;
+  padding:5px;
+  float:none;
+  border:none;
+  pointer-events:visiblePainted;
+  display: inline-block;
+  margin: 2px;
+}
+
+.btnUpdate:hover{
+  background-color:#fde16e;
+}
+
+
+
+
   

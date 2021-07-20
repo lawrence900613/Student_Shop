@@ -1,5 +1,15 @@
+<<<<<<< HEAD
 com/example/Account.class
 com/example/User.class
 com/example/Searchname.class
 Person.class
 com/example/Item.class
+=======
+com\example\Account.class
+com\example\UserID.class
+com\example\Main.class
+com\example\Searchname.class
+com\example\User.class
+com\example\Item.class
+com\example\ItemID.class
+>>>>>>> master

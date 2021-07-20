@@ -19,6 +19,7 @@
               <li><a href="./ShoppingList">Shoppinglist</a></li>
               <li><a href="./Login">Login</a></li>
               <li><a href="./Search">Search</a></li>
+              <li>
                 <div class="dropdown">
                     <button class="dropbtn">More
                         <i class="fa fa-caret-down"></i>
@@ -75,9 +76,10 @@
 
                     <input type="number" th:field=*{Price} onkeyup="priceUpdate()" id="gettingPrice" step="any" placeholder="Price per Unit" class="sameSize"><br><br>
 
+
                     <textarea name="description" onkeyup="descriptionUpdate()" cols="30" rows="10" id="gettingDescription" style="width: 300px; height: 200px; font-size: 20px;" placeholder="Enter a Description of the Item" th:field = *{Description}></textarea><br><br>
                                         
-                    <input type="number" th:field=*{Stock} placeholder="Number of Units in Stock" class="sameSize" step="1">><br>
+                    <input type="number" th:field=*{Stock} placeholder="Number of Units in Stock" class="sameSize"><br>
 
                     <p class="listingHeading">Upload Image of Item:</p>
                     <input type="file" name="file" id="file"  accept= "image/*" class="sameSize" onchange="putImage()"><br>

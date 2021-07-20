@@ -52,9 +52,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-
-
-
+import java.io.Console;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -104,7 +102,7 @@ public class Main {
           model.put("ret", output);
         }
       }
-
+      System.out.println("IN THIS GETMAPPING with home/{id}");
       switch(output.getRole()){
         case "seller":
           return "homeSeller";
@@ -172,6 +170,7 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
       Statement stmt = connection.createStatement();
       ResultSet rs = stmt.executeQuery("SELECT SellingList FROM Accounts WHERE ID =" + id);
       ArrayList<Item> storeItem = new ArrayList<Item>();
+      if(rs.next()){
       Array temp = rs.getArray("SellingList");
       Integer temp2[] = {};
       if(temp != null){
@@ -187,7 +186,7 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
         outputItem.setID(rs2.getInt("ID"));
         storeItem.add(outputItem);
       }
-
+    }
       Item in = new Item(); 
       model.put("Item", in);
 
@@ -208,18 +207,16 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
 
 // trying to add sellerid into items------------------------------------------------------------------------------------
 
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, userID Integer, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
       if (!file.isEmpty()) {
         byte[] fileBytes = file.getBytes();
         Item.setImage(fileBytes);
       }
       
       //line below, item.getName etc.. all from parameters
-      UserID userid = new UserID();
-      Integer idofuser = userid.getUserID();
-      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + Item.getName() + "','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "')";
+      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + Item.getName() +"','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "')";
       stmt.executeUpdate(sql);
-      System.out.println( Item.getName() +"','"+ idofuser);
+      System.out.println(Item.getName()+" "+ Item.getCategory()+" "+ Item.getPrice()+" "+ Item.getStock());
       return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"
   }
   catch (Exception e) {
@@ -345,18 +342,17 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
             System.out.println(account.getRole());
             System.out.println("Success");
             System.out.println(id);
-            // UserID userid = new UserID();
-            // userid.setUserID(id);
-            // model.put("userID", userID);
-
-            return "redirect:/Home";
+            UserID userid = new UserID();
+            userid.setUserID(id);
+            model.put("userID", userid);
+            return "redirect:/Home/"+id;
           }else{
             System.out.println("Success123");
             System.out.println(id);
-            // UserID userid = new UserID();
-            // userid.setUserID(id);
-            // model.put("userID", userid);
-            return "redirect:/homeSeller";
+            UserID userid = new UserID();
+            userid.setUserID(id);
+            model.put("userID", userid);
+            return "redirect:/HomeSeller/"+id;
           }
       }
       return "badlogin";
@@ -408,26 +404,6 @@ String getLoginSuccess() {
   return "success";
 }
 
-  // @RequestMapping("/db")
-  // String db(Map<String, Object> model) {
-  //   try (Connection connection = dataSource.getConnection()) {
-  //     Statement stmt = connection.createStatement();
-  //     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-  //     stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-  //     ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
-  //     ArrayList<String> output = new ArrayList<String>();
-  //     while (rs.next()) {
-  //       output.add("Read from DB: " + rs.getTimestamp("tick"));
-  //     }
-
-  //     model.put("records", output);
-  //     return "db";
-  //   } catch (Exception e) {
-  //     model.put("message", e.getMessage());
-  //     return "error";
-  //   }
-  // }
 
   @GetMapping(path = {"/Search/{id}","/Search"})
     public String getSearch(@PathVariable (required = false) Integer id, Map<String, Object> model){

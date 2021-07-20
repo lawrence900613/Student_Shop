@@ -61,7 +61,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
-
 @Controller
 @SpringBootApplication
 public class Main {
@@ -85,6 +84,8 @@ public class Main {
   String about() {
     return "About";  
   }
+
+  
 
  @GetMapping(path ="/Home/{id}")
   public String landingSpecialized(@PathVariable("id") Integer recieveID, Map<String, Object> model) {
@@ -327,14 +328,17 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
         ResultSet rs = stmt.executeQuery(sql);
         if(rs.next()){
           String role = rs.getString("Role");
+          Integer id = rs.getInt("Id");
           if(role.equals("customer")){
-          System.out.println(account.getRole());
-          System.out.println("Success");
-          return "redirect:/Home";
-        }else{
-          System.out.println("Success123");
-          return "redirect:/HomeSeller";
-        }
+            System.out.println(account.getRole());
+            System.out.println("Success");
+            System.out.println(id);
+            return "redirect:/Home?id="+id+"";
+          }else{
+            System.out.println("Success123");
+            System.out.println(id);
+            return "redirect:/HomeSeller?id="+id+"";
+          }
       }
       return "badlogin";
     } catch (Exception e) {
@@ -363,8 +367,8 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Accounts (Id serial, Username varchar(20), Password varchar(16), Role varchar(16),Shoppinglist Integer[],Sellinglist Integer[])");
       String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+ "' ";
       ResultSet rs = stmt.executeQuery(sql);
-      if(rs.next()){
-        return "AccountError";
+      if(rs.next() == true){
+        return "accounterror";
       }else{
         sql = "INSERT INTO Accounts (Username, Password,Role) VALUES ('" + account.getUsername() + "','" + account.getPassword() + "','" + account.getRole() + "')";
         stmt.executeUpdate(sql);

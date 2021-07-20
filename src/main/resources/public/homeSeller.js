@@ -25,3 +25,9 @@ function putImage(){
     var target = document.getElementById("target");
     showImage(src, target);
 }
+
+
+function gettingid(){
+    let params = new URLSearchParams(location.search);
+    params.get('id')
+}

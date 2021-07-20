@@ -205,16 +205,21 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
+
+// trying to add sellerid into items------------------------------------------------------------------------------------
+
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, userID Integer, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
       if (!file.isEmpty()) {
         byte[] fileBytes = file.getBytes();
         Item.setImage(fileBytes);
       }
       
       //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + Item.getName() +"','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "')";
+      UserID userid = new UserID();
+      Integer idofuser = userid.getUserID();
+      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + Item.getName() + "','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "')";
       stmt.executeUpdate(sql);
-      System.out.println(Item.getName()+" "+ Item.getCategory()+" "+ Item.getPrice()+" "+ Item.getStock());
+      System.out.println( Item.getName() +"','"+ idofuser);
       return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"
   }
   catch (Exception e) {
@@ -340,11 +345,18 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
             System.out.println(account.getRole());
             System.out.println("Success");
             System.out.println(id);
-            return "redirect:/Home?id="+id+"";
+            // UserID userid = new UserID();
+            // userid.setUserID(id);
+            // model.put("userID", userID);
+
+            return "redirect:/Home";
           }else{
             System.out.println("Success123");
             System.out.println(id);
-            return "redirect:/HomeSeller?id="+id+"";
+            // UserID userid = new UserID();
+            // userid.setUserID(id);
+            // model.put("userID", userid);
+            return "redirect:/homeSeller";
           }
       }
       return "badlogin";
@@ -396,26 +408,26 @@ String getLoginSuccess() {
   return "success";
 }
 
-  @RequestMapping("/db")
-  String db(Map<String, Object> model) {
-    try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-      stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-      ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
+  // @RequestMapping("/db")
+  // String db(Map<String, Object> model) {
+  //   try (Connection connection = dataSource.getConnection()) {
+  //     Statement stmt = connection.createStatement();
+  //     stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
+  //     stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
+  //     ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
 
-      ArrayList<String> output = new ArrayList<String>();
-      while (rs.next()) {
-        output.add("Read from DB: " + rs.getTimestamp("tick"));
-      }
+  //     ArrayList<String> output = new ArrayList<String>();
+  //     while (rs.next()) {
+  //       output.add("Read from DB: " + rs.getTimestamp("tick"));
+  //     }
 
-      model.put("records", output);
-      return "db";
-    } catch (Exception e) {
-      model.put("message", e.getMessage());
-      return "error";
-    }
-  }
+  //     model.put("records", output);
+  //     return "db";
+  //   } catch (Exception e) {
+  //     model.put("message", e.getMessage());
+  //     return "error";
+  //   }
+  // }
 
   @GetMapping(path = {"/Search/{id}","/Search"})
     public String getSearch(@PathVariable (required = false) Integer id, Map<String, Object> model){

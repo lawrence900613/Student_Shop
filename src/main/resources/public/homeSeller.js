@@ -12,6 +12,7 @@ function descriptionUpdate(){
 }
 
 
+/*
 function showImage(src, target){
     var fr = new FileReader();
     fr.onload = function(){
@@ -25,3 +26,4 @@ function putImage(){
     var target = document.getElementById("target");
     showImage(src, target);
 }
+*/

@@ -163,17 +163,21 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
 }
 
 @GetMapping(path = {"/HomeSeller/{id}", "/HomeSeller"})
-  public String getHomeSellerWithID(@PathVariable (required = false) Integer id, Map<String, Object> model){
+  public String getHomeSellerWithID(@PathVariable (required = false) String id, Map<String, Object> model){
     try (Connection connection = dataSource.getConnection()) {
+      Integer parameterid = Integer.parseInt(id);
       if(id == null){
         Item in = new Item(); 
         model.put("Item", in);
         return "homeSeller";
       }
       Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer, SellerId Integer)");
+
+      System.out.println("before query loop in homeseller id= "+parameterid);
+
       ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE SellerId =" + id);
       ArrayList<Item> storeItem = new ArrayList<Item>();
-
       while(rs.next()){
         Item outputItem = new Item();
         outputItem.setName(rs.getString("Name"));
@@ -187,7 +191,7 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
       model.put("Item", in);
 
       UserID temp = new UserID();
-      temp.setUserID(id);
+      temp.setUserID(parameterid);
       model.put("UserId", temp);
 
       model.put("records", storeItem);
@@ -202,7 +206,7 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
 
 
 @PostMapping(path = "/afterSubmitNewItem/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item Item, @PathVariable("id") Integer SellerId)  throws Exception{
+  public String handleNewItem(Map<String, Object> model, Item Item, @PathVariable("id") Integer SellerId )  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
       System.out.println("1 inside aftersubmitnewitem/id with id = "+SellerId);
@@ -214,10 +218,10 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
       System.out.println(Item.getName()+" "+ Item.getCategory()+" "+ Item.getPrice()+" "+ Item.getStock());
       
 
-      if (!file.isEmpty()) {
-        byte[] fileBytes = file.getBytes();
-        Item.setImage(fileBytes);
-      }
+      // if (!file.isEmpty()) {
+      //   byte[] fileBytes = file.getBytes();
+      //   Item.setImage(fileBytes);
+      // }
       
       //line below, item.getName etc.. all from parameters
       return "redirect:/HomeSeller/" + SellerId;
@@ -358,7 +362,7 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recId, Map
           userid.setUserID(id);
           model.put("userID", userid);
           model.put("Item", itemid);
-          System.out.println("inside the login post!!!! id= "+id);
+          System.out.println("inside the login post!!!! going to sellerhome id= "+id);
           return "redirect:/HomeSeller/"+id;
         }
       }
@@ -553,7 +557,7 @@ public String getsearchagain(Map<String, Object> model){
           for (Integer obj : newIDList)
                 System.out.println(obj);
 
-          String temp;
+          // String temp;
 
           for(int i = 0; i < newIDList.length; i++){
 

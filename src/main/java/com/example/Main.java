@@ -57,7 +57,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+// import UserID.java;
 
 @Controller
 @SpringBootApplication
@@ -163,17 +163,21 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
 }
 
 @GetMapping(path = {"/HomeSeller/{id}", "/HomeSeller"})
-  public String getHomeSellerWithID(@PathVariable (required = false) Integer id, Map<String, Object> model){
+  public String getHomeSellerWithID(@PathVariable (required = false) String id, Map<String, Object> model){
     try (Connection connection = dataSource.getConnection()) {
+      Integer parameterid = Integer.parseInt(id);
       if(id == null){
         Item in = new Item(); 
         model.put("Item", in);
         return "homeSeller";
       }
       Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer, SellerId Integer)");
+
+      System.out.println("before query loop in homeseller id= "+parameterid);
+
       ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE SellerId =" + id);
       ArrayList<Item> storeItem = new ArrayList<Item>();
-
       while(rs.next()){
         Item outputItem = new Item();
         outputItem.setName(rs.getString("Name"));
@@ -187,12 +191,13 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
       model.put("Item", in);
 
       UserID temp = new UserID();
-      temp.setUserID(id);
+      temp.setUserID(parameterid);
       model.put("UserId", temp);
 
       model.put("records", storeItem);
 
       return "homeSeller";
+
     }catch (Exception e) {
       model.put("message", e.getMessage());
       return "error";
@@ -201,11 +206,12 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
 
 
 @PostMapping(path = "/afterSubmitNewItem/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item Item, @PathVariable("id") Integer SellerId)  throws Exception{
+  public String handleNewItem(Map<String, Object> model, Item Item, @PathVariable("id") Integer SellerId )  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
+      System.out.println("1 inside aftersubmitnewitem/id with id = "+SellerId);
 
+      Statement stmt = connection.createStatement();
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer, SellerId Integer)");
       String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock, SellerId) VALUES ('" + Item.getName() +"','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "','" +  SellerId + "')";
       stmt.executeUpdate(sql);
@@ -334,27 +340,31 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recId, Map
     try(Connection connection = dataSource.getConnection()) {
       System.out.println(account.getRole());
       Statement stmt = connection.createStatement();
-        String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
-        ResultSet rs = stmt.executeQuery(sql);
-        if(rs.next()){
-          String role = rs.getString("Role");
-          Integer id = rs.getInt("Id");
-          if(role.equals("customer")){
-            System.out.println(account.getRole());
-            System.out.println("Success");
-            System.out.println(id);
-            UserID userid = new UserID();
-            userid.setUserID(id);
-            model.put("userID", userid);
-            return "redirect:/Home/"+id;
-          }else{
-            System.out.println("Success123");
-            System.out.println(id);
-            UserID userid = new UserID();
-            userid.setUserID(id);
-            model.put("userID", userid);
-            return "redirect:/HomeSeller/"+id;
-          }
+      String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
+      ResultSet rs = stmt.executeQuery(sql);
+      if(rs.next()){
+        String role = rs.getString("Role");
+        Integer id = rs.getInt("Id");
+        if(role.equals("customer")){
+          System.out.println(account.getRole());
+          System.out.println("Success");
+          System.out.println(id);
+          UserID userid = new UserID();
+          userid.setUserID(id);
+          model.put("userID", userid);
+          return "redirect:/Home/"+id;
+        }else{
+          System.out.println("Success123");
+          System.out.println(id);
+          UserID userid = new UserID();
+          ItemID itemid = new ItemID();
+
+          userid.setUserID(id);
+          model.put("userID", userid);
+          model.put("Item", itemid);
+          System.out.println("inside the login post!!!! going to sellerhome id= "+id);
+          return "redirect:/HomeSeller/"+id;
+        }
       }
       return "badlogin";
     } catch (Exception e) {
@@ -547,7 +557,7 @@ public String getsearchagain(Map<String, Object> model){
           for (Integer obj : newIDList)
                 System.out.println(obj);
 
-          String temp;
+          // String temp;
 
           for(int i = 0; i < newIDList.length; i++){
 

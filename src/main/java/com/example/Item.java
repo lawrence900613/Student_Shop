@@ -8,6 +8,7 @@ public class Item {
     private byte[] Image;
     private Integer ID;
     private Integer Stock;
+    private Integer SellerID;
 
     public String getName() {
         return this.Name;
@@ -37,7 +38,9 @@ public class Item {
         return this.Stock;
     }
 
-
+    public Integer getSellerID() {
+        return this.SellerID;
+    }
 
     public void setName(String n) {
         this.Name = n;
@@ -65,5 +68,9 @@ public class Item {
 
     public void setStock(Integer s) {
         this.Stock = s;
+    }
+
+    public void setSellerID(Integer in) {
+        this.SellerID = in;
     }
 }

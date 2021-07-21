@@ -42,7 +42,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Array; //this fix 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -92,7 +92,7 @@ public class Main {
       Statement stmt = connection.createStatement();
       ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + recieveID); 
       
-      User output = new User(); // store data
+      User output = new User();
 
       while(rs.next()){
         if(recieveID == (rs.getInt("id"))){
@@ -102,20 +102,17 @@ public class Main {
           model.put("ret", output);
         }
       }
-      System.out.println("IN THIS GETMAPPING with home/{id} "+recieveID);
-      switch(output.getRole()){
-        case "seller":
-          UserID userID = new UserID();
-          userID.setUserID(recieveID);
-          model.put("userID", recieveID);
-          return "homeSeller";
-        case "customer":
-          return "home";
-        case "Guest":
-          return "home"; //?? Guest ID SETUP
+      System.out.println("IN THIS GETMAPPING with home/{id}");
+      if(output.getRole() == "seller"){
+        return "HomeSeller/" + output.getID();
       }
-
-     throw new Exception("testing"); //!!!!!!!!!!!!!!!!!!!!
+      else if(output.getRole() == "customer"){
+        return "home";
+      }
+      else{
+        return "home";
+      }
+      
     }
 
     catch (Exception e) {
@@ -125,8 +122,8 @@ public class Main {
   }
   
 
-@GetMapping(path = "/MyItem/{id}")
-public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> model) throws Exception{
+@GetMapping(path = "/MyItem/{UserId}/{ItemId}")
+public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("ItemId") Integer ItemId, Map<String, Object> model) throws Exception{
 
   try (Connection connection = dataSource.getConnection()){
     Statement stmt = connection.createStatement();
@@ -135,7 +132,7 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
     Item output = new Item(); // store data
 
     while (rs.next()) {
-      if(rs.getInt("Id") == receiveID){
+      if(rs.getInt("Id") == ItemId){
         break;
       }
     }
@@ -148,7 +145,10 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
     output.setID(rs.getInt("Id"));
     output.setImage(rs.getBytes("image")); 
     
-    model.put("ret", output); //to display existing 
+    model.put("retItem", output); //to display existing
+    UserID Userid = new UserID();
+    Userid.setUserID(UserId);
+    model.put("retUserId", Userid); //to redirect
 
     Item in = new Item(); //to update
     model.put("Item", in);
@@ -171,34 +171,27 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
         return "homeSeller";
       }
       Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT SellingList FROM Accounts WHERE ID =" + id);
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE SellerId =" + id);
       ArrayList<Item> storeItem = new ArrayList<Item>();
-      if(rs.next()){
-        Array temp = rs.getArray("SellingList");
-        Integer temp2[] = {};
 
-        if(temp != null){
-          temp2 = (Integer[]) temp.getArray();
-          Integer[] tempArr = temp2;
-          for(int i = 0; i < tempArr.length; i++){
-
-            ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //implement move on when empty ID
-            Item outputItem = new Item();
-            outputItem.setName(rs2.getString("Name"));
-            outputItem.setCategory(rs2.getString("Category"));
-            outputItem.setStock(rs2.getInt("Stock"));
-            outputItem.setID(rs2.getInt("ID"));
-            storeItem.add(outputItem);
-          }
-        }
+      while(rs.next()){
+        Item outputItem = new Item();
+        outputItem.setName(rs.getString("Name"));
+        outputItem.setCategory(rs.getString("Category"));
+        outputItem.setStock(rs.getInt("Stock"));
+        outputItem.setID(rs.getInt("ID"));
+        storeItem.add(outputItem);
       }
-      model.put("records", storeItem);
-      System.out.println("Inside HomeSeller/id with id= "+id);
-    
+      
       Item in = new Item(); 
       model.put("Item", in);
-      UserID userID = new UserID();
-      model.put("UserID", userID);
+
+      UserID temp = new UserID();
+      temp.setUserID(id);
+      model.put("UserId", temp);
+
+      model.put("records", storeItem);
+
       return "homeSeller";
 
     }catch (Exception e) {
@@ -208,31 +201,26 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
   }
 
 
-@PostMapping(path = "/afterSubmitNewItem/{id}", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String handleNewItem(Map<String, Object> model, @PathVariable (required = false) String id, Item Item, @RequestParam("file") MultipartFile file)  throws Exception{
+@PostMapping(path = "/afterSubmitNewItem/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+  public String handleNewItem(Map<String, Object> model, Item Item, @PathVariable("id") Integer SellerId)  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
-      Integer intID = Integer.parseInt(id);
-      System.out.println("1 inside aftersubmitnewitem/id with id = "+intID);
+      System.out.println("1 inside aftersubmitnewitem/id with id = "+SellerId);
 
       Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer, SellerId Integer)");
+      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock, SellerId) VALUES ('" + Item.getName() +"','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "','" +  SellerId + "')";
+      stmt.executeUpdate(sql);
+      System.out.println(Item.getName()+" "+ Item.getCategory()+" "+ Item.getPrice()+" "+ Item.getStock());
+      
 
-// trying to add sellerid into items------------------------------------------------------------------------------------
-      UserID userid = new UserID();
-      Integer idofuser = userid.getUserID();
-      System.out.println("2 getting ID value.. id = "+idofuser);
-
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
       if (!file.isEmpty()) {
         byte[] fileBytes = file.getBytes();
         Item.setImage(fileBytes);
       }
       
       //line below, item.getName etc.. all from parameters
-      String sql = "INSERT INTO Items (Name, Category, Description, Price, image, Stock) VALUES ('" + Item.getName() +"','"+Item.getCategory() + "','" + Item.getDescription() + "','" + Item.getPrice() + "','" + Item.getImage() + "','" +  Item.getStock() + "')";
-      stmt.executeUpdate(sql);
-      System.out.println(Item.getName()+" "+ Item.getCategory()+" "+ Item.getPrice()+" "+ Item.getStock());
-      return "redirect:/HomeSeller"; //return "redirect:/itemAdd/success"
+      return "redirect:/HomeSeller/" + SellerId;
   }
   catch (Exception e) {
     model.put("message", e.getMessage());
@@ -277,7 +265,7 @@ public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Obj
     outputAcc.setID(rs.getInt("ID"));
     Integer temp2[] = {};
     if(temp != null){
-      temp2 = (Integer[]) temp.getArray();
+      temp2 = (Integer[]) temp.getArray(); //make sure we remove IDs that are no longer available
     }
     Integer[] tempArr = temp2;
     Item outputItem = new Item();
@@ -303,11 +291,11 @@ public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Obj
   path = "/DELETEmi/{id}",
   consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
 )
-public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception {
+public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recId, Map<String, Object> model) throws Exception {
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
-    stmt.executeUpdate("DELETE FROM Items WHERE id=" + recID);
-    return "redirect:/successDeleteMyItem";
+    stmt.executeUpdate("DELETE FROM Items WHERE id=" + recId);
+    return "redirect:/HomeSeller/" + recId; //redirect:/SuccessDeleteMyItem
   } catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
@@ -398,7 +386,7 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
     System.out.println(account.getUsername());
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Accounts (Id serial, Username varchar(20), Password varchar(16), Role varchar(16),Shoppinglist Integer[],Sellinglist Integer[])");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Accounts (Id serial, Username varchar(20), Password varchar(16), Role varchar(16),Shoppinglist Integer[1], Sellinglist Integer[1])");
       String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+ "' ";
       ResultSet rs = stmt.executeQuery(sql);
       if(rs.next() == true){
@@ -507,10 +495,6 @@ String getLoginSuccess() {
 
 
 
-
-
-
-
 @GetMapping(path = "/Success/search")
 public String getsearchagain(Map<String, Object> model){
   Searchname item = new Searchname() ;   //creates a new empty Item object
@@ -531,6 +515,65 @@ public String getsearchagain(Map<String, Object> model){
     public String getHomeNOID(Map<String, Object> model){
       return "home"; 
     }
+
+@PostMapping(path = {"/AddToShoppingListMyItem/{Userid}/{Itemid}","/AddToShoppingListMyItem"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String AddItemShoppingList(Map<String, Object> model, @PathVariable ("Userid") Integer UserId, @PathVariable ("Itemid") Integer ItemId, Searchname item) throws Exception{
+    try (Connection connection = dataSource.getConnection()) {
+      Statement stmt = connection.createStatement();
+      System.out.println(UserId);
+      ResultSet rsTemp = stmt.executeQuery("SELECT * FROM Items WHERE id =" + ItemId);
+      ArrayList<Integer> tempStoreItemID = new ArrayList<Integer>();
+
+      if(rsTemp.next()) {
+
+        Integer storeItemId = rsTemp.getInt("Id"); // get Item ID
+
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + UserId);
+        if(rs.next()){
+          Array temp = rs.getArray("ShoppingList");
+
+          if(temp != null){
+            Integer[] temp2 = (Integer[])temp.getArray();
+
+            for(int i = 0; i < temp2.length; i++){
+              if(temp2[i] != null)
+                tempStoreItemID.add(temp2[i]);
+            }
+          }
+
+          if(!(tempStoreItemID.contains(storeItemId))){    // https://popsql.com/learn-sql/postgresql/how-to-modify-arrays-in-postgresql - find a way to copy array / make sure no removed items in existing array
+            tempStoreItemID.add(storeItemId);
+          }
+
+          Integer newIDList[] = new Integer[tempStoreItemID.size()];
+          newIDList = tempStoreItemID.toArray(newIDList);
+
+          System.out.println("User = " + UserId); //print out to confirm correct
+          System.out.println("Item = " + storeItemId);
+          for (Integer obj : newIDList)
+                System.out.println(obj);
+
+          String temp;
+
+          for(int i = 0; i < newIDList.length; i++){
+
+          }
+              
+          stmt.executeUpdate("UPDATE Accounts SET ShoppingList = '" + newIDList +"' WHERE id = " + UserId);
+        }
+      }
+    
+      // if (!file.isEmpty()) {
+      //   byte[] fileBytes = file.getBytes();
+      //   Item.setImage(fileBytes);
+      // }
+      return "MyItem/" + UserId + "/" + ItemId;
+  }
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
 
    
 

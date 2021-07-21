@@ -12,11 +12,11 @@
           <h1 class="logo"></h1>
           <nav>
             <ul>
-              <li><a href="./Home">Home</a></li>
-              <li><a href="./About">About</a></li>
-              <li><a href="./ShoppingList">Shoppinglist</a></li>
-              <li><a href="./Login">Login</a></li>
-              <li><a href="./Search">Search</a></li>
+              <li><a href="../Home">Home</a></li>
+              <li><a href="../About">About</a></li>
+              <li><a href="../ShoppingList">Shoppinglist</a></li>
+              <li><a href="../Login">Login</a></li>
+              <li><a href="../Search">Search</a></li>
               <li>
                 <div class="dropdown">
                     <button class="dropbtn">More
@@ -44,7 +44,7 @@
             </div>
 
 
-            <table th:each="record : ${ret}" class ="TableFormat">
+            <table th:each="record : ${retItem}" class ="TableFormat">
                 
                 <tr>
                     <th>Name</th>
@@ -68,22 +68,22 @@
                 </tr>
             </table>
 
-            <div id = "outer">
+            <div id = "outer" th:each="record : ${retItem}">
 
                 <input type="button" class="btn" value="Back" onclick="location.href='/HomeSeller'">
                 
-                <form action="#" method="post" th:each="record : ${ret}" th:action="@{/DELETEmi/{id}(id=${record.getID()})}">
+                <form action="#" method="post" th:each="record : ${retItem}" th:action="@{/DELETEmi/{id}(id=${record.getID()})}">
                     <input type="submit" class="btnDelete" value="DELETE"></td>
                 </form>
-
-                <form action="#" method="post" th:each="record : ${ret}" th:action="@{/]AddToSLmi/{id}(id=${record.getID()})}"> <!-- not done working adding to shopping list-->
+                <iframe name="votar" style="display:none;"></iframe>
+                <form action="#" method="post" th:each="id : ${retUserId}" th:action="@{/AddToShoppingListMyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" target = "votar"> <!-- not done working adding to shopping list-->
                     <input type="submit" class="btnAdd" value="Add to Shopping List"></td>
                 </form>
             </div>
 
             <h2>Update Item Information</h2>
 
-            <form action="#" method="post" th:each="record : ${ret}" th:action="@{/UPDATEmi/{id}(id=${record.getID()})}" th:object="${Item}">
+            <form action="#" method="post" th:each="record : ${retItem}" th:action="@{/UPDATEmi/{id}(id=${record.getID()})}" th:object="${Item}" target = "hiddenFrame">
 
                 <div>Place Old Image here Placeholder</div><br><br> <!-- fix needed -->
 

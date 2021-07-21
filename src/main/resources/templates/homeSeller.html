@@ -62,9 +62,9 @@
               </table>
             </div>
             
-            <h3>Add an Item For Sale</h3> 
+            <h3  th:each="UserID: ${UserID}">Add an Item For Sale</h3> 
             <div class="listingBox">
-              <form method="post" action ="#" th:action="@{/afterSubmitNewItem}" th:object="${Item}" enctype="multipart/form-data">
+              <form method="post" action ="#" th:action="@{/afterSubmitNewItem/{id}(id=${UserID.getUserID()})}" th:object="${Item}" enctype="multipart/form-data">
                 
                     <input type="text" th:field=*{Name} placeholder="Product Name" id="gettingName" class="sameSize" onkeyup="nameUpdate()"><br><br>
                     <select  th:field = *{Category} class="categoryBox">

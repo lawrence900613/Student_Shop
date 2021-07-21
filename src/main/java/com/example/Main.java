@@ -57,7 +57,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+// import UserID.java;
 
 @Controller
 @SpringBootApplication
@@ -102,9 +102,12 @@ public class Main {
           model.put("ret", output);
         }
       }
-      System.out.println("IN THIS GETMAPPING with home/{id}");
+      System.out.println("IN THIS GETMAPPING with home/{id} "+recieveID);
       switch(output.getRole()){
         case "seller":
+          UserID userID = new UserID();
+          userID.setUserID(recieveID);
+          model.put("userID", recieveID);
           return "homeSeller";
         case "customer":
           return "home";
@@ -171,27 +174,33 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
       ResultSet rs = stmt.executeQuery("SELECT SellingList FROM Accounts WHERE ID =" + id);
       ArrayList<Item> storeItem = new ArrayList<Item>();
       if(rs.next()){
-      Array temp = rs.getArray("SellingList");
-      Integer temp2[] = {};
-      if(temp != null){
-        temp2 = (Integer[]) temp.getArray();
+        Array temp = rs.getArray("SellingList");
+        Integer temp2[] = {};
+
+        if(temp != null){
+          temp2 = (Integer[]) temp.getArray();
+          Integer[] tempArr = temp2;
+          for(int i = 0; i < tempArr.length; i++){
+
+            ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //implement move on when empty ID
+            Item outputItem = new Item();
+            outputItem.setName(rs2.getString("Name"));
+            outputItem.setCategory(rs2.getString("Category"));
+            outputItem.setStock(rs2.getInt("Stock"));
+            outputItem.setID(rs2.getInt("ID"));
+            storeItem.add(outputItem);
+          }
+        }
       }
-      Integer[] tempArr = temp2;
-      for(int i = 0; i < tempArr.length; i++){
-        ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); //implement move on when empty ID
-        Item outputItem = new Item();
-        outputItem.setName(rs2.getString("Name"));
-        outputItem.setCategory(rs2.getString("Category"));
-        outputItem.setStock(rs2.getInt("Stock"));
-        outputItem.setID(rs2.getInt("ID"));
-        storeItem.add(outputItem);
-      }
-    }
+      model.put("records", storeItem);
+      System.out.println("Inside HomeSeller/id with id= "+id);
+    
       Item in = new Item(); 
       model.put("Item", in);
-
-      model.put("records", storeItem);
+      UserID userID = new UserID();
+      model.put("UserID", userID);
       return "homeSeller";
+
     }catch (Exception e) {
       model.put("message", e.getMessage());
       return "error";
@@ -199,13 +208,19 @@ public String myItem(@PathVariable("id") Integer receiveID, Map<String, Object> 
   }
 
 
-@PostMapping(path = "/afterSubmitNewItem", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item Item, @RequestParam("file") MultipartFile file)  throws Exception{
+@PostMapping(path = "/afterSubmitNewItem/{id}", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String handleNewItem(Map<String, Object> model, @PathVariable (required = false) String id, Item Item, @RequestParam("file") MultipartFile file)  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
+      Integer intID = Integer.parseInt(id);
+      System.out.println("1 inside aftersubmitnewitem/id with id = "+intID);
+
       Statement stmt = connection.createStatement();
 
 // trying to add sellerid into items------------------------------------------------------------------------------------
+      UserID userid = new UserID();
+      Integer idofuser = userid.getUserID();
+      System.out.println("2 getting ID value.. id = "+idofuser);
 
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
       if (!file.isEmpty()) {
@@ -333,27 +348,31 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recID, Map
     try(Connection connection = dataSource.getConnection()) {
       System.out.println(account.getRole());
       Statement stmt = connection.createStatement();
-        String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
-        ResultSet rs = stmt.executeQuery(sql);
-        if(rs.next()){
-          String role = rs.getString("Role");
-          Integer id = rs.getInt("Id");
-          if(role.equals("customer")){
-            System.out.println(account.getRole());
-            System.out.println("Success");
-            System.out.println(id);
-            UserID userid = new UserID();
-            userid.setUserID(id);
-            model.put("userID", userid);
-            return "redirect:/Home/"+id;
-          }else{
-            System.out.println("Success123");
-            System.out.println(id);
-            UserID userid = new UserID();
-            userid.setUserID(id);
-            model.put("userID", userid);
-            return "redirect:/HomeSeller/"+id;
-          }
+      String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+"'AND Password ='"+account.getPassword() + "' ";
+      ResultSet rs = stmt.executeQuery(sql);
+      if(rs.next()){
+        String role = rs.getString("Role");
+        Integer id = rs.getInt("Id");
+        if(role.equals("customer")){
+          System.out.println(account.getRole());
+          System.out.println("Success");
+          System.out.println(id);
+          UserID userid = new UserID();
+          userid.setUserID(id);
+          model.put("userID", userid);
+          return "redirect:/Home/"+id;
+        }else{
+          System.out.println("Success123");
+          System.out.println(id);
+          UserID userid = new UserID();
+          ItemID itemid = new ItemID();
+
+          userid.setUserID(id);
+          model.put("userID", userid);
+          model.put("Item", itemid);
+          System.out.println("inside the login post!!!! id= "+id);
+          return "redirect:/HomeSeller/"+id;
+        }
       }
       return "badlogin";
     } catch (Exception e) {

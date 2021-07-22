@@ -78,8 +78,12 @@ public class Main {
     return "home";  //basic landing of user
   }
 
-  @GetMapping( path = "/About")
-  String about() {
+  @GetMapping( path = "/About/{id}")
+  String about(@PathVariable("id") Integer recieveID, Map<String, Object> model ){
+    
+    UserID temp = new UserID();
+    temp.setUserID(recieveID);
+    model.put("UserId", temp);
     return "About";  
   }
 
@@ -228,14 +232,59 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
 
 
 @PostMapping(
-  path = "/DELETEsp/{id}",
+  path = "/DELETEsp/{UserId}/{ItemId}",
   consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
 )
-public String handleDeleteButtonForShoppingList(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception {
+public String handleDeleteButtonForShoppingList(@PathVariable("UserId") Integer UserId, @PathVariable("ItemId") Integer ItemId, Map<String, Object> model) throws Exception {
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
-    stmt.executeUpdate("DELETE FROM DBNAME WHERE id=" + recID + ";"); //THIS NEEDS TO GO INTO USER ARRAY TO DELETE NUMBER
-    return "redirect:/successDeleteShoppingList";
+    ResultSet rsTemp = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + UserId); //THIS NEEDS TO GO INTO USER ARRAY TO DELETE NUMBER
+
+    ArrayList<Integer> tempStoreItemID = new ArrayList<Integer>();
+
+      if(rsTemp.next()){
+          Array temp = rsTemp.getArray("ShoppingList");
+
+          if(temp != null){
+            Integer[] temp2 = (Integer[])temp.getArray();
+
+            for(int i = 0; i < temp2.length; i++){
+              if(temp2[i] != null)
+                tempStoreItemID.add(temp2[i]);
+            }
+          }
+
+          if(tempStoreItemID.contains(ItemId)){ //remove from array if exist
+            tempStoreItemID.remove(ItemId);
+          }
+
+          Integer newIDList[] = new Integer[tempStoreItemID.size()];
+          newIDList = tempStoreItemID.toArray(newIDList);
+
+          System.out.println("User = " + UserId); //print out to confirm correct
+          System.out.println("Item = " + ItemId);
+          for (Integer obj : newIDList)
+                System.out.println(obj);
+
+
+          StringBuilder string = new StringBuilder();
+          string.append("{");
+          for(int i = 0; i < newIDList.length; i++){
+             string.append(newIDList[i]);
+             if(i != newIDList.length - 1)
+              string.append(",");
+          }
+          string.append("}");
+          System.out.println(string);    
+          stmt.executeUpdate("UPDATE Accounts SET ShoppingList = '" + string + "' WHERE id = " + UserId);
+      }
+
+      UserID temp = new UserID();
+      temp.setUserID(UserId);
+      model.put("UserId", temp);
+
+      return "successDeleteShoppingList";
+
   } catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
@@ -249,51 +298,70 @@ public String getShoppingListNoID(Map<String, Object> model) throws Exception{
 
  
 @GetMapping(path="/ShoppingList/{id}")
-public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception{
+public String getShoppingList(@PathVariable("id") Integer UserId, Map<String, Object> model) throws Exception{
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts");
-    while (rs.next()) {
-      if(rs.getInt("Id") == recID){
-        break;
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + UserId);
+
+    if(rs.next()){
+      Array temp = rs.getArray("ShoppingList");
+  
+      ArrayList<Integer> tempStoreItemID = new ArrayList<Integer>();
+
+      if(temp != null){ //if array not empty
+        Integer[] temp2 = (Integer[])temp.getArray();
+
+        for(int i = 0; i < temp2.length; i++){
+          if(temp2[i] != null)
+            tempStoreItemID.add(temp2[i]); //copy to arraylist
+        }
       }
+
+      ArrayList<Item> storeItems = new ArrayList<Item>(); //store all the items
+
+      for(int i = 0; i < tempStoreItemID.size(); i++){
+        ResultSet rsTemp = stmt.executeQuery("SELECT * FROM Items WHERE id =" + tempStoreItemID.get(i));
+        if(rsTemp.next()){
+          Item outputItem = new Item();
+          outputItem.setName(rsTemp.getString("Name"));
+          outputItem.setDescription(rsTemp.getString("Description"));
+          outputItem.setPrice(rsTemp.getFloat("Price"));
+          outputItem.setID(rsTemp.getInt("ID"));
+          storeItems.add(outputItem);
+        }
+      }
+    
+
+      UserID tempId = new UserID();
+      tempId.setUserID(UserId);
+      model.put("UserId", tempId);
+
+      model.put("records", storeItems); //iterate all shopping list item and link them to respective page
     }
-    Account outputAcc = new Account();
-    Array temp = rs.getArray("ShoppingList");
-    outputAcc.setID(rs.getInt("ID"));
-    Integer temp2[] = {};
-    if(temp != null){
-      temp2 = (Integer[]) temp.getArray(); //make sure we remove IDs that are no longer available
-    }
-    Integer[] tempArr = temp2;
-    Item outputItem = new Item();
-    ArrayList<Item> storeItem = new ArrayList<Item>();
-    for(int i = 0; i < tempArr.length; i++){
-      ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); 
-      outputItem.setName(rs2.getString("Name"));
-      outputItem.setDescription(rs2.getString("Description"));
-      outputItem.setPrice(rs2.getFloat("Price"));
-      outputItem.setID(rs2.getInt("ID"));
-      storeItem.add(outputItem);
-      
-    }
-    model.put("records", storeItem); //iterate all shopping list item and link them to respective page ***
     return "shoppingList";
-  }catch (Exception e) {
+
+  }
+  catch (Exception e){
     model.put("message", e.getMessage());
     return "error";
   }
 }
 
 @PostMapping(
-  path = "/DELETEmi/{id}",
+  path = "/DELETEmi/{uid}/{id}",
   consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
 )
-public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recId, Map<String, Object> model) throws Exception {
+public String handleDeleteButtonForMyItem(@PathVariable("uid") Integer UserId, @PathVariable("id") Integer ItemId, Map<String, Object> model) throws Exception {
   try (Connection connection = dataSource.getConnection()) {
     Statement stmt = connection.createStatement();
-    stmt.executeUpdate("DELETE FROM Items WHERE id=" + recId);
-    return "redirect:/HomeSeller/" + recId; //redirect:/SuccessDeleteMyItem
+    stmt.executeUpdate("DELETE FROM Items WHERE id=" + ItemId);
+
+    UserID temp = new UserID();
+    temp.setUserID(UserId);
+    model.put("UserId", temp);
+
+    return "SuccessDeleteMyItem";
+
   } catch (Exception e) {
     model.put("message", e.getMessage());
     return "error";
@@ -301,14 +369,19 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recId, Map
 }
 
   @PostMapping( 
-    path = "/UPDATEmi/{id}",
+    path = "/UPDATEmi/{uid}/{id}",
     consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE}
   )
-  public String handleUpdateButtonforMyItem(@PathVariable("id") Integer receiveID, Map<String, Object> model, Item item) throws Exception {
+  public String handleUpdateButtonforMyItem(@PathVariable("uid") Integer UserId, @PathVariable("id") Integer receiveID, Map<String, Object> model, Item item) throws Exception {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
       System.out.println(item.getName());
       stmt.executeUpdate("UPDATE Items SET Name ='" + item.getName() + "', Category = '" + item.getCategory() + "', Description = '" + item.getDescription() + "', Price = '" + item.getPrice() + "', Stock = '" + item.getStock() + "' WHERE id =" + receiveID + ";");
+      
+      UserID temp = new UserID();
+      temp.setUserID(UserId);
+      model.put("UserId", temp);
+
       return "successUpdate"; 
     } catch (Exception e) {
       model.put("message", e.getMessage());
@@ -535,7 +608,7 @@ public String getsearchagain(Map<String, Object> model){
             }
           }
 
-          if(!(tempStoreItemID.contains(storeItemId))){    // https://popsql.com/learn-sql/postgresql/how-to-modify-arrays-in-postgresql - find a way to copy array / make sure no removed items in existing array
+          if(!(tempStoreItemID.contains(storeItemId))){    //find a way to copy array / make sure no removed items in existing array
             tempStoreItemID.add(storeItemId);
           }
 
@@ -547,13 +620,17 @@ public String getsearchagain(Map<String, Object> model){
           for (Integer obj : newIDList)
                 System.out.println(obj);
 
-          String temp;
 
+          StringBuilder string = new StringBuilder();
+          string.append("{");
           for(int i = 0; i < newIDList.length; i++){
-
+             string.append(newIDList[i]);
+             if(i != newIDList.length - 1)
+              string.append(",");
           }
-              
-          stmt.executeUpdate("UPDATE Accounts SET ShoppingList = '" + newIDList +"' WHERE id = " + UserId);
+          string.append("}");
+          System.out.println(string);    
+          stmt.executeUpdate("UPDATE Accounts SET ShoppingList = '" + string + "' WHERE id = " + UserId);
         }
       }
     
@@ -561,7 +638,7 @@ public String getsearchagain(Map<String, Object> model){
       //   byte[] fileBytes = file.getBytes();
       //   Item.setImage(fileBytes);
       // }
-      return "MyItem/" + UserId + "/" + ItemId;
+      return "redirect:MyItem/" + UserId + "/" + ItemId;
   }
   catch (Exception e) {
     model.put("message", e.getMessage());

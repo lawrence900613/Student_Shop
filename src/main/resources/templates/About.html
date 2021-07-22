@@ -11,8 +11,8 @@
         <div class="container">
           <h1 class="logo"></h1>
           <nav>
-            <ul>
-              <li><a href="../Home">Home</a></li>
+            <ul th:each= "UserId : ${UserId}">
+              <li><a th:href="@{/Home/{uid}(uid=${UserId.getUserID()})}">Home</a></li>
               <li><a href="../About">About</a></li>
               <li><a href="../ShoppingList">Shoppinglist</a></li>
               <li><a href="../Login">Login</a></li>
@@ -33,7 +33,7 @@
             </ul>
           </nav>
         </div>
-      </header>
+      </header>-->
     <div class="WhiteBox">
         <h2>Find-all</h2>
         <div class="GreyBox">

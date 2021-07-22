@@ -2,7 +2,7 @@
 <html lan="en"> <!-- renamed to Item page, used to be myPage -->
 
 <head>
-    <link rel="stylesheet" href="../stylesheets/myPage.css">
+    <link rel="stylesheet" href="../public/stylesheets/myPage.css" th:href="@{/myPage.css}">
     <title>Your Page</title>
 </head>
 
@@ -70,43 +70,46 @@
 
             <div id = "outer" th:each="record : ${retItem}">
 
-                <input type="button" class="btn" value="Back" onclick="location.href='/HomeSeller'">
+                <input type="button"  th:each="id : ${retUserId}" class="btn" value="Back" th:onclick="'window.location.href = \'' + @{/HomeSeller/{uid}(uid=${id.getUserID()})} + '\''">
                 
-                <form action="#" method="post" th:each="record : ${retItem}" th:action="@{/DELETEmi/{id}(id=${record.getID()})}">
+                <form action="#" method="post" th:each="id : ${retUserId}" th:action="@{/DELETEmi/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}">
                     <input type="submit" class="btnDelete" value="DELETE"></td>
                 </form>
                 <iframe name="votar" style="display:none;"></iframe>
-                <form action="#" method="post" th:each="id : ${retUserId}" th:action="@{/AddToShoppingListMyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" target = "votar"> <!-- not done working adding to shopping list-->
+                <form action="#" method="post" th:each="id : ${retUserId}" th:action="@{/AddToShoppingListMyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" target = "votar">
                     <input type="submit" class="btnAdd" value="Add to Shopping List"></td>
                 </form>
             </div>
 
             <h2>Update Item Information</h2>
 
-            <form action="#" method="post" th:each="record : ${retItem}" th:action="@{/UPDATEmi/{id}(id=${record.getID()})}" th:object="${Item}" target = "hiddenFrame">
+            <div th:each="id : ${retUserId}">
 
-                <div>Place Old Image here Placeholder</div><br><br> <!-- fix needed -->
+                <form action="#" method="post" th:each="record : ${retItem}" th:action="@{/UPDATEmi/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" th:object="${Item}" target = "hiddenFrame">
 
-                <input type="text" th:value="${record.getName()}" name="Name" id ="Name"><br><br>
+                    <div>Place Old Image here Placeholder</div><br><br> <!-- fix needed -->
 
-                <textarea type="text" th:text="${record.getDescription()}"  name = "Description" id = "Description" cols="30" rows="10" style="width: 300px; height: 200px; font-size: 20px;"></textarea> <br><br>
+                    <input type="text" th:value="${record.getName()}" name="Name" id ="Name"><br><br>
 
-                <select name ="Category" id ="Cataegory">
-                    <option value=""  selected hidden style="color: gray;" th:text="${record.getCategory()}">Choose Category..</option>
-                    <option value="electronics" >Electronics</option>
-                    <option value="food">Food</option>
-                    <option value="kitchen">Kitchen</option>
-                </select><br><br>
+                    <textarea type="text" th:text="${record.getDescription()}"  name = "Description" id = "Description" cols="30" rows="10" style="width: 300px; height: 200px; font-size: 20px;"></textarea> <br><br>
 
-                <input type="number" th:value="${record.getPrice()}" name="Price" id = "Price" step="any"> <br><br>
+                    <select name ="Category" id ="Cataegory">
+                        <option value=""  selected hidden style="color: gray;" th:text="${record.getCategory()}">Choose Category..</option>
+                        <option value="electronics" >Electronics</option>
+                        <option value="food">Food</option>
+                        <option value="kitchen">Kitchen</option>
+                    </select><br><br>
 
-                <input type="number" th:value="${record.getStock()}" name="Stock" id = "Stock" step="1"> <br>
+                    <input type="number" th:value="${record.getPrice()}" name="Price" id = "Price" step="any"> <br><br>
 
-                <p class="listingHeading">Upload Image of Item:</p>
-                <input type="file" name="file" id="file"  accept= "image/*" class="sameSize"><br><br> <!-- not sure how image upload works-->
+                    <input type="number" th:value="${record.getStock()}" name="Stock" id = "Stock" step="1"> <br>
 
-                <input type="submit" class="btnUpdate" value="UPDATE"></td>
-            </form>
+                    <p class="listingHeading">Upload Image of Item:</p>
+                    <input type="file" name="file" id="file"  accept= "image/*" class="sameSize"><br><br> <!-- not sure how image upload works-->
+
+                    <input type="submit" class="btnUpdate" value="UPDATE"></td>
+                </form>
+            </div>
         
         </div>
     </div>

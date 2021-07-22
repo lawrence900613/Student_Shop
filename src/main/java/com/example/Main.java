@@ -397,36 +397,12 @@ public String getShoppingList(@PathVariable("id") String recievedID, Map<String,
     
 
       UserID tempId = new UserID();
-      tempId.setUserID(UserId);
-      model.put("UserId", tempId);
+      tempId.setUserID(recID);
+      model.put("UserID", tempId);
 
       model.put("records", storeItems); //iterate all shopping list item and link them to respective page
     }
-    Account outputAcc = new Account();
-    Array temp = rs.getArray("ShoppingList");
-    outputAcc.setID(rs.getInt("ID"));
-    Integer temp2[] = {};
-    if(temp != null){
-      temp2 = (Integer[]) temp.getArray(); //make sure we remove IDs that are no longer available
-    }
-    Integer[] tempArr = temp2;
-    Item outputItem = new Item();
-    ArrayList<Item> storeItem = new ArrayList<Item>();
-    for(int i = 0; i < tempArr.length; i++){
-      ResultSet rs2 = stmt.executeQuery("SELECT * FROM Items WHERE id=" + tempArr[i]); 
-      outputItem.setName(rs2.getString("Name"));
-      outputItem.setDescription(rs2.getString("Description"));
-      outputItem.setPrice(rs2.getFloat("Price"));
-      outputItem.setID(rs2.getInt("ID"));
-      storeItem.add(outputItem);
-      
-    }
-    model.put("records", storeItem); //iterate all shopping list item and link them to respective page ***
-
-    UserID tempid = new UserID();
-    tempid.setUserID(recID);
-    model.put("UserID", tempid);
-
+    
     return "shoppingList";
 
   }

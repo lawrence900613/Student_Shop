@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Success</title>
+  <title>Update Success</title>
 </head>
 <body>
-  Successfully updated from database!
+  Successfully updated your listings!
 
-  <input type="button" class="botton" value="Back" onclick="location.href='/HomeSeller'">
+  <input type="button" th:each="id : ${UserId}" class="botton" value="Back" th:onclick="'window.location.href = \'' + @{/HomeSeller/{uid}(uid=${id.getUserID()})} + '\''">
 </body>
 </html>

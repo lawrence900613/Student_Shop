@@ -48,34 +48,17 @@
                     </thead>
                     
                     <tbody>
-                        <!--
-                        <td> test </td>
-                        <td> image + This is the first test </td>
-                        <td> $420 </td>-->
                         <tr th:each="record : ${records}" >
-                            <td> test </td>
-                            <td> image + This is the first test </td>
-                            <td> $420 </td>
 
-                            <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}">
+                            <td><a href="#"  th:each="id : ${UserId}" th:href="@{/MyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" th:utext="${record.getName()}"></a></td>
+                            <td th:utext="${record.getCategory()}"></td>
+                            <td th:utext="${record.getStock()}"></td>
+
+                            <form action="#" th:each="id : ${UserId}" method="post" th:action="@{/DELETEsp/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}">
                                 <td><input type="submit" class="btnDelete" value="DELETE"></td>
                             </form>
+                            
 
-                            <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}"> <!-- buy button to implement-->
-                                <td><input type="submit" class="btnBUY" value="BUY"></td>
-                            </form>
-                        </tr>
-                        <tr th:each="record : ${records}" >
-                            <td> test2 </td>
-                            <td> This is the first test2 </td>
-                            <td> $42022 </td>
-                            <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}">
-                                <td><input type="submit" class="btnDelete" value="DELETE"></td>
-                            </form>
-
-                            <form action="#" method="post" th:action="@{/DELETEsp/{id}(id=${record.getID()})}">
-                                <td><input type="submit" class="btnBUY" value="BUY"></td>
-                            </form>
                         </tr>
                     </tbody>
             

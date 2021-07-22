@@ -23,8 +23,8 @@
         <button type="submit">Login</button>
     </div>
 
-    <div class="container">
-        <button type="button" class="cancel" onclick="location.href='/Home'">Cancel</button>
+    <div class="container" th:each="UserID : ${UserID}">
+        <button type="button" class="cancel"   th:onclick="'window.location.href=\'/Home/' + ${UserID.getUserID()} + '\''">Cancel</button>
         <span class="create"><a th:href="@{/Create}">Create Account</a></span>
     </div>
 </form>

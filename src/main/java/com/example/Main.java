@@ -74,10 +74,18 @@ public class Main {
   }
 
   @RequestMapping("/")
-  String landing() {
+  public String landingNoSignin( Map<String, Object> model ) {
+    UserID idofuser = new UserID();
+    idofuser.setUserID(0);
+    model.put("UserID", idofuser);
     return "home";  //basic landing of user
   }
 
+  @GetMapping(path = "/About")
+  public String getAboutNOID(Map<String, Object> model){
+    return "About"; 
+  }
+  
   @GetMapping( path ="/About/{id}")
   public String about(@PathVariable("id")Integer recieveID, Map<String, Object> model ) {
     System.out.println("recieved id is = " +recieveID);
@@ -105,7 +113,10 @@ public class Main {
   //   System.out.println("about to go to searchhtml");
   //   return "search";  
   // }
-  
+  // @GetMapping(path = "/Home")
+  //   public String getHomeNOID(Map<String, Object> model){
+  //     return "home"; 
+  //   }
 
  @GetMapping(path ="/Home/{id}")
   public String landingSpecialized(@PathVariable("id") Integer recieveID, Map<String, Object> model) {
@@ -131,15 +142,22 @@ public class Main {
       //   model.put("UserID", idofuser);
       //   return "HomeSeller/" + output.getID();
       // }
-    if(output.getRole() == "customer" || output.getRole() == "seller"){
+
+      if(recieveID == 0){
+
+        UserID idofuser = new UserID();
+        idofuser.setUserID(0);
+        model.put("UserID", idofuser);
+        return "home";
+      }
+    // if(output.getRole() == "customer" || output.getRole() == "seller"){
+      else{
         UserID idofuser = new UserID();
         idofuser.setUserID(recieveID);
         model.put("UserID", idofuser);
         return "home";
       }
-      else{
-        return "home";
-      }
+      
       
     }
 
@@ -279,18 +297,29 @@ public String handleDeleteButtonForShoppingList(@PathVariable("id") Integer recI
   }
 }
 
-@GetMapping(path="/ShoppingList")
-public String getShoppingListNoID(Map<String, Object> model) throws Exception{
-  return "shoppingList";
-}
+// @GetMapping(path="/ShoppingList")
+// public String getShoppingListNoID(Map<String, Object> model) throws Exception{
+//   return "shoppingList";
+// }
 
  
 @GetMapping(path="/ShoppingList/{id}")
-public String getShoppingList(@PathVariable("id") String idofuser, Map<String, Object> model) throws Exception{
+public String getShoppingList(@PathVariable("id") String recievedID, Map<String, Object> model) throws Exception{
   try (Connection connection = dataSource.getConnection()) {
-    Integer recID = Integer.parseInt(idofuser);
+    System.out.println("Currently in shoppinglist");
+
+    Integer recID = Integer.parseInt(recievedID);
     Statement stmt = connection.createStatement();
     ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts");
+    if(recID == 0){
+      Account account = new Account();
+      model.put("account", account);
+
+      UserID idofuser = new UserID();
+      idofuser.setUserID(0);
+      model.put("UserID", idofuser);
+      return "guestlogin";
+    }
     while (rs.next()) {
       if(rs.getInt("Id") == recID){
         break;
@@ -316,6 +345,11 @@ public String getShoppingList(@PathVariable("id") String idofuser, Map<String, O
       
     }
     model.put("records", storeItem); //iterate all shopping list item and link them to respective page ***
+
+    UserID tempid = new UserID();
+    tempid.setUserID(recID);
+    model.put("UserID", tempid);
+
     return "shoppingList";
   }catch (Exception e) {
     model.put("message", e.getMessage());
@@ -356,11 +390,17 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recId, Map
   }
 
   @GetMapping(
-    path = "/Login"
+    path = "/Login/{id}"
   )
-  public String getLoginForm(Map<String, Object> model) {
+  public String getLogin(@PathVariable("id") String recievedID, Map<String, Object> model) throws Exception{
     Account account = new Account();
     model.put("account", account);
+    Integer recID = Integer.parseInt(recievedID);
+
+
+    UserID idofuser = new UserID();
+    idofuser.setUserID(recID);
+    model.put("UserID", idofuser);
     return "login";
   }
 
@@ -383,7 +423,7 @@ public String handleDeleteButtonForMyItem(@PathVariable("id") Integer recId, Map
           System.out.println(id);
           UserID userid = new UserID();
           userid.setUserID(id);
-          model.put("userID", userid);
+          model.put("UserID", userid);
           return "redirect:/Home/"+id;
         }else{
           System.out.println("Success123");
@@ -449,16 +489,16 @@ String getLoginSuccess() {
 
 
   @GetMapping(path = {"/Search/{id}","/Search"})
-    public String getSearch(@PathVariable (required = false) Integer id, Map<String, Object> model){
+    public String getSearch(@PathVariable ("id") Integer id, Map<String, Object> model){
       try (Connection connection = dataSource.getConnection()) {
-        if(id == null){
+        if(id == 0){
           Searchname item = new Searchname() ;
           ItemID ID = new ItemID();
           UserID userID = new UserID();
-          userID.setUserID(0);
+          userID.setUserID(id);
           System.out.println(userID.getUserID());
 
-          model.put("userID",userID);    //creates a new empty Item object
+          model.put("UserID",userID);    //creates a new empty Item object
           model.put("item", item);
           model.put("ID", ID);
           return "search"; 
@@ -472,7 +512,7 @@ String getLoginSuccess() {
             ItemID ID = new ItemID();
             userID.setUserID(rs.getInt("Id"));
             System.out.println(userID.getUserID());
-            model.put("userID", userID);
+            model.put("UserID", userID);
             model.put("item", item);
             model.put("ID", ID);
             return "search";
@@ -589,11 +629,6 @@ public String getsearchagain(Map<String, Object> model){
 
 
 
-
-  // @GetMapping(path = "/Home")
-  //   public String getHomeNOID(Map<String, Object> model){
-  //     return "home"; 
-  //   }
 
 @PostMapping(path = {"/AddToShoppingListMyItem/{Userid}/{Itemid}","/AddToShoppingListMyItem"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
   public String AddItemShoppingList(Map<String, Object> model, @PathVariable ("Userid") Integer UserId, @PathVariable ("Itemid") Integer ItemId, Searchname item) throws Exception{

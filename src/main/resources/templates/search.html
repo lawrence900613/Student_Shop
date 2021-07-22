@@ -9,14 +9,14 @@
 <body>
     <header>
         <div class="container">
-          <h1 class="logo"></h1>
-          <nav>
-            <ul>
-                <li><a href="../Home">Home</a></li>
-                <li><a href="../About">About</a></li>
-                <li><a href="../ShoppingList">Shoppinglist</a></li>
-                <li><a href="../Login">Login</a></li>
-                <li><a href="../Search">Search</a></li>
+          <h1 class="logo" th:each="UserID : ${UserID}"></h1>
+          <nav >
+            <ul >
+              <li><a th:href="@{/Home/{uid}(uid=${UserID.getUserID()})}" >Home</a></li>
+              <li><a th:href="@{/About/{uid}(uid=${UserID.getUserID()})}">About</a></li>
+              <li><a th:href="@{/ShoppingList/{uid}(uid=${UserID.getUserID()})}">Shoppinglist</a></li>
+              <li><a th:href="@{/Login/{uid}(uid=${UserID.getUserID()})}">Login</a></li>
+              <li><a th:href="@{/Search/{uid}(uid=${UserID.getUserID()})}">Search</a></li>
                 <li>
                 <div class="dropdown">
                     <button class="dropbtn">More

@@ -9,10 +9,10 @@
 <body>
     <header>
         <div class="container">
-          <h1 class="logo"></h1>
+          <h1 class="logo" th:each="UserID : ${UserID}"></h1>
           <nav>
             <ul>
-              <li><a href="../Home">Home</a></li>
+              <li><a th:href="@{/Home/{uid}(uid=1)}" >Home</a></li>
               <li><a href="../About">About</a></li>
               <li><a href="../ShoppingList">Shoppinglist</a></li>
               <li><a href="../Login">Login</a></li>

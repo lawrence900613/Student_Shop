@@ -78,11 +78,33 @@ public class Main {
     return "home";  //basic landing of user
   }
 
-  @GetMapping( path = "/About")
-  String about() {
+  @GetMapping( path ="/About/{id}")
+  public String about(@PathVariable("id")Integer recieveID, Map<String, Object> model ) {
+    System.out.println("recieved id is = " +recieveID);
+
+    if(recieveID != null){
+      UserID idofuser = new UserID();
+      idofuser.setUserID(recieveID);
+      model.put("UserID", idofuser);
+    }
+    
+    System.out.println("about to go to About!!!!!");
     return "About";  
   }
 
+  // @GetMapping( path = "/ShoppingList/{id}")
+  // String shoppingList() {
+  //   return "shoppingList";  
+  // }
+
+  // @GetMapping( path = "/Search/{id}")
+  // public String searching(@PathVariable(required = false) Integer recieveID, Map<String, Object> model ) {
+  //   UserID idofuser = new UserID();
+  //   idofuser.setUserID(recieveID);
+  //   model.put("UserID", idofuser);
+  //   System.out.println("about to go to searchhtml");
+  //   return "search";  
+  // }
   
 
  @GetMapping(path ="/Home/{id}")
@@ -103,10 +125,16 @@ public class Main {
         }
       }
       System.out.println("IN THIS GETMAPPING with home/{id}");
-      if(output.getRole() == "seller"){
-        return "HomeSeller/" + output.getID();
-      }
-      else if(output.getRole() == "customer"){
+      // if(output.getRole() == "seller"){
+      //   UserID idofuser = new UserID();
+      //   idofuser.setUserID(recieveID);
+      //   model.put("UserID", idofuser);
+      //   return "HomeSeller/" + output.getID();
+      // }
+    if(output.getRole() == "customer" || output.getRole() == "seller"){
+        UserID idofuser = new UserID();
+        idofuser.setUserID(recieveID);
+        model.put("UserID", idofuser);
         return "home";
       }
       else{
@@ -123,13 +151,15 @@ public class Main {
   
 
 @GetMapping(path = "/MyItem/{UserId}/{ItemId}")
-public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("ItemId") Integer ItemId, Map<String, Object> model) throws Exception{
+public String myItem(@PathVariable("UserId") String idofuser, @PathVariable("ItemId") Integer ItemId, Map<String, Object> model) throws Exception{
 
   try (Connection connection = dataSource.getConnection()){
     Statement stmt = connection.createStatement();
     ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
     
     Item output = new Item(); // store data
+
+    Integer UserId = Integer.parseInt(idofuser);
 
     while (rs.next()) {
       if(rs.getInt("Id") == ItemId){
@@ -206,9 +236,10 @@ public String myItem(@PathVariable("UserId") Integer UserId, @PathVariable("Item
 
 
 @PostMapping(path = "/afterSubmitNewItem/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-  public String handleNewItem(Map<String, Object> model, Item Item, @PathVariable("id") Integer SellerId )  throws Exception{
+  public String handleNewItem(Map<String, Object> model, Item Item, @PathVariable("id") String idofuser )  throws Exception{
     //saving the data obtained into databse
     try (Connection connection = dataSource.getConnection()) {
+      Integer SellerId = Integer.parseInt(idofuser);
       System.out.println("1 inside aftersubmitnewitem/id with id = "+SellerId);
 
       Statement stmt = connection.createStatement();
@@ -255,8 +286,9 @@ public String getShoppingListNoID(Map<String, Object> model) throws Exception{
 
  
 @GetMapping(path="/ShoppingList/{id}")
-public String getShoppingList(@PathVariable("id") Integer recID, Map<String, Object> model) throws Exception{
+public String getShoppingList(@PathVariable("id") String idofuser, Map<String, Object> model) throws Exception{
   try (Connection connection = dataSource.getConnection()) {
+    Integer recID = Integer.parseInt(idofuser);
     Statement stmt = connection.createStatement();
     ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts");
     while (rs.next()) {
@@ -498,6 +530,49 @@ String getLoginSuccess() {
 }
 
 
+@PostMapping(path = {"/Searchcategory/{id}","/Searchcategory"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+  public String searchcategory(Map<String, Object> model, @PathVariable (required = false) Integer id, Searchname item) throws Exception{
+    //saving the data obtained into databse
+    try (Connection connection = dataSource.getConnection()) {
+      Statement stmt = connection.createStatement();
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE Category = "+ item);
+      ArrayList<Item> output = new ArrayList<Item>();
+      String searchname = item.getName();
+      searchname = searchname.toLowerCase();
+      System.out.println(searchname);
+      while (rs.next()) {
+        String productname = rs.getString("name");
+        productname = productname.toLowerCase();
+        if(productname.contains(searchname)){
+        Item product = new Item();
+        product.setName(rs.getString("name"));
+        product.setDescription(rs.getString("description"));
+        product.setPrice(rs.getFloat("price"));
+        product.setStock(rs.getInt("stock"));
+        product.setID(rs.getInt("id"));
+        output.add(product);
+      }
+    }
+    Searchname item2 = new Searchname() ;
+    UserID userID = new UserID();
+    ItemID ID = new ItemID();
+    userID.setUserID(id);
+    model.put("userID", userID);
+    model.put("item", item2);
+    model.put("product", output);
+    model.put("ID", ID);
+    return "search";
+
+  }
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+
+}
+
+
 
 @GetMapping(path = "/Success/search")
 public String getsearchagain(Map<String, Object> model){
@@ -515,10 +590,10 @@ public String getsearchagain(Map<String, Object> model){
 
 
 
-  @GetMapping(path = "/Home")
-    public String getHomeNOID(Map<String, Object> model){
-      return "home"; 
-    }
+  // @GetMapping(path = "/Home")
+  //   public String getHomeNOID(Map<String, Object> model){
+  //     return "home"; 
+  //   }
 
 @PostMapping(path = {"/AddToShoppingListMyItem/{Userid}/{Itemid}","/AddToShoppingListMyItem"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
   public String AddItemShoppingList(Map<String, Object> model, @PathVariable ("Userid") Integer UserId, @PathVariable ("Itemid") Integer ItemId, Searchname item) throws Exception{

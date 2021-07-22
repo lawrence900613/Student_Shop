@@ -7,18 +7,18 @@
     <title>Home: Seller</title>
 </head>
 
-<body>
+<body >
 
     <header>
         <div class="container">
           <h1 class="logo"></h1>
           <nav>
-            <ul>
-              <li><a href="../Home">Home</a></li>
-              <li><a href="../About">About</a></li>
+            <ul th:each="UserId : ${UserId}">
+              <li><a th:href="@{/Home/{uid}(uid=${UserId.getUserID()})}">Home</a></li>
+              <li><a th:href="@{/About/{uid}(uid=${UserId.getUserID()})}">About</a></li>
               <li><a href="../ShoppingList">Shoppinglist</a></li>
               <li><a href="../Login">Login</a></li>
-              <li><a href="../Search">Search</a></li>
+              <li><a th:href="@{/Search/{uid}(uid=${UserId.getUserID()})}">Search</a></li>
               <li>
                 <div class="dropdown">
                     <button class="dropbtn">More
@@ -61,8 +61,8 @@
                 </tbody>
               </table>
             </div>
-            
-            <h3 th:each="UserId : ${UserId}">Add an Item For Sale</h3> 
+          
+            <h3>Add an Item For Sale</h3> 
             <div class="listingBox" >
               <form method="post" action ="#" th:action="@{/afterSubmitNewItem/{uid}(uid=${UserId.getUserID()})}" th:object="${Item}" enctype="multipart/form-data">
                 

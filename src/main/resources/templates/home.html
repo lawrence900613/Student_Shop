@@ -9,14 +9,15 @@
 <body>
   <header>
     <div class="container">
-      <h1 class="logo"></h1>
-      <nav>
-        <ul>
-          <li><a href="../Home">Home</a></li>
-          <li><a href="../About">About</a></li>
-          <li><a href="../ShoppingList">Shoppinglist</a></li>
-          <li><a href="../Login">Login</a></li>
-          <li><a href="../Search">Search</a></li>
+      <h1 class="logo" th:each = "UserID : ${UserID}"></h1>
+      <nav >
+        <ul> 
+          
+          <li><a th:href="@{/Home/{uid}(uid=${UserID.getUserID()})}">Home</a></li>
+          <li><a th:href="@{/About/{uid}(uid=${UserID.getUserID()})}">About</a></li>
+          <li><a th:href="@{/ShoppingList/{uid}(uid=${UserID.getUserID()})}">Shoppinglist</a></li>
+          <li><a th:href="@{/Login/{uid}(uid=${UserID.getUserID()})}">Login</a></li>
+          <li><a th:href="@{/Search/{uid}(uid=${UserID.getUserID()})}">Search</a></li>
           <li>
             <div class="dropdown">
                 <button class="dropbtn">More
@@ -27,9 +28,8 @@
                     <a href="#">Link 2</a>
                     <a href="#">Link 3</a>
                 </div>
-                </li>
-          <li>
-        </li>
+              </div>
+          </li>
         </ul>
       </nav>
     </div>
@@ -50,21 +50,21 @@
       <h1>Shop Grocery</h1>
       <div class="catalog">
         <div class="item">
-          <form method="post" th:action="@{/Searchitem}" th:object="${item}">
+          <form method="post" th:action="@{/Searchcategory}" th:object="${item}">
             <input type="hidden" th:name="name" value="food">
             <input type="image" src="../Good_Food_Display_-_NCI_Visuals_Online.jpg" alt="submit">
             <span class="caption" style="font-size:30px">Food</span>
           </form>
         </div>
         <div class="Electronics">
-          <form method="post" th:action="@{/Searchitem}" th:object="${item}">
+          <form method="post" th:action="@{/Searchcategory}" th:object="${item}">
             <input type="hidden" th:name="name" value="Electronics">
             <input type="image" src="../Electronics-Shop-4.png" alt="submit">
             <span class="caption" style="font-size:30px">Electronics</span>
           </form>
         </div>
         <div class="HouseHold">
-          <form method="post" th:action="@{/Searchitem}" th:object="${item}">
+          <form method="post" th:action="@{/Searchcategory}" th:object="${item}">
             <input type="hidden" th:name="name" value="HouseHold">
             <input type="image" src="../gettyimages-510693044-1550590816.jpg" alt="submit">
             <span class="caption" style="font-size:30px">HouseHold</span>

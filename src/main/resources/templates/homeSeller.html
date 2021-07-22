@@ -62,7 +62,7 @@
               </table>
             </div>
             
-            <h3>Add an Item For Sale</h3> 
+            <h3 th:each="UserId : ${UserId}">Add an Item For Sale</h3> 
             <div class="listingBox" >
               <form method="post" action ="#" th:each="id : ${UserId}" th:action="@{/afterSubmitNewItem/{uid}(uid=${id.getUserID()})}" th:object="${Item}" enctype="multipart/form-data" > <!-- enctype="multipart/form-data"-->
                 

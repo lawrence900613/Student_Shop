@@ -35,7 +35,7 @@
     </div>
   </header>
   <div class="WhiteBox">
-    <div class="GreyBox">
+    <div class="GreyBox" th:each = "UserID : ${UserID}">
       <h2>Welcome to the User Landing Page</h2>
       <div class="parent">
         <div class="item">
@@ -50,29 +50,29 @@
       <h1>Shop Grocery</h1>
       <div class="catalog">
         <div class="item">
-          <form method="post" th:action="@{/Searchcategory}" th:object="${item}">
-            <input type="hidden" th:name="name" value="food">
+          <form method="post" th:action="@{/Searchcategory/{uid}(uid=${UserID.getUserID()})}" th:object="${item}">
+            <input type="hidden" th:name="category" value="food">
             <input type="image" src="../Good_Food_Display_-_NCI_Visuals_Online.jpg" alt="submit">
             <span class="caption" style="font-size:30px">Food</span>
           </form>
         </div>
         <div class="Electronics">
-          <form method="post" th:action="@{/Searchcategory}" th:object="${item}">
-            <input type="hidden" th:name="name" value="Electronics">
+          <form method="post" th:action="@{/Searchcategory/{uid}(uid=${UserID.getUserID()})}" th:object="${item}">
+            <input type="hidden" th:name="category" value="Electronics">
             <input type="image" src="../Electronics-Shop-4.png" alt="submit">
             <span class="caption" style="font-size:30px">Electronics</span>
           </form>
         </div>
         <div class="HouseHold">
-          <form method="post" th:action="@{/Searchcategory}" th:object="${item}">
-            <input type="hidden" th:name="name" value="HouseHold">
+          <form method="post" th:action="@{/Searchcategory/{uid}(uid=${UserID.getUserID()})}" th:object="${item}">
+            <input type="hidden" th:name="category" value="HouseHold">
             <input type="image" src="../gettyimages-510693044-1550590816.jpg" alt="submit">
             <span class="caption" style="font-size:30px">HouseHold</span>
           </form>
         </div>
         <div class="Furniture">
-          <form method="post" th:action="@{/Searchitem}" th:object="${item}">
-            <input type="hidden" th:name="name" value="Furniture">
+          <form method="post" th:action="@{/Searchcategory/{uid}(uid=${UserID.getUserID()})}" th:object="${item}">
+            <input type="hidden" th:name="category" value="Furniture">
             <input type="image" src="../Furniture.jpg" alt="submit">
             <span class="caption" style="font-size:30px">Furniture</span>
           </form>

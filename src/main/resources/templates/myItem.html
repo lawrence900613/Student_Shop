@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="../public/stylesheets/myPage.css" th:href="@{/myPage.css}">
-    <title>Your Page</title>
+    <title>Item</title>
 </head>
 
 <body>
@@ -67,7 +67,12 @@
                     <td th:utext="${record.getStock()}" id="stockIn"></td>
                 </tr>
             </table>
+
+            <iframe name="votar" style="display:none;"></iframe>
             <div id = "outer" th:each="record : ${retItem}">
+                <form action="#" method="post" th:each="id : ${retUserId}" th:action="@{/AddToShoppingListMyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" target = "votar">
+                    <input type="submit" class="btnAdd" value="Add to Shopping List"></td>
+                </form>
                 <input type="button"  th:each="id : ${retUserId}" class="btn" value="Back" th:onclick="'window.location.href = \'' + @{/Search/{uid}(uid=${id.getUserID()})} + '\''">
             </div>
             

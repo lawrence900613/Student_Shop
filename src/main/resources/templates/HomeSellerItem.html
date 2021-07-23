@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="../public/stylesheets/myPage.css" th:href="@{/myPage.css}">
-    <title>Your Page</title>
+    <title>Item</title>
 </head>
 
 <body>
@@ -94,19 +94,22 @@
                     <textarea type="text" th:text="${record.getDescription()}"  name = "Description" id = "Description" cols="30" rows="10" style="width: 300px; height: 200px; font-size: 20px;"></textarea> <br><br>
 
                     <select name ="Category" id ="Cataegory">
-                        <option value=""  selected hidden style="color: gray;" th:text="${record.getCategory()}">Choose Category..</option>
-                        <option value="electronics" >Electronics</option>
-                        <option value="food">Food</option>
-                        <option value="kitchen">Kitchen</option>
+                        <option th:value="${record.getCategory()}"  selected hidden style="color: gray;" th:text="${record.getCategory()}">Choose Category..</option>
+                        <option value="Electronics" >Electronics</option>
+                        <option value="Food">Food</option>
+                        <option value="Kitchen">Kitchen</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Miscellaneous">Miscellaneous</option>
                     </select><br><br>
 
-                    <input type="number" th:value="${record.getPrice()}" name="Price" id = "Price" step="any"> <br><br>
+                    <input type="number" th:value="${record.getPrice()}" name="Price" id = "Price" step="any" min="0"> <br><br>
 
-                    <input type="number" th:value="${record.getStock()}" name="Stock" id = "Stock" step="1"> <br>
+                    <input type="number" th:value="${record.getStock()}" name="Stock" id = "Stock" step="1" min="1"> <br>
 
+                    <!--
                     <p class="listingHeading">Upload Image of Item:</p>
-                    <input type="file" name="file" id="file"  accept= "image/*" class="sameSize"><br><br> <!-- not sure how image upload works-->
-
+                    
+                    <input type="file" name="file" id="file"  accept= "image/*" class="sameSize"><br><br> -->
                     <input type="submit" class="btnUpdate" value="UPDATE"></td>
                 </form>
             </div>

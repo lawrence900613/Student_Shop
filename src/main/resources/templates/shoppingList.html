@@ -38,27 +38,26 @@
 
         <div class="GreyBox">
 
-                <table class="AddTable" id="Table">
+                <table class="AddTable" id="Table" >
                     <thead>
                         <tr >
-                            <th>Item</th>
-                            <th>Description</th>
-                            <th>Price</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price ($)</th>
                         </tr>
                     </thead>
                     
-                    <tbody>
-                        <tr th:each="record : ${records}" >
-
-                            <td><a href="#"  th:each="id : ${UserId}" th:href="@{/MyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" th:utext="${record.getName()}"></a></td>
-                            <td th:utext="${record.getCategory()}"></td>
-                            <td th:utext="${record.getStock()}"></td>
-
-                            <form action="#" th:each="id : ${UserId}" method="post" th:action="@{/DELETEsp/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}">
-                                <td><input type="submit" class="btnDelete" value="DELETE"></td>
-                            </form>
+                    <tbody >
+                        <tr th:each="records : ${records}">
                             
-
+                            <!-- <td><a href="#"  th:each="UserId : ${UserId}" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td> -->
+                            <td><a th:each="UserId : ${UserID}" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td>
+                            <td th:utext="${records.getCategory()}"></td>
+                            <td th:utext="${records.getPrice()}"></td>
+                            
+                            <form action="#" th:each="UserId : ${UserID}" method="post" th:action="@{/DELETEsp/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}">
+                                <td><input type="submit" class="btnDelete" value="DELETE"></td>
+                            </form>                     
                         </tr>
                     </tbody>
             

@@ -171,7 +171,7 @@ public class Main {
     }
   }
 
-  @GetMapping(path = "/Template/{UserId}/{ItemId}")
+@GetMapping(path = "/HomeSellerItem/{UserId}/{ItemId}")
 public String SellerItem(@PathVariable("UserId") String idofuser, @PathVariable("ItemId") Integer ItemId, Map<String, Object> model) throws Exception{
 
   try (Connection connection = dataSource.getConnection()){
@@ -196,6 +196,7 @@ public String SellerItem(@PathVariable("UserId") String idofuser, @PathVariable(
     output.setID(rs.getInt("Id"));
     output.setImage(rs.getBytes("image")); 
      //to display existing
+    model.put("retItem", output);
     
     UserID Userid = new UserID();
     Userid.setUserID(UserId);
@@ -204,7 +205,7 @@ public String SellerItem(@PathVariable("UserId") String idofuser, @PathVariable(
     Item in = new Item(); //to update
     model.put("Item", in);
 
-    return "template";
+    return "HomeSellerItem";
   } 
     
   catch (Exception e) {
@@ -398,14 +399,12 @@ public String handleDeleteButtonForShoppingList(@PathVariable("UserId") Integer 
 
  
 @GetMapping(path="/ShoppingList/{id}")
-public String getShoppingList(@PathVariable("id") String recievedID, Map<String, Object> model) throws Exception{
+public String getShoppingList(@PathVariable("id") Integer recievedID, Map<String, Object> model) throws Exception{
   try (Connection connection = dataSource.getConnection()) {
     System.out.println("Currently in shoppinglist");
-
-    Integer recID = Integer.parseInt(recievedID);         //converting recievedID into integer!!
     Statement stmt = connection.createStatement();
 
-    if(recID == 0){
+    if(recievedID == 0){
       Account account = new Account();
       model.put("account", account);
 
@@ -414,7 +413,8 @@ public String getShoppingList(@PathVariable("id") String recievedID, Map<String,
       model.put("UserID", idofuser);
       return "guestlogin";
     }
-    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + recID);
+
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + recievedID);
 
     if(rs.next()){
       Array temp = rs.getArray("ShoppingList");
@@ -437,19 +437,20 @@ public String getShoppingList(@PathVariable("id") String recievedID, Map<String,
         if(rsTemp.next()){
           Item outputItem = new Item();
           outputItem.setName(rsTemp.getString("Name"));
+          outputItem.setCategory(rsTemp.getString("Category"));
           outputItem.setDescription(rsTemp.getString("Description"));
           outputItem.setPrice(rsTemp.getFloat("Price"));
           outputItem.setID(rsTemp.getInt("ID"));
           storeItems.add(outputItem);
         }
       }
-    
-
+  
       UserID tempId = new UserID();
-      tempId.setUserID(recID);
+      tempId.setUserID(recievedID);
       model.put("UserID", tempId);
 
       model.put("records", storeItems); //iterate all shopping list item and link them to respective page
+
     }
     
     return "shoppingList";
@@ -522,7 +523,7 @@ public String handleDeleteButtonForMyItem(@PathVariable("uid") Integer UserId, @
   @GetMapping(
     path = "/Login"
   )
-  public String getLogin( Map<String, Object> model) throws Exception{
+  public String getLogin2( Map<String, Object> model) throws Exception{
     Account account = new Account();
     UserID idofuser = new UserID();
     model.put("account", account);
@@ -686,7 +687,7 @@ String getLoginSuccess() {
             output.add(product);
             }
         }else{
-          if(searchcat == rs.getString("Category")){
+          if(searchcat.equals(rs.getString("Category"))){
             String productname = rs.getString("name");
             productname = productname.toLowerCase();
             if(productname.contains(searchname)){

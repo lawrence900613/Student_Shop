@@ -143,14 +143,20 @@ public class Main {
       //   return "HomeSeller/" + output.getID();
       // }
 
-      if(recieveID == 0){
+      System.out.println("ID = " + recieveID + " Role = " + output.getRole());
 
+      if(recieveID == 0){
         UserID idofuser = new UserID();
         idofuser.setUserID(0);
         model.put("UserID", idofuser);
         return "home";
       }
-    // if(output.getRole() == "customer" || output.getRole() == "seller"){
+      else if(output.getRole().equals("seller")){
+        UserID idofuser = new UserID();
+        idofuser.setUserID(recieveID);
+        model.put("UserID", idofuser);
+        return "redirect:/HomeSeller/" + recieveID;
+      }
       else{
         UserID idofuser = new UserID();
         idofuser.setUserID(recieveID);

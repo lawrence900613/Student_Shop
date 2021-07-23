@@ -200,6 +200,7 @@ public String myItem(@PathVariable("UserId") String idofuser, @PathVariable("Ite
     output.setImage(rs.getBytes("image")); 
     
     model.put("retItem", output); //to display existing
+    
     UserID Userid = new UserID();
     Userid.setUserID(UserId);
     model.put("retUserId", Userid); //to redirect

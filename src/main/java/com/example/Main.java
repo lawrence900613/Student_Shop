@@ -118,8 +118,8 @@ public class Main {
   //     return "home"; 
   //   }
 
- @GetMapping(path ="/Home/{id}")
-  public String landingSpecialized(@PathVariable("id") Integer recieveID, Map<String, Object> model) {
+ @GetMapping(path = {"/Home/{id}", "/Home"})
+  public String landingSpecialized(@PathVariable (required = false) Integer recieveID, Map<String, Object> model) {
     
     try (Connection connection = dataSource.getConnection()){
       Statement stmt = connection.createStatement();
@@ -144,8 +144,13 @@ public class Main {
       // }
 
       System.out.println("ID = " + recieveID + " Role = " + output.getRole());
-
-      if(recieveID == 0){
+      if(recieveID == null){
+        UserID idofuser = new UserID();
+        idofuser.setUserID(0);
+        model.put("UserID", idofuser);
+        return "home";
+      }
+      else if(recieveID == 0){
         UserID idofuser = new UserID();
         idofuser.setUserID(0);
         model.put("UserID", idofuser);
@@ -172,6 +177,50 @@ public class Main {
       return "error";
     }
   }
+
+  @GetMapping(path = "/Template/{UserId}/{ItemId}")
+public String SellerItem(@PathVariable("UserId") String idofuser, @PathVariable("ItemId") Integer ItemId, Map<String, Object> model) throws Exception{
+
+  try (Connection connection = dataSource.getConnection()){
+    Statement stmt = connection.createStatement();
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
+    
+    Item output = new Item(); // store data
+
+    Integer UserId = Integer.parseInt(idofuser);
+
+    while (rs.next()) {
+      if(rs.getInt("Id") == ItemId){
+        break;
+      }
+    }
+
+    output.setName("" + rs.getObject("Name"));
+    output.setDescription("" + rs.getObject("Description"));
+    output.setCategory("" + rs.getObject("Category"));
+    output.setPrice(rs.getFloat("Price"));
+    output.setStock(rs.getInt("Stock"));
+    output.setID(rs.getInt("Id"));
+    output.setImage(rs.getBytes("image")); 
+     //to display existing
+    
+    UserID Userid = new UserID();
+    Userid.setUserID(UserId);
+    model.put("retUserId", Userid); //to redirect
+
+    Item in = new Item(); //to update
+    model.put("Item", in);
+
+    return "template";
+  } 
+    
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+
   
 
 @GetMapping(path = "/MyItem/{UserId}/{ItemId}")
@@ -476,6 +525,22 @@ public String handleDeleteButtonForMyItem(@PathVariable("uid") Integer UserId, @
     model.put("UserID", idofuser);
     return "login";
   }
+
+  @GetMapping(
+    path = "/Login"
+  )
+  public String getLogin( Map<String, Object> model) throws Exception{
+    Account account = new Account();
+    UserID idofuser = new UserID();
+    model.put("account", account);
+    model.put("UserID", idofuser);
+    return "login";
+  }
+
+
+
+
+
 
   @PostMapping(
     path = "/Login",

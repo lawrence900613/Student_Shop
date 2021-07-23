@@ -119,16 +119,16 @@ public class Main {
   //   }
 
  @GetMapping(path = {"/Home/{id}", "/Home"})
-  public String landingSpecialized(@PathVariable (required = false) Integer recieveID, Map<String, Object> model) {
+  public String landingSpecialized(@PathVariable (required = false) Integer id, Map<String, Object> model) {
     
     try (Connection connection = dataSource.getConnection()){
       Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + recieveID); 
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + id); 
       
       User output = new User();
 
       while(rs.next()){
-        if(recieveID == (rs.getInt("id"))){
+        if(id == (rs.getInt("id"))){
           output.setName("" + rs.getObject("Username"));
           output.setRole("" + rs.getObject("Role"));
           output.setID(rs.getInt("id"));
@@ -143,14 +143,7 @@ public class Main {
       //   return "HomeSeller/" + output.getID();
       // }
 
-      System.out.println("ID = " + recieveID + " Role = " + output.getRole());
-      if(recieveID == null){
-        UserID idofuser = new UserID();
-        idofuser.setUserID(0);
-        model.put("UserID", idofuser);
-        return "home";
-      }
-      else if(recieveID == 0){
+      System.out.println("ID = " + id + " Role = " + output.getRole());if(id == 0){
         UserID idofuser = new UserID();
         idofuser.setUserID(0);
         model.put("UserID", idofuser);
@@ -158,13 +151,13 @@ public class Main {
       }
       else if(output.getRole().equals("seller")){
         UserID idofuser = new UserID();
-        idofuser.setUserID(recieveID);
+        idofuser.setUserID(id);
         model.put("UserID", idofuser);
-        return "redirect:/HomeSeller/" + recieveID;
+        return "redirect:/HomeSeller/" + id;
       }
       else{
         UserID idofuser = new UserID();
-        idofuser.setUserID(recieveID);
+        idofuser.setUserID(id);
         model.put("UserID", idofuser);
         return "home";
       }

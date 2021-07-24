@@ -118,17 +118,17 @@ public class Main {
   //     return "home"; 
   //   }
 
- @GetMapping(path ="/Home/{id}")
-  public String landingSpecialized(@PathVariable("id") Integer recieveID, Map<String, Object> model) {
+ @GetMapping(path = {"/Home/{id}", "/Home"})
+  public String landingSpecialized(@PathVariable (required = false) Integer id, Map<String, Object> model) {
     
     try (Connection connection = dataSource.getConnection()){
       Statement stmt = connection.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + recieveID); 
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + id); 
       
       User output = new User();
 
       while(rs.next()){
-        if(recieveID == (rs.getInt("id"))){
+        if(id == (rs.getInt("id"))){
           output.setName("" + rs.getObject("Username"));
           output.setRole("" + rs.getObject("Role"));
           output.setID(rs.getInt("id"));
@@ -143,9 +143,7 @@ public class Main {
       //   return "HomeSeller/" + output.getID();
       // }
 
-      System.out.println("ID = " + recieveID + " Role = " + output.getRole());
-
-      if(recieveID == 0){
+      System.out.println("ID = " + id + " Role = " + output.getRole());if(id == 0){
         UserID idofuser = new UserID();
         idofuser.setUserID(0);
         model.put("UserID", idofuser);
@@ -153,13 +151,13 @@ public class Main {
       }
       else if(output.getRole().equals("seller")){
         UserID idofuser = new UserID();
-        idofuser.setUserID(recieveID);
+        idofuser.setUserID(id);
         model.put("UserID", idofuser);
-        return "redirect:/HomeSeller/" + recieveID;
+        return "redirect:/HomeSeller/" + id;
       }
       else{
         UserID idofuser = new UserID();
-        idofuser.setUserID(recieveID);
+        idofuser.setUserID(id);
         model.put("UserID", idofuser);
         return "home";
       }
@@ -172,6 +170,51 @@ public class Main {
       return "error";
     }
   }
+
+@GetMapping(path = "/HomeSellerItem/{UserId}/{ItemId}")
+public String SellerItem(@PathVariable("UserId") String idofuser, @PathVariable("ItemId") Integer ItemId, Map<String, Object> model) throws Exception{
+
+  try (Connection connection = dataSource.getConnection()){
+    Statement stmt = connection.createStatement();
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
+    
+    Item output = new Item(); // store data
+
+    Integer UserId = Integer.parseInt(idofuser);
+
+    while (rs.next()) {
+      if(rs.getInt("Id") == ItemId){
+        break;
+      }
+    }
+
+    output.setName("" + rs.getObject("Name"));
+    output.setDescription("" + rs.getObject("Description"));
+    output.setCategory("" + rs.getObject("Category"));
+    output.setPrice(rs.getFloat("Price"));
+    output.setStock(rs.getInt("Stock"));
+    output.setID(rs.getInt("Id"));
+    output.setImage(rs.getBytes("image")); 
+     //to display existing
+    model.put("retItem", output);
+    
+    UserID Userid = new UserID();
+    Userid.setUserID(UserId);
+    model.put("retUserId", Userid); //to redirect
+
+    Item in = new Item(); //to update
+    model.put("Item", in);
+
+    return "HomeSellerItem";
+  } 
+    
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+
   
 
 @GetMapping(path = "/MyItem/{UserId}/{ItemId}")
@@ -356,14 +399,12 @@ public String handleDeleteButtonForShoppingList(@PathVariable("UserId") Integer 
 
  
 @GetMapping(path="/ShoppingList/{id}")
-public String getShoppingList(@PathVariable("id") String recievedID, Map<String, Object> model) throws Exception{
+public String getShoppingList(@PathVariable("id") Integer recievedID, Map<String, Object> model) throws Exception{
   try (Connection connection = dataSource.getConnection()) {
     System.out.println("Currently in shoppinglist");
-
-    Integer recID = Integer.parseInt(recievedID);         //converting recievedID into integer!!
     Statement stmt = connection.createStatement();
 
-    if(recID == 0){
+    if(recievedID == 0){
       Account account = new Account();
       model.put("account", account);
 
@@ -372,7 +413,8 @@ public String getShoppingList(@PathVariable("id") String recievedID, Map<String,
       model.put("UserID", idofuser);
       return "guestlogin";
     }
-    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + recID);
+
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + recievedID);
 
     if(rs.next()){
       Array temp = rs.getArray("ShoppingList");
@@ -395,19 +437,20 @@ public String getShoppingList(@PathVariable("id") String recievedID, Map<String,
         if(rsTemp.next()){
           Item outputItem = new Item();
           outputItem.setName(rsTemp.getString("Name"));
+          outputItem.setCategory(rsTemp.getString("Category"));
           outputItem.setDescription(rsTemp.getString("Description"));
           outputItem.setPrice(rsTemp.getFloat("Price"));
           outputItem.setID(rsTemp.getInt("ID"));
           storeItems.add(outputItem);
         }
       }
-    
-
+  
       UserID tempId = new UserID();
-      tempId.setUserID(recID);
+      tempId.setUserID(recievedID);
       model.put("UserID", tempId);
 
       model.put("records", storeItems); //iterate all shopping list item and link them to respective page
+
     }
     
     return "shoppingList";
@@ -476,6 +519,22 @@ public String handleDeleteButtonForMyItem(@PathVariable("uid") Integer UserId, @
     model.put("UserID", idofuser);
     return "login";
   }
+
+  @GetMapping(
+    path = "/Login"
+  )
+  public String getLogin2( Map<String, Object> model) throws Exception{
+    Account account = new Account();
+    UserID idofuser = new UserID();
+    model.put("account", account);
+    model.put("UserID", idofuser);
+    return "login";
+  }
+
+
+
+
+
 
   @PostMapping(
     path = "/Login",
@@ -600,47 +659,67 @@ String getLoginSuccess() {
       }
     }
 
-  @PostMapping(path = {"/Searchitem/{id}","/Searchitem"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-  public String searchItem(Map<String, Object> model, @PathVariable (required = false) Integer id, Searchname item) throws Exception{
-    //saving the data obtained into databse
-    try (Connection connection = dataSource.getConnection()) {
-      Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
-      ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
-      ArrayList<Item> output = new ArrayList<Item>();
-      String searchname = item.getName();
-      searchname = searchname.toLowerCase();
-      System.out.println(searchname);
-      while (rs.next()) {
-        String productname = rs.getString("name");
-        productname = productname.toLowerCase();
-        if(productname.contains(searchname)){
-        Item product = new Item();
-        product.setName(rs.getString("name"));
-        product.setDescription(rs.getString("description"));
-        product.setPrice(rs.getFloat("price"));
-        product.setStock(rs.getInt("stock"));
-        product.setID(rs.getInt("id"));
-        output.add(product);
+    @PostMapping(path = {"/Searchitem/{id}","/Searchitem"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public String searchItem(Map<String, Object> model, @PathVariable (required = false) Integer id, Searchname item) throws Exception{
+      //saving the data obtained into databse
+      try (Connection connection = dataSource.getConnection()) {
+        Statement stmt = connection.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
+        ArrayList<Item> output = new ArrayList<Item>();
+        String searchname = item.getName();
+        searchname = searchname.toLowerCase();
+        String searchcat = item.getCategory();
+        System.out.println(searchname);
+        System.out.println(searchcat);
+        while (rs.next()) {
+          if(searchcat.equals("ItemName")){
+            String productname = rs.getString("name");
+            productname = productname.toLowerCase();
+          if(productname.contains(searchname)){
+            Item product = new Item();
+            product.setName(rs.getString("name"));
+            product.setCategory(rs.getString("Category"));
+            product.setDescription(rs.getString("description"));
+            product.setPrice(rs.getFloat("price"));
+            product.setStock(rs.getInt("stock"));
+            product.setID(rs.getInt("id"));
+            output.add(product);
+            }
+        }else{
+          if(searchcat.equals(rs.getString("Category"))){
+            String productname = rs.getString("name");
+            productname = productname.toLowerCase();
+            if(productname.contains(searchname)){
+            Item product = new Item();
+            product.setName(rs.getString("name"));
+            product.setCategory(rs.getString("Category"));
+            product.setDescription(rs.getString("description"));
+            product.setPrice(rs.getFloat("price"));
+            product.setStock(rs.getInt("stock"));
+            product.setID(rs.getInt("id"));
+            output.add(product);
+          }
+        }
       }
     }
-    Searchname item2 = new Searchname() ;
-    UserID userID = new UserID();
-    ItemID ID = new ItemID();
-    userID.setUserID(id);
-    model.put("userID", userID);
-    model.put("item", item2);
-    model.put("product", output);
-    model.put("ID", ID);
-    return "search";
-
+      Searchname item2 = new Searchname() ;
+      UserID userID = new UserID();
+      ItemID ID = new ItemID();
+      userID.setUserID(id);
+      model.put("UserID", userID);
+      model.put("item", item2);
+      model.put("product", output);
+      model.put("ID", ID);
+      return "search";
+  
+    }
+    catch (Exception e) {
+      model.put("message", e.getMessage());
+      return "error";
+    }
+  
   }
-  catch (Exception e) {
-    model.put("message", e.getMessage());
-    return "error";
-  }
-
-}
 
 
 @PostMapping(path = {"/Searchcategory/{id}","/Searchcategory"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -649,29 +728,29 @@ String getLoginSuccess() {
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
       stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Items (Id serial, Name varchar(80), Description varchar(200), Category varchar(20), Price float, image bytea, Stock Integer)");
-      ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE Category = "+ item);
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
       ArrayList<Item> output = new ArrayList<Item>();
-      String searchname = item.getName();
-      searchname = searchname.toLowerCase();
-      System.out.println(searchname);
+      String searchcat = item.getCategory();
+      System.out.println(searchcat);
       while (rs.next()) {
-        String productname = rs.getString("name");
-        productname = productname.toLowerCase();
-        if(productname.contains(searchname)){
-        Item product = new Item();
-        product.setName(rs.getString("name"));
-        product.setDescription(rs.getString("description"));
-        product.setPrice(rs.getFloat("price"));
-        product.setStock(rs.getInt("stock"));
-        product.setID(rs.getInt("id"));
-        output.add(product);
+        if(searchcat.equals(rs.getString("Category"))){
+          String productname = rs.getString("name");
+          productname = productname.toLowerCase();
+          Item product = new Item();
+          product.setName(rs.getString("name"));
+          product.setCategory(rs.getString("Category"));
+          product.setDescription(rs.getString("description"));
+          product.setPrice(rs.getFloat("price"));
+          product.setStock(rs.getInt("stock"));
+          product.setID(rs.getInt("id"));
+          output.add(product);
       }
     }
     Searchname item2 = new Searchname() ;
     UserID userID = new UserID();
     ItemID ID = new ItemID();
     userID.setUserID(id);
-    model.put("userID", userID);
+    model.put("UserID", userID);
     model.put("item", item2);
     model.put("product", output);
     model.put("ID", ID);
@@ -682,7 +761,6 @@ String getLoginSuccess() {
     model.put("message", e.getMessage());
     return "error";
   }
-
 }
 
 

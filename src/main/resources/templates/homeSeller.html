@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="../stylesheets/homeSeller.css" >
-    <script type="text/javascript" src="./homeSeller.js"> defer</script>
+    <script type="text/javascript" src="../homeSeller.js"> defer</script>
     <title>Home: Seller</title>
 </head>
 
@@ -53,7 +53,7 @@
                 <tbody>
                     <tbody>
                         <tr th:each="record : ${records}">
-                            <td><a href="#"  th:each="id : ${UserId}" th:href="@{/MyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" th:utext="${record.getName()}"></a></td>
+                            <td><a href="#"  th:each="id : ${UserId}" th:href="@{/HomeSellerItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" th:utext="${record.getName()}"></a></td>
                             <td th:utext="${record.getCategory()}"></td>
                             <td th:utext="${record.getStock()}"></td>
                         </tr>
@@ -69,17 +69,19 @@
                     <input type="text" th:field=*{Name} placeholder="Product Name" id="gettingName" class="sameSize" onkeyup="nameUpdate()"><br><br>
                     <select  th:field = *{Category} class="categoryBox">
                         <option value=""  selected hidden style="color: gray;">Choose Category..</option>
-                        <option value="electronics" >Electronics</option>
-                        <option value="food">Food</option>
-                        <option value="kitchen">Kitchen</option>
+                        <option value="Electronics" >Electronics</option>
+                        <option value="Food">Food</option>
+                        <option value="Kitchen">Kitchen</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Miscellaneous">Miscellaneous</option>
                     </select><br><br>
 
-                    <input type="number" th:field=*{Price} onkeyup="priceUpdate()" id="gettingPrice" step="any" placeholder="Price per Unit" class="sameSize"><br><br>
+                    <input type="number" th:field=*{Price} onkeyup="priceUpdate()" id="gettingPrice" step="any" placeholder="Price per Unit" class="sameSize" min="0"><br><br>
 
 
                     <textarea name="description" onkeyup="descriptionUpdate()" cols="30" rows="10" id="gettingDescription" style="width: 300px; height: 200px; font-size: 20px;" placeholder="Enter a Description of the Item" th:field = *{Description}></textarea><br><br>
                                         
-                    <input type="number" th:field=*{Stock} placeholder="Number of Units in Stock" class="sameSize"><br>
+                    <input type="number" th:field=*{Stock} placeholder="Number of Units in Stock" class="sameSize" min="1"><br>
 
                      <!-- <p class="listingHeading">Upload Image of Item:</p>
                     <input type="file" name="file" id="file"  accept= "image/*" class="sameSize" onchange="putImage()"><br>
@@ -102,9 +104,10 @@
               </div>
               <br>
               
+              <!--
               <div class="pictureDiv">
                 <img alt="imported image"  id="target" style="width: 100%;"/>
-              </div>
+              </div>-->
               <br>
               
           </div>

@@ -34,13 +34,21 @@
           </nav>
         </div>
       </header>
-    <div class="WhiteBox">
-        <div class="GreyBox" th:each="userID: ${userID}" >
+      <div class="WhiteBox">
+        <div class="GreyBox" th:each="userID: ${UserID}" >
             <table id="myTable" class="myTable">
                 <tr>
                     <form class="example" method="post" th:action="@{/Searchitem/{id}(id=${userID.getUserID()})}" th:object="${item}">
                         <input type="text" th:field=*{name} placeholder="Search.." name="search">
                         <button type="submit"><i class="fa fa-search"></i>Search</button>
+                        <select th:field = *{category} class="categoryBox">
+                            <option value=""  selected hidden style="color: gray;">Choose Category..</option>
+                            <option value="ItemName" >ItemName</option>
+                            <option value="Electronics" >Electronics</option>
+                            <option value="Food">Food</option>
+                            <option value="Kitchen">Kitchen</option>
+                            <option value="Miscellaneous">Miscellaneous</option>
+                        </select>
                     </form>
             <tr>
                 <td>Name</td>
@@ -48,14 +56,9 @@
                 <td>Description</td>
             </tr>
             <tr th:each="product : ${product}">
-                <td th:text="${product.getName()}"></td>
+                <td><a th:href="@{/MyItem/{pid}/{uid}(uid=${product.getID()},pid=${userID.getUserID()})}" th:text="${product.getName()}"></a></td>
                 <td th:text="${product.getPrice()}"></td>
                 <td th:text="${product.getDescription()}"></td>
-
-                <form class="AddShoppingList" method="post" th:action="@{/AddShoppingList/{id}(id=${userID.getUserID()})}" th:object="${ID}">
-                    <input type="hidden"  th:value="${product.getID()}" id="clientName" name="ID" />
-                    <button type="submit"><i class="fa fa-search"></i>add into shopping list</button>
-                </form>
             </tr>
         </table>
         </div>

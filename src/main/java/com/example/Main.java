@@ -57,7 +57,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-// import UserID.java;
+
 
 @Controller
 @SpringBootApplication
@@ -73,11 +73,16 @@ public class Main {
     SpringApplication.run(Main.class, args);
   }
 
+
   @RequestMapping("/")
   public String landingNoSignin( Map<String, Object> model ) {
     UserID idofuser = new UserID();
     idofuser.setUserID(0);
     model.put("UserID", idofuser);
+
+    App newapi = new App();
+    // newapi.main(string []);
+
     return "home";  //basic landing of user
   }
 

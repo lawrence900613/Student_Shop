@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="../stylesheets/homeSeller.css" >
-    <script type="text/javascript" src="../homeSeller.js"> defer</script>
+    <script type="text/javascript" src="../homeSeller.js" defer> </script>
     <title>Home: Seller</title>
 </head>
 
@@ -25,7 +25,7 @@
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <div class="dropdown-content">
-                        <a href="#">Link 1</a>
+                        <a th:href="@{/PopularTime/{uid}(uid=${UserId.getUserID()})}">Search Store</a>
                         <a href="#">Link 2</a>
                         <a href="#">Link 3</a>
                     </div>

@@ -844,9 +844,15 @@ public String getsearchagain(Map<String, Object> model){
   }
 }
 
+@GetMapping(path = "/PopularTime/{UserId}") // rmb to pass ID
+public String popularTime(Map<String, Object> model, @PathVariable("UserId") Integer id) throws Exception {
+  
+  UserID in = new UserID();
+  in.setUserID(id);
+  model.put("UserID", in);
+  return "popularTime";
+}
    
-
-
   @Bean
   public DataSource dataSource() throws SQLException {
     if (dbUrl == null || dbUrl.isEmpty()) {

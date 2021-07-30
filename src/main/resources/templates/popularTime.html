@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lan="en">
+
+
+<head>
+    <link rel="stylesheet" href="../stylesheets/popularTime.css"/>
+    <script type="text/javascript" src="../popularTime.js" defer>  </script>
+    <title>Location Search</title>
+</head>
+
+<body>
+    <header>
+        <div class="container" >
+          <h1 class="logo"></h1>
+          <nav>
+            <ul th:each="UserID : ${UserID}">
+              <li><a th:href="@{/Home/{uid}(uid=${UserID.getUserID()})}" >Home</a></li>
+              <li><a th:href="@{/About/{uid}(uid=${UserID.getUserID()})}">About</a></li>
+              <li><a th:href="@{/ShoppingList/{uid}(uid=${UserID.getUserID()})}">Shoppinglist</a></li>
+              <li><a th:href="@{/Login/{uid}(uid=${UserID.getUserID()})}">Login</a></li>
+              <li><a th:href="@{/Search/{uid}(uid=${UserID.getUserID()})}">Search</a></li>
+              <li>
+                <div class="dropdown">
+                    <button class="dropbtn">More
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a th:href="@{/PopularTime/{uid}(uid=${UserID.getUserID()})}">Search Store</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                    </div>
+                    </li>
+              <li>
+            </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+    <div class="WhiteBox">
+        <h2>Find-all</h2>
+        <div class="GreyBox">
+
+          <h2>Note: All our times are in 24-hour clock</h2>
+
+          <table class="TableFormat" id="Table">
+            <thead>
+                <tr class="RowOne">
+                    <th>Name of Store</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr>
+                  <td><input type = "text" id = "name" class = "name"></td>
+                  <td><input type = "text" id = address class = "address"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <input type="button" value="Submit" class="button" id = "locSubmit">
+
+          <table>
+            <tr>
+              <th class="RowOne">Venue Name</th>
+              <td id ="venueName"></td>
+            </tr>
+            <tr>
+              <th class="RowOne">Venue Address</th>
+              <td id ="venueAddress"></td>
+            </tr>
+
+          </table>
+          <h3>Schedule</h3>
+          <table class="TableFormat" id="Table">
+            <thead>
+                <tr class="RowOne">
+                    <th>Day</th>
+                    <th>Open</th>
+                    <th>Close</th>
+                    <th>Suggested Hour</th> <!-- MIGHT NEED A NEW WAY -->
+                    <th>Max Peak Time</th>
+
+            </thead>
+            <tbody>
+                <tr>
+                  <th>Monday</th>
+                  <td id = "openTime0"></td>
+                  <td id = "closeTime0"></td>
+                  <td id = "suggestTime0"></td>
+                  <td id = "maxTime0"></td>
+                </tr>
+                <tr>
+                  <th>Tuesday</th>
+                  <td id = "openTime1"></td>
+                  <td id = "closeTime1"></td>
+                  <td id = "suggestTime1"></td>
+                  <td id = "maxTime1"></td>
+                </tr>
+                <tr>
+                  <th>Wednesday</th>
+                  <td id = "openTime2"></td>
+                  <td id = "closeTime2"></td>
+                  <td id = "suggestTime2"></td>
+                  <td id = "maxTime2"></td>
+                </tr>
+                <tr>
+                  <th>Thursday</th>
+                  <td id = "openTime3"></td>
+                  <td id = "closeTime3"></td>
+                  <td id = "suggestTime3"></td>
+                  <td id = "maxTime3"></td>
+                </tr>
+                <tr>
+                  <th>Friday</th>
+                  <td id = "openTime4"></td>
+                  <td id = "closeTime4"></td>
+                  <td id = "suggestTime4"></td>
+                  <td id = "maxTime4"></td>
+                </tr>
+                <tr>
+                  <th>Saturday</th>
+                  <td id = "openTime5"></td>
+                  <td id = "closeTime5"></td>
+                  <td id = "suggestTime5"></td>
+                  <td id = "maxTime5"></td>
+                </tr>
+                <tr>
+                  <th>Sunday</th>
+                  <td id = "openTime6"></td>
+                  <td id = "closeTime6"></td>
+                  <td id = "suggestTime6"></td>
+                  <td id = "maxTime6"></td>
+                </tr>
+          
+            </tbody>
+          </table>
+
+          <h3>Live Forecast</h3>
+          <p>Between 0% and 100%, if value is above 100% means it is  busier than the highest forecasted peak. </p>
+          <table>
+            <tr>
+              <th class="RowOne">Live Status</th>
+              <td id ="liveStatus"></td>
+            </tr>
+          </table>
+
+          
+        </div>
+    </div>
+</body>
+
+
+</html>

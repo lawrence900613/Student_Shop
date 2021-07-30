@@ -51,7 +51,7 @@
                         <tr th:each="records : ${records}">
                             
                             <!-- <td><a href="#"  th:each="UserId : ${UserId}" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td> -->
-                            <td><a th:each="UserId : ${UserID}" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td>
+                            <td><a th:each="UserId : ${UserID}" id="gettext" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td>
                             <td th:utext="${records.getCategory()}"></td>
                             <td th:utext="${records.getPrice()}"></td>
                             
@@ -66,5 +66,7 @@
             
         </div>
     </div>
+    <script src="/recipe.js"></script>
+
 </body>
 </html>

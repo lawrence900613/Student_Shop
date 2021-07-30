@@ -54,9 +54,14 @@ import javax.swing.event.*;
 
 import java.io.Console;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+// import java.io.IOException;
+// import java.net.MalformedURLException;
+// import java.net.URL;
 
 
 @Controller
@@ -69,8 +74,21 @@ public class Main {
   @Autowired
   private DataSource dataSource;
 
+private static HttpURLConnection connection;
+
   public static void main(String[] args) throws Exception {
     SpringApplication.run(Main.class, args);
+
+    // URL url = new URL("https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/tt1375666");
+    // connection = (HttpURLConnection) url.openConnection();
+
+    // connection.setRequestMethod("GET");
+    // connection.setRequestProperty("Authorization", "b1e1ab1091mshcc9d4bcef44cbf0p1f1095jsn68c0743c6ce6");
+    // connection.setConnectTimeout(5000); //5 seconds try to connect
+    // connection.setReadTimeout(5000);
+
+    // int status = connection.getResponseCode();
+    // System.out.println(status);
   }
 
 
@@ -81,7 +99,7 @@ public class Main {
     model.put("UserID", idofuser);
 
     App newapi = new App();
-    // newapi.main(string []);
+    System.out.println("FINISHED INITIALIZING");
 
     return "home";  //basic landing of user
   }

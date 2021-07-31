@@ -15,7 +15,7 @@
               <li><a th:href="@{/Home/{uid}(uid=${retUserId.getUserID()})}" >Home</a></li>
               <li><a th:href="@{/About/{uid}(uid=${retUserId.getUserID()})}">About</a></li>
               <li><a th:href="@{/ShoppingList/{uid}(uid=${retUserId.getUserID()})}">Shoppinglist</a></li>
-              <li><a th:href="@{/Login/{uid}(uid=${retUserId.getUserID()})}">Login</a></li>
+              <li><a id ="log" th:href="@{/Login/{uid}(uid=${retUserId.getUserID()})}">Login</a></li>
               <li><a th:href="@{/Search/{uid}(uid=${retUserId.getUserID()})}">Search</a></li>
               <li>
                 <div class="dropdown">

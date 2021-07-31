@@ -123,6 +123,32 @@ public class Main {
   //     return "home"; 
   //   }
 
+  @GetMapping(path ="/logout/{id}")
+  public String getLogout(@PathVariable (required = false) Integer id, Map<String, Object> model) throws Exception{
+    try (Connection connection = dataSource.getConnection()){
+
+      Statement stmt = connection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + id); 
+      
+      User output = new User();
+      while(rs.next()){
+        if(id == (rs.getInt("id"))){
+          output.setName("" + rs.getObject("Username"));
+          output.setRole("" + rs.getObject("Role"));
+          output.setID(rs.getInt("id"));
+          model.put("ret", output);
+        }
+      }
+
+      return "logout";
+    }catch (Exception e) {
+      model.put("message", e.getMessage());
+      return "error";
+    }
+
+  }
+
+
  @GetMapping(path = {"/Home/{id}", "/Home"})
   public String landingSpecialized(@PathVariable (required = false) Integer id, Map<String, Object> model) {
     

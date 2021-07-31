@@ -15,7 +15,7 @@
               <li><a th:href="@{/Home/{uid}(uid=${retUserId.getUserID()})}" >Home</a></li>
               <li><a th:href="@{/About/{uid}(uid=${retUserId.getUserID()})}">About</a></li>
               <li><a th:href="@{/ShoppingList/{uid}(uid=${retUserId.getUserID()})}">Shoppinglist</a></li>
-              <li><a th:href="@{/Login/{uid}(uid=${retUserId.getUserID()})}">Login</a></li>
+              <li><a id="log" th:href="@{/Login/{uid}(uid=${retUserId.getUserID()})}">Login</a></li>
               <li><a th:href="@{/Search/{uid}(uid=${retUserId.getUserID()})}">Search</a></li>
               <li>
                 <div class="dropdown">
@@ -117,6 +117,27 @@
         </div>
     </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        //dom is fully loaded, but maybe waiting on images & css files
+        var links=document.getElementById("log").href;
+        console.log(links);
+        var length =links.length;
+        var lastelement = links[length-1];
+        console.log(lastelement);
+        
+        if(lastelement == null){
+            lastelement = 0;
+        }else{
+            if(parseInt(lastelement) > 0){
+            document.getElementById("log").href = "/logout/" + lastelement;
+            document.getElementById("log").innerHTML = "Logout";
+        }
+    }
+    });
+    
+    </script>
+
 
 
 </html>

@@ -52,7 +52,7 @@
                         <tr th:each="records : ${records}">
                             
                             <!-- <td><a href="#"  th:each="UserId : ${UserId}" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td> -->
-                            <td><a th:each="UserId : ${UserID}" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td>
+                            <td><a th:each="UserId : ${UserID}" id="gettext" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td>
                             <td th:utext="${records.getCategory()}"></td>
                             <td th:utext="${records.getPrice()}"></td>
                             
@@ -64,8 +64,28 @@
             
                        
                 </table>
-            
+<br>
+                <h3 id="recipeheader" >Top 3 Recipe Recommendation With Your Current Grocery List</h3>
+                <table>
+                    <tr>
+                        <td> <a href="#" id="link0"><img src="" id="pic0" alt="first image"></a></td>
+                        <td id="name0">recipe1</td>
+                    </tr>
+
+                    <tr>
+                        <td> <a href="#" id="link1"><img src="" id="pic1" alt="first image"></a></td>
+                        <td id="name1">recipe2</td>
+                    </tr>
+
+                    <tr>
+                        <td> <a href="#" id="link2"><img src="" id="pic2" alt="first image"></a></td>
+                        <td id="name2">recipe3</td>
+                    </tr>
+                </table>
+
         </div>
     </div>
+    <script src="/recipe.js"></script>
+
 </body>
 </html>

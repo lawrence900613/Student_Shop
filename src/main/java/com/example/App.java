@@ -14,7 +14,7 @@ public class App
     //Here will be your code
 
     // Host url
-    String host = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/";
+    String host = "https://imdb-internet-movie-database-unofficial.p.rapidapi.com/film/tt1375666";
     String charset = "UTF-8";
     // Headers for a request
     String x_rapidapi_host = "imdb-internet-movie-database-unofficial.p.rapidapi.com";
@@ -27,12 +27,12 @@ public class App
 
 
 
-    HttpResponse <String> response = Unirest.get(host + s)
+    HttpResponse <String> response = Unirest.get(host)
       .header("x-rapidapi-key", x_rapidapi_key)
       .header("x-rapidapi-host", x_rapidapi_host)
       .asString();
-    System.out.println(response.getStatus());
-      System.out.println(response.getHeaders().get("Content-Type"));
+    // System.out.println(response.getStatus());
+    //   System.out.println(response.getHeaders().get("Content-Type"));
       System.out.println("FINISHED CALLING APP DONEEEEEEE");
   }
 }

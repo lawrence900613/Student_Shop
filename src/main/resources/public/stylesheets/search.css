@@ -469,3 +469,31 @@ h2{
   overflow: auto;
 }
   
+th{
+  font-size: 35px;
+  padding: 20px;
+}
+
+td{
+  font-size: 25px;
+  padding: 20px;
+  text-align: center;
+}
+
+#searchbutton{
+  padding-left: 15px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  padding-right: 15px;
+  font-size: 20px;
+}
+#searchbox{
+  width:250px;
+  height: 35px;
+  font-size: 25px;
+}
+
+#categoryselect{
+  width:250px;
+  font-size: 25px;
+}

@@ -365,4 +365,16 @@ h2{
   height: auto;
   overflow: auto;
 }
-  
+  #name0, #name1, #name2{
+font-size: 30px;
+  }
+
+th{
+  font-size: 35px;
+  padding: 20px;
+}
+td{
+  font-size: 25px;
+  padding: 20px;
+  text-align: center;
+}

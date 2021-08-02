@@ -39,21 +39,22 @@
             <table id="myTable" class="myTable">
                 <tr>
                     <form class="example" method="post" th:action="@{/Searchitem/{id}(id=${userID.getUserID()})}" th:object="${item}">
-                        <input type="text" th:field=*{name} placeholder="Search.." name="search">
-                        <button type="submit"><i class="fa fa-search"></i>Search</button>
-                        <select th:field = *{category} class="categoryBox">
+                        <input id="searchbox" type="text" th:field=*{name} placeholder="Search.." name="search">
+                        <select id="categoryselect" th:field = *{category} class="categoryBox">
                             <option value=""  selected hidden style="color: gray;">Choose Category..</option>
-                            <option value="ItemName" >ItemName</option>
                             <option value="Electronics" >Electronics</option>
                             <option value="Food">Food</option>
                             <option value="Kitchen">Kitchen</option>
+                            <option value="Furniture">Furniture</option>
                             <option value="Miscellaneous">Miscellaneous</option>
                         </select>
+                        <button id="searchbutton" type="submit"><i class="fa fa-search"></i>Search</button>
+                        
                     </form>
             <tr>
-                <td>Name</td>
-                <td>Price</td>
-                <td>Description</td>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
             </tr>
             <tr th:each="product : ${product}">
                 <td><a th:href="@{/MyItem/{pid}/{uid}(uid=${product.getID()},pid=${userID.getUserID()})}" th:text="${product.getName()}"></a></td>

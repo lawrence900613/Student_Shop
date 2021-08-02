@@ -696,34 +696,36 @@ String getLoginSuccess() {
         System.out.println(searchname);
         System.out.println(searchcat);
         while (rs.next()) {
+          System.out.println("HELLLOOObefore if statement");
           if(searchcat.equals("ItemName")){
             String productname = rs.getString("name");
-            productname = productname.toLowerCase();
-          if(productname.contains(searchname)){
-            Item product = new Item();
-            product.setName(rs.getString("name"));
-            product.setCategory(rs.getString("Category"));
-            product.setDescription(rs.getString("description"));
-            product.setPrice(rs.getFloat("price"));
-            product.setStock(rs.getInt("stock"));
-            product.setID(rs.getInt("id"));
-            output.add(product);
-            }
-        }else{
-          if(searchcat.equals(rs.getString("Category"))){
-            String productname = rs.getString("name");
+            System.out.println("HELLLOOO"+productname);
             productname = productname.toLowerCase();
             if(productname.contains(searchname)){
-            Item product = new Item();
-            product.setName(rs.getString("name"));
-            product.setCategory(rs.getString("Category"));
-            product.setDescription(rs.getString("description"));
-            product.setPrice(rs.getFloat("price"));
-            product.setStock(rs.getInt("stock"));
-            product.setID(rs.getInt("id"));
-            output.add(product);
+              Item product = new Item();
+              product.setName(rs.getString("name"));
+              product.setCategory(rs.getString("Category"));
+              product.setDescription(rs.getString("description"));
+              product.setPrice(rs.getFloat("price"));
+              product.setStock(rs.getInt("stock"));
+              product.setID(rs.getInt("id"));
+              output.add(product);
+              }
+         }else{
+            if(searchcat.equals(rs.getString("Category"))){
+              String productname = rs.getString("name");
+              productname = productname.toLowerCase();
+              if(productname.contains(searchname)){
+              Item product = new Item();
+              product.setName(rs.getString("name"));
+              product.setCategory(rs.getString("Category"));
+              product.setDescription(rs.getString("description"));
+              product.setPrice(rs.getFloat("price"));
+              product.setStock(rs.getInt("stock"));
+              product.setID(rs.getInt("id"));
+              output.add(product);
+            }
           }
-        }
       }
     }
       Searchname item2 = new Searchname() ;

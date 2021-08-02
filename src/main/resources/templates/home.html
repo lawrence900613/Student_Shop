@@ -3,6 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="../stylesheets/home.css">
+    <script type="text/javascript" src="../logout.js"> defer</script>
     <title>Rectangle Store</title>
 </head>
 
@@ -15,7 +16,7 @@
           <li><a th:href="@{/Home/{uid}(uid=${UserID.getUserID()})}">Home</a></li>
           <li><a th:href="@{/About/{uid}(uid=${UserID.getUserID()})}">About</a></li>
           <li><a th:href="@{/ShoppingList/{uid}(uid=${UserID.getUserID()})}">Shoppinglist</a></li>
-          <li><a th:href="@{/Login/{uid}(uid=${UserID.getUserID()})}">Login</a></li>
+          <li><a id="log" th:href="@{/Login/{uid}(uid=${UserID.getUserID()})}">Login</a></li>
           <li><a th:href="@{/Search/{uid}(uid=${UserID.getUserID()})}">Search</a></li>
           <li>
             <div class="dropdown">
@@ -23,7 +24,7 @@
                     <i class="fa fa-caret-down"></i>
                 </button>
                 <div class="dropdown-content">
-                    <a href="#">Link 1</a>
+                    <a th:href="@{/PopularTime/{uid}(uid=${UserID.getUserID()})}">Search Store</a>
                     <a href="#">Link 2</a>
                     <a href="#">Link 3</a>
                 </div>
@@ -50,7 +51,7 @@
       <div class="catalog">
         <div class="item">
           <form method="post" th:action="@{/Searchcategory/{uid}(uid=${UserID.getUserID()})}" th:object="${item}">
-            <input type="hidden" th:name="category" value="food">
+            <input type="hidden" th:name="category" value="Food">
             <input type="image" src="../Good_Food_Display_-_NCI_Visuals_Online.jpg" alt="submit">
             <span class="caption" style="font-size:30px">Food</span>
           </form>
@@ -64,7 +65,7 @@
         </div>
         <div class="HouseHold">
           <form method="post" th:action="@{/Searchcategory/{uid}(uid=${UserID.getUserID()})}" th:object="${item}">
-            <input type="hidden" th:name="category" value="HouseHold">
+            <input type="hidden" th:name="category" value="Kitchen">
             <input type="image" src="../gettyimages-510693044-1550590816.jpg" alt="submit">
             <span class="caption" style="font-size:30px">Kitchen</span>
           </form>

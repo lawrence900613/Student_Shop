@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="../stylesheets/homeSeller.css" >
-    <script type="text/javascript" src="../homeSeller.js"> defer</script>
+    <script type="text/javascript" src="../homeSeller.js" defer> </script>
     <title>Home: Seller</title>
 </head>
 
@@ -17,7 +17,7 @@
               <li><a th:href="@{/Home/{uid}(uid=${UserId.getUserID()})}">Home</a></li>
               <li><a th:href="@{/About/{uid}(uid=${UserId.getUserID()})}">About</a></li>
               <li><a th:href="@{/ShoppingList/{uid}(uid=${UserId.getUserID()})}">Shoppinglist</a></li>
-              <li><a th:href="@{/Login/{uid}(uid=${UserId.getUserID()})}">Login</a></li>
+              <li><a id="log" th:href="@{/Login/{uid}(uid=${UserId.getUserID()})}">Login</a></li>
               <li><a th:href="@{/Search/{uid}(uid=${UserId.getUserID()})}">Search</a></li>
               <li>
                 <div class="dropdown">
@@ -25,7 +25,7 @@
                         <i class="fa fa-caret-down"></i>
                     </button>
                     <div class="dropdown-content">
-                        <a href="#">Link 1</a>
+                        <a th:href="@{/PopularTime/{uid}(uid=${UserId.getUserID()})}">Search Store</a>
                         <a href="#">Link 2</a>
                         <a href="#">Link 3</a>
                     </div>

@@ -141,6 +141,32 @@ private static HttpURLConnection connection;
   //     return "home"; 
   //   }
 
+  @GetMapping(path ="/logout/{id}")
+  public String getLogout(@PathVariable (required = false) Integer id, Map<String, Object> model) throws Exception{
+    try (Connection connection = dataSource.getConnection()){
+
+      Statement stmt = connection.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + id); 
+      
+      User output = new User();
+      while(rs.next()){
+        if(id == (rs.getInt("id"))){
+          output.setName("" + rs.getObject("Username"));
+          output.setRole("" + rs.getObject("Role"));
+          output.setID(rs.getInt("id"));
+          model.put("ret", output);
+        }
+      }
+
+      return "logout";
+    }catch (Exception e) {
+      model.put("message", e.getMessage());
+      return "error";
+    }
+
+  }
+
+
  @GetMapping(path = {"/Home/{id}", "/Home"})
   public String landingSpecialized(@PathVariable (required = false) Integer id, Map<String, Object> model) {
     
@@ -869,9 +895,15 @@ public String getsearchagain(Map<String, Object> model){
   }
 }
 
+@GetMapping(path = "/PopularTime/{UserId}") // rmb to pass ID
+public String popularTime(Map<String, Object> model, @PathVariable("UserId") Integer id) throws Exception {
+  
+  UserID in = new UserID();
+  in.setUserID(id);
+  model.put("UserID", in);
+  return "popularTime";
+}
    
-
-
   @Bean
   public DataSource dataSource() throws SQLException {
     if (dbUrl == null || dbUrl.isEmpty()) {

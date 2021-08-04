@@ -36,8 +36,8 @@
           </nav>
         </div>
       </header>
-    <div class="WhiteBox">
-        <h2>Welcome to the Seller Landing Page</h2>
+      <div class="WhiteBox" th:each = "UserName : ${UserName}">
+        <h2>Welcome Seller,</h2><h2 th:utext="${UserName.getUsername()}"></h2>
         <div class="GreyBox">
         
             <h3>All Your Listed Items</h3>

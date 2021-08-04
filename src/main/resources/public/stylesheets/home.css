@@ -243,6 +243,16 @@ h2{
   font-weight:600;
 }
 
+h3{
+  text-align: left;
+  margin-left: 20px;
+  margin-top: 20px;
+  font-family:Verdana;
+  font-size:27px;
+  font-weight:600;
+  display: inline;
+}
+
 .GreyBox{
   background-color:#e9eff1;
   border-radius: 5px;

@@ -85,7 +85,7 @@
 
             <div th:each="id : ${retUserId}">
 
-                <form action="#" method="post" th:each="record : ${retItem}" th:action="@{/UPDATEmi/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" th:object="${Item}" target = "hiddenFrame">
+                <form action="#" method="post" th:each="record : ${retItem}" th:action="@{/UPDATEmi/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" th:object="${Item}">  <!--  target = "hiddenframe"-->
 
                     <div>Place Old Image here Placeholder</div><br><br> <!-- fix needed -->
 

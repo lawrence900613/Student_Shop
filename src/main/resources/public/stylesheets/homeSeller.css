@@ -242,6 +242,7 @@ h2{
   font-family:Verdana;
   font-size:27px;
   font-weight:600;
+  display: inline;
 }
 
 .GreyBox{

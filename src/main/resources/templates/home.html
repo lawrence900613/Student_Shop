@@ -34,9 +34,9 @@
       </nav>
     </div>
   </header>
-  <div class="WhiteBox">
+  <div class="WhiteBox" th:each = "UserName : ${UserName}">
     <div class="GreyBox" th:each = "UserID : ${UserID}">
-      <h2>Welcome to the User Landing Page</h2>
+      <h3>Welcome User,</h3><h3 th:utext="${UserName.getUsername()}"></h3>
       <div class="parent">
         <div class="item">
           <img src="../chesley-grocery-store-flyer-april-4-to-9-1.jpg" class="flyer" alt="flyer">

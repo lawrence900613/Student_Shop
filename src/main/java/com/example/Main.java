@@ -96,10 +96,16 @@ private static HttpURLConnection connection;
   public String landingNoSignin( Map<String, Object> model ) {
     UserID idofuser = new UserID();
     idofuser.setUserID(0);
-    model.put("UserID", idofuser);
 
+    User output = new User();
+    output.setName("Guest");
+  
     App newapi = new App();
     System.out.println("FINISHED INITIALIZING");
+
+
+    model.put("UserID", idofuser);
+    model.put("UserName", output);
 
     return "home";  //basic landing of user
   }
@@ -181,7 +187,7 @@ private static HttpURLConnection connection;
           output.setName("" + rs.getObject("Username"));
           output.setRole("" + rs.getObject("Role"));
           output.setID(rs.getInt("id"));
-          model.put("ret", output);
+          model.put("UserName", output);
         }
       }
       System.out.println("IN THIS GETMAPPING with home/{id}");
@@ -192,9 +198,14 @@ private static HttpURLConnection connection;
       //   return "HomeSeller/" + output.getID();
       // }
 
-      System.out.println("ID = " + id + " Role = " + output.getRole());if(id == 0){
+      System.out.println("ID = " + id + " Role = " + output.getRole());
+      
+      if(id == 0){
         UserID idofuser = new UserID();
         idofuser.setUserID(0);
+        User output2 = new User();
+        output2.setName("Guest");
+        model.put("UserName", output2);
         model.put("UserID", idofuser);
         return "home";
       }
@@ -226,7 +237,7 @@ public String SellerItem(@PathVariable("UserId") String idofuser, @PathVariable(
   try (Connection connection = dataSource.getConnection()){
     Statement stmt = connection.createStatement();
     ResultSet rs = stmt.executeQuery("SELECT * FROM Items");
-    
+
     Item output = new Item(); // store data
 
     Integer UserId = Integer.parseInt(idofuser);
@@ -325,6 +336,23 @@ public String myItem(@PathVariable("UserId") String idofuser, @PathVariable("Ite
 
       ResultSet rs = stmt.executeQuery("SELECT * FROM Items WHERE SellerId =" + id);
       ArrayList<Item> storeItem = new ArrayList<Item>();
+
+      Statement stmt2 = connection.createStatement();
+      ResultSet rs2 = stmt2.executeQuery("SELECT * FROM Accounts WHERE id=" + parameterid); 
+      
+      User output = new User();
+
+      while(rs2.next()){
+        if(parameterid == (rs2.getInt("id"))){
+          output.setName("" + rs2.getObject("Username"));
+          output.setRole("" + rs2.getObject("Role"));
+          output.setID(rs2.getInt("id"));
+          model.put("UserName", output);
+        }
+      }
+
+
+
       while(rs.next()){
         Item outputItem = new Item();
         outputItem.setName(rs.getString("Name"));

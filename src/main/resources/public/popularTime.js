@@ -83,6 +83,17 @@ async function myScript(){
     document.getElementById("liveStatus").innerHTML = "";
   }
   else{
+
+    if(data2.analysis.venue_live_busyness < 40){
+      document.getElementById("RowTwo").style.backgroundColor="#1fed64"
+    }
+    else if(data2.analysis.venue_live_busyness < 70){
+      document.getElementById("RowTwo").style.backgroundColor="#f0fa2d"
+    }
+    else{
+      document.getElementById("RowTwo").style.backgroundColor="#f54242"
+    }
+
     document.getElementById("liveStatus").innerHTML = data2.analysis.venue_live_busyness + "% of store capacity";
   }
 

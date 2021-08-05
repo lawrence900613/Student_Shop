@@ -1,0 +1,39 @@
+form {
+    border: 3px solid;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12p 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid white;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: red;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* add hover effect?*/
+
+.cancel {
+    width: auto;
+    padding: 10px 18px;
+    background-color: red;
+}
+
+.container {
+    padding: 16px;
+}
+
+.incorrectNotice{
+    background-color: rgb(252, 38, 38);
+    color: white;
+}

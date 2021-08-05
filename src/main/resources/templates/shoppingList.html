@@ -45,11 +45,13 @@
                             <th class = "RowOne">Name</th>
                             <th class = "RowOne">Category</th>
                             <th class = "RowOne">Price ($)</th>
+                            <th></th>
+                            <th id="checkboxHeader">Add to Recipe Search</th>
                         </tr>
                     </thead>
                     
                     <tbody >
-                        <tr th:each="records : ${records}">
+                        <tr th:each="records : ${records}" id="thisrow">
                             
                             <!-- <td><a href="#"  th:each="UserId : ${UserId}" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td> -->
                             <td><a th:each="UserId : ${UserID}" id="gettext" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td>
@@ -58,28 +60,35 @@
                             
                             <form action="#" th:each="UserId : ${UserID}" method="post" th:action="@{/DELETEsp/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}">
                                 <td><input type="submit" class="btnDelete" value="DELETE"></td>
-                            </form>                     
+                            </form>       
+                            <td> <input type="checkbox" id="checkbox" th:value="${records.getName()}"> </td>              
                         </tr>
                     </tbody>
-            
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><input type="button" onclick="searchRecipe()" value="Search Recipe"></td>
+            </tr>
                        
                 </table>
 <br>
-                <h3 id="recipeheader" >Top 3 Recipe Recommendation With Your Current Grocery List (Click on image to see full recipe)</h3>
-                <table>
+                <h3 id="recipeheader" ></h3>
+                <table  id="Table">
                     <tr>
-                        <td> <a href="#" id="link0"><img src="" id="pic0" alt="first image"></a></td>
-                        <td id="name0">recipe1</td>
+                        <td class="recipeTable"> <a href="#" id="link0"><img src="" id="pic0" alt="first image"></a></td>
+                        <td class="recipeTable" id="name0">recipe1</td>
                     </tr>
 
                     <tr>
-                        <td> <a href="#" id="link1"><img src="" id="pic1" alt="first image"></a></td>
-                        <td id="name1">recipe2</td>
+                        <td class="recipeTable"> <a href="#" id="link1"><img src="" id="pic1" alt="first image"></a></td>
+                        <td class="recipeTable" id="name1">recipe2</td>
                     </tr>
 
                     <tr>
-                        <td> <a href="#" id="link2"><img src="" id="pic2" alt="first image"></a></td>
-                        <td id="name2">recipe3</td>
+                        <td class="recipeTable"> <a href="#" id="link2"><img src="" id="pic2" alt="first image"></a></td>
+                        <td class="recipeTable" id="name2">recipe3</td>
                     </tr>
                 </table>
 

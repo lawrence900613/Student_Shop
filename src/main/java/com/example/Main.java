@@ -173,17 +173,21 @@ private static HttpURLConnection connection;
   }
 
 
- @GetMapping(path = {"/Home/{id}", "/Home"})
-  public String landingSpecialized(@PathVariable (required = false) Integer id, Map<String, Object> model) {
+  @GetMapping(path = {"/Home/{id}", "/Home"})
+  public String landingSpecialized(@PathVariable (required = false) String id, Map<String, Object> model) {
     
+    if(id == null){
+      return "redirect:/Home/0";
+    }else{
     try (Connection connection = dataSource.getConnection()){
       Statement stmt = connection.createStatement();
       ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id=" + id); 
+      Integer parameterid = Integer.parseInt(id);
       
       User output = new User();
 
       while(rs.next()){
-        if(id == (rs.getInt("id"))){
+        if(parameterid == (rs.getInt("id"))){
           output.setName("" + rs.getObject("Username"));
           output.setRole("" + rs.getObject("Role"));
           output.setID(rs.getInt("id"));
@@ -198,9 +202,9 @@ private static HttpURLConnection connection;
       //   return "HomeSeller/" + output.getID();
       // }
 
-      System.out.println("ID = " + id + " Role = " + output.getRole());
+      System.out.println("ID = " + parameterid + " Role = " + output.getRole());
       
-      if(id == 0){
+      if(parameterid == 0){
         UserID idofuser = new UserID();
         idofuser.setUserID(0);
         User output2 = new User();
@@ -211,13 +215,13 @@ private static HttpURLConnection connection;
       }
       else if(output.getRole().equals("seller")){
         UserID idofuser = new UserID();
-        idofuser.setUserID(id);
+        idofuser.setUserID(parameterid);
         model.put("UserID", idofuser);
         return "redirect:/HomeSeller/" + id;
       }
       else{
         UserID idofuser = new UserID();
-        idofuser.setUserID(id);
+        idofuser.setUserID(parameterid);
         model.put("UserID", idofuser);
         return "home";
       }
@@ -229,6 +233,7 @@ private static HttpURLConnection connection;
       model.put("message", e.getMessage());
       return "error";
     }
+  }
   }
 
 @GetMapping(path = "/HomeSellerItem/{UserId}/{ItemId}")

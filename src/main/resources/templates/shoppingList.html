@@ -42,14 +42,16 @@
                 <table class="AddTable" id="Table" >
                     <thead>
                         <tr >
-                            <th>Name</th>
+                            <th >Name</th>
                             <th>Category</th>
                             <th>Price ($)</th>
+                            <th></th>
+                            <th id="checkboxHeader">Add to Recipe Search</th>
                         </tr>
                     </thead>
                     
                     <tbody >
-                        <tr th:each="records : ${records}">
+                        <tr th:each="records : ${records}" id="thisrow">
                             
                             <!-- <td><a href="#"  th:each="UserId : ${UserId}" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td> -->
                             <td><a th:each="UserId : ${UserID}" id="gettext" th:href="@{/MyItem/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getName()}"></a></td>
@@ -58,14 +60,21 @@
                             
                             <form action="#" th:each="UserId : ${UserID}" method="post" th:action="@{/DELETEsp/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}">
                                 <td><input type="submit" class="btnDelete" value="DELETE"></td>
-                            </form>                     
+                            </form>       
+                            <td> <input type="checkbox" id="checkbox" th:value="${records.getName()}"> </td>              
                         </tr>
                     </tbody>
-            
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><input type="button" onclick="searchRecipe()" value="Search Recipe"></td>
+            </tr>
                        
                 </table>
 <br>
-                <h3 id="recipeheader" >Top 3 Recipe Recommendation With Your Current Grocery List(Click on image to see full recipe)</h3>
+                <h3 id="recipeheader" ></h3>
                 <table>
                     <tr>
                         <td> <a href="#" id="link0"><img src="" id="pic0" alt="first image"></a></td>

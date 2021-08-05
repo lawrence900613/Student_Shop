@@ -47,33 +47,35 @@
             <table th:each="record : ${retItem}" class ="TableFormat">
                 
                 <tr>
-                    <th>Name</th>
+                    <th class= "RowOne">Name</th>
                     <td th:utext="${record.getName()}" id="nameIn"></td>
                 </tr>
                 <tr>
-                    <th>Description</th>
+                    <th class= "RowOne">Description</th>
                     <td th:utext="${record.getDescription()}" id="descriptionIn"></td>
                 </tr>
                 <tr>
-                    <th>Category</th>
+                    <th class= "RowOne">Category</th>
                     <td th:utext="${record.getCategory()}" id="categoryIn"></td>
                 </tr>
                 <tr>
-                    <th>Price</th>
+                    <th class= "RowOne">Price</th>
                     <td th:utext="${record.getPrice()}" id="priceIn"></td>
                 </tr>
                 <tr>
-                    <th>Stock</th>
+                    <th class= "RowOne">Stock</th>
                     <td th:utext="${record.getStock()}" id="stockIn"></td>
                 </tr>
             </table>
 
             <iframe name="votar" style="display:none;"></iframe>
             <div id = "outer" th:each="record : ${retItem}">
+                <form>
+                    <input type="button"  th:each="id : ${retUserId}" class="btn" value="Back" th:onclick="'window.location.href = \'' + @{/Search/{uid}(uid=${id.getUserID()})} + '\''">
+                </form>
                 <form action="#" method="post" th:each="id : ${retUserId}" th:action="@{/AddToShoppingListMyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" target = "votar">
                     <input type="submit" class="btnAdd" value="Add to Shopping List"></td>
                 </form>
-                <input type="button"  th:each="id : ${retUserId}" class="btn" value="Back" th:onclick="'window.location.href = \'' + @{/Search/{uid}(uid=${id.getUserID()})} + '\''">
             </div>
             
         </div>

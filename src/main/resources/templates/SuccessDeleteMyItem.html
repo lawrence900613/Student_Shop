@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Delete Item Home Seller</title>
 </head>
-<body>
+<body style="font-size:20px">
   Successfully deleted from your Listings!
 
   <input type="button" th:each="id : ${UserId}" class="botton" value="Back" th:onclick="'window.location.href = \'' + @{/HomeSeller/{uid}(uid=${id.getUserID()})} + '\''">

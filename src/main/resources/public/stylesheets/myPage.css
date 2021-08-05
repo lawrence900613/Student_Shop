@@ -306,14 +306,58 @@ h2{
   border:none;
   pointer-events:visiblePainted;
   display: inline-block;
-  margin: 2px;
+  margin: 7px;
+  margin-left:70px;
 }
 
 .btnUpdate:hover{
   background-color:#fde16e;
 }
 
+table, th, td{
+  border-collapse: collapse;
+  padding: 5px;
+  border: 2px solid #bfbebe;
+  margin: 15px;
+}
+
+.TableFormat{
+  width:auto;
+  border-collapse: collapse;
+  border: 2px solid #bfbebe;
+  text-align: left;
+}
+
+.RowOne{
+  background-color: #dddddd;
+}
+
+.ButtonDiv{
+  display: block;
+}
+
+.btn{
+  width:90px;
+  background-color:#a0a3a1;
+  color:#f8fafe;
+  border-radius:5px;
+  padding:5px;
+  float:none;
+  border:none;
+  pointer-events:visiblePainted;
+  display: inline-block;
+  margin: 2px;
+}
+
+.btn:hover{
+  background-color:#878a88;
+}
 
 
+#outer input { display: block; }
+#outer form { display: inline-block; }
 
-  
+.categoryBox{
+  margin-left: 45px;
+  width: 176px;
+}

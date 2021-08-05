@@ -233,10 +233,6 @@
  h2{
    text-align: left;
    margin-left: 20px;
-   margin-top: 20px;
-   font-family:Verdana;
-   font-size:27px;
-   font-weight:600;
  }
  
  .GreyBox{
@@ -368,21 +364,17 @@ table, th, td{
     background-color: #dddddd;
 }
   
-.btn{
-    width:90px;
+.button{
+    width:80px;
     background-color:#b81013;
     color:#f8fafe;
     border-radius:5px;
     padding:5px;
-    float:none;
-    margin-right:10px;
     border:none;
-    pointer-events:visiblePainted;
-    margin-bottom:10px;
-    float:right;
+    margin-left:20px;
 }
   
-  .btn:hover {
+  .button:hover {
     background-color: #af4253;
   }
   
@@ -391,6 +383,14 @@ table, th, td{
     margin-top: 7px;
     font-size: 20px;
   
+  }
+
+  .textBetween{
+    margin-left:17px;
+  }
+
+  #RowTwo{
+    background-color: #dddddd;
   }
   
   

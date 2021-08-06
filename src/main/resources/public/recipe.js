@@ -6,7 +6,8 @@ for (var l = 0; l<3; l++){
     document.getElementById("name"+l).innerText = " ";    
 
 }
-// document.getElementsByClassName("recipeTable").style.border = "#e9eff1";
+// var invisibleTable = document.getElementsByClassName("recipeTable")
+// invisibleTable.style.borderColor = "grey";
 
 function searchRecipe(){
     document.getElementById("recipeheader").innerText= "Top 3 Recipe Recommendation (Click on image to see full recipe)";
@@ -92,21 +93,36 @@ function searchRecipe(){
                     var dataone = xhr.responseText;
 
                     var jsonResponse = JSON.parse(dataone); // gets the whole json file that is returned
+                    console.log("BelowVVVVVVVVVV is json");
                     console.log(jsonResponse);
-                    for (var l = 0; l<3; l++){
-                        // console.log(jsonResponse["hits"][l]["recipe"]["label"]);
-                        // console.log(jsonResponse["hits"][l]["recipe"]["image"]);
-                        // console.log(jsonResponse["hits"][l]["recipe"]["url"]);
-                        document.getElementById("pic"+l).style.display = "";
+                    if(jsonResponse["count"] >=3){
+                        for (var l = 0; l<3; l++){
+                            // console.log(jsonResponse["hits"][l]["recipe"]["label"]);
+                            // console.log(jsonResponse["hits"][l]["recipe"]["image"]);
+                            // console.log(jsonResponse["hits"][l]["recipe"]["url"]);
+                            document.getElementById("pic"+l).style.display = "";
 
-                        document.getElementById("pic"+l).src = jsonResponse["hits"][l]["recipe"]["image"];
-                        document.getElementById("name"+l).innerText = jsonResponse["hits"][l]["recipe"]["label"];
-                        document.getElementById("link"+l).href = jsonResponse["hits"][l]["recipe"]["url"];
+                            document.getElementById("pic"+l).src = jsonResponse["hits"][l]["recipe"]["image"];
+                            document.getElementById("name"+l).innerText = jsonResponse["hits"][l]["recipe"]["label"];
+                            document.getElementById("link"+l).href = jsonResponse["hits"][l]["recipe"]["url"];
 
 
+                        }
+                        //console.log(jsonResponse["hits"][0]["recipe"]["label"]);   //first returns all hits(10 results), get first item, 
+                                                                        //get recipe of first (access to label, pic, etc), get title 
                     }
-                    //console.log(jsonResponse["hits"][0]["recipe"]["label"]);   //first returns all hits(10 results), get first item, 
-                                                                    //get recipe of first (access to label, pic, etc), get title 
+                    else{
+                        console.log("In the IFFFFF else statement");
+                        document.getElementById("recipeheader").innerText= "We cannot find any recipes using all the ingredients, please reselect ingredients";
+                        for (var l = 0; l<3; l++){
+                        
+                            document.getElementById("pic"+l).style.display = "none";
+                            document.getElementById("pic"+l).src = "#";
+                            document.getElementById("name"+l).innerText = " ";
+                            //document.getElementById("link"+l).href = jsonResponse["hits"][l]["recipe"]["url"]; 
+                        }
+                    }
+                    
                 }
             }
         };

@@ -609,3 +609,6 @@ td{
 #checkboxHeader{
   font-size: 25px;
 }
+.recipeTable{
+  border-color: #e9eff1;
+}

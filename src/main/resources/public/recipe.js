@@ -6,7 +6,8 @@ for (var l = 0; l<3; l++){
     document.getElementById("name"+l).innerText = " ";    
 
 }
-// document.getElementsByClassName("recipeTable").style.border = "#e9eff1";
+// var invisibleTable = document.getElementsByClassName("recipeTable")
+// invisibleTable.style.borderColor = "grey";
 
 function searchRecipe(){
     document.getElementById("recipeheader").innerText= "Top 3 Recipe Recommendation (Click on image to see full recipe)";

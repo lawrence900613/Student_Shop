@@ -24,6 +24,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -676,7 +679,7 @@ public String handleDeleteButtonForMyItem(@PathVariable("uid") Integer UserId, @
     System.out.println(account.getUsername());
     try (Connection connection = dataSource.getConnection()) {
       Statement stmt = connection.createStatement();
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Accounts (Id serial, Username varchar(20), Password varchar(16), Role varchar(16),Shoppinglist Integer[1], Sellinglist Integer[1])");
+      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS Accounts (Id serial, Username varchar(20), Password varchar(16), Role varchar(16),Shoppinglist Integer[1], Sellinglist Integer[1], MessengingIds Integer[1])");
       String sql = "SELECT * FROM Accounts WHERE Username ='"+account.getUsername()+ "' ";
       ResultSet rs = stmt.executeQuery(sql);
       if(rs.next() == true){
@@ -936,7 +939,213 @@ public String popularTime(Map<String, Object> model, @PathVariable("UserId") Int
   model.put("UserID", in);
   return "popularTime";
 }
-   
+
+@GetMapping(path="/Messages/{UserId}")
+public String getMessages(@PathVariable("UserId") Integer Userid, Map<String, Object> model) throws Exception{
+  try (Connection connection = dataSource.getConnection()) {
+    System.out.println("Currently in Messages");
+    Statement stmt = connection.createStatement();
+    if(Userid == 0){
+      Account account = new Account();
+      model.put("account", account);
+      UserID idofuser = new UserID();
+      idofuser.setUserID(0);
+      model.put("UserID", idofuser);
+      return "MessagesAccessDenied";
+    }
+    ResultSet rs = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + Userid);
+    if(rs.next()){
+      Array temp = rs.getArray("MessengingIds");
+      ArrayList<Integer> tempStoreItemID = new ArrayList<Integer>();
+      if(temp != null){ //if array not empty
+        Integer[] temp2 = (Integer[])temp.getArray();
+        for(int i = 0; i < temp2.length; i++){
+          if(temp2[i] != null)
+            tempStoreItemID.add(temp2[i]); //copy to arraylist
+        }
+      }
+      ArrayList<Account> storeItems = new ArrayList<Account>(); //store all the items
+      for(int i = 0; i < tempStoreItemID.size(); i++){
+        ResultSet rsTemp = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + tempStoreItemID.get(i));
+        if(rsTemp.next()){
+          Account outputItem = new Account();
+          outputItem.setUsername(rsTemp.getString("Username"));
+          outputItem.setID(rsTemp.getInt("Id"));
+          storeItems.add(outputItem);
+        }
+      }
+      UserID tempId = new UserID();
+      tempId.setUserID(Userid);
+      model.put("UserID", tempId);
+      model.put("records", storeItems); //iterate all shopping list item and link them to respective page
+    }
+    return "messengingList";
+  }
+  catch (Exception e){
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+
+// Initially contacting seller
+@PostMapping(path = {"/ContactSeller/{Userid}/{Itemid}"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+public String ContactSeller(Map<String, Object> model, @PathVariable ("Userid") Integer UserId, @PathVariable ("Itemid") Integer ItemId) throws Exception{
+  try (Connection connection = dataSource.getConnection()) {
+    Statement stmt = connection.createStatement();
+    System.out.println("UserId passed in:" + UserId);
+    System.out.println("ItemId passed in:" + ItemId);
+    // If user is not logged in then ask them to login
+    if(UserId == 0){
+      Account account = new Account();
+      model.put("account", account);
+      UserID idofuser = new UserID();
+      idofuser.setUserID(0);
+      model.put("UserID", idofuser);
+      return "contactSellerDenied";
+    }
+    // from ItemId find the seller ID and put in model
+    ResultSet rs1 = stmt.executeQuery("SELECT * FROM Items WHERE id =" + ItemId);
+    if(rs1.next()){
+      UserID recipientID = new UserID();
+      recipientID.setUserID(rs1.getInt("SellerID"));
+      model.put("recipientID", recipientID);
+      System.out.println("The found recipientId:" + recipientID.getUserID());
+      // Get recipient name and put in model
+      ResultSet rs2 = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + recipientID.getUserID());
+      if(rs2.next()){
+        Account recipientAccount = new Account();
+        recipientAccount.setUsername(rs2.getString("Username"));
+        model.put("recipientAccount", recipientAccount);
+        System.out.println("The found recipientName:" + recipientAccount.getUsername());
+        // Update the MessengingIds for the recipientAccount (add senderID into MessengingIds)
+        ArrayList<Integer> tempStoreMessengingIdR = new ArrayList<Integer>();
+        Array temp = rs2.getArray("MessengingIds");
+        if(temp != null){
+          Integer[] temp2 = (Integer[])temp.getArray();
+          for(int i = 0; i < temp2.length; i++){
+            if(temp2[i] != null){
+              tempStoreMessengingIdR.add(temp2[i]);
+            }
+          }
+        }
+        if(!(tempStoreMessengingIdR.contains(UserId))){
+          tempStoreMessengingIdR.add(UserId);
+        }
+        Integer newIDList[] = new Integer[tempStoreMessengingIdR.size()];
+        newIDList = tempStoreMessengingIdR.toArray(newIDList);
+        for (Integer obj : newIDList){
+          System.out.println("Messenging list for recipient: " + obj);
+        }
+        StringBuilder string = new StringBuilder();
+        string.append("{");
+        for(int i = 0; i < newIDList.length; i++){
+          string.append(newIDList[i]);
+          if(i != newIDList.length - 1){
+            string.append(",");
+          }
+        }
+        string.append("}");
+        System.out.println("Messenging list for recipient: " + string);
+        stmt.executeUpdate("UPDATE Accounts SET MessengingIds = '" + string + "' WHERE id = " + recipientID.getUserID());   
+      }
+      UserID senderID = new UserID();
+      senderID.setUserID(UserId);
+      model.put("senderID", senderID);
+      // Get sender name and put in model
+      ResultSet rs3 = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + senderID.getUserID());
+      if(rs3.next()){
+        Account senderAccount = new Account();
+        senderAccount.setUsername(rs3.getString("Username"));
+        model.put("senderAccount", senderAccount);
+        System.out.println("The found senderName:" + senderAccount.getUsername());
+        // Update the MessengingIds for the senderAccount (add recipientID into MessengingIds)
+        ArrayList<Integer> tempStoreMessengingIdS = new ArrayList<Integer>();
+        Array temp = rs3.getArray("MessengingIds");
+        if(temp != null){
+          Integer[] temp2 = (Integer[])temp.getArray();
+          for(int i = 0; i < temp2.length; i++){
+            if(temp2[i] != null){
+              tempStoreMessengingIdS.add(temp2[i]);
+            }
+          }
+        }
+        if(!(tempStoreMessengingIdS.contains(recipientID.getUserID()))){
+          tempStoreMessengingIdS.add(recipientID.getUserID());
+        }
+        Integer newIDList[] = new Integer[tempStoreMessengingIdS.size()];
+        newIDList = tempStoreMessengingIdS.toArray(newIDList);
+        for (Integer obj : newIDList){
+          System.out.println("Messenging list for sender: " + obj);
+        }
+        StringBuilder string = new StringBuilder();
+        string.append("{");
+        for(int i = 0; i < newIDList.length; i++){
+          string.append(newIDList[i]);
+          if(i != newIDList.length - 1){
+            string.append(",");
+          }
+        }
+        string.append("}");
+        System.out.println("Messenging list for sender: " + string);
+        stmt.executeUpdate("UPDATE Accounts SET MessengingIds = '" + string + "' WHERE id = " + senderID.getUserID());   
+      }
+    }
+    return "Message";
+  }
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+// @GetMapping(path = "/Messaging/{Userid}/{Recipientid}")
+@PostMapping(path = {"/Messaging/{Userid}/{Recipientid}"}, consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+public String Messaging(Map<String, Object> model, @PathVariable ("Userid") Integer UserId, @PathVariable ("Recipientid") Integer RecipientId) throws Exception{
+  try (Connection connection = dataSource.getConnection()) {
+    Statement stmt = connection.createStatement();
+    System.out.println("UserId passed in:" + UserId);
+    System.out.println("RecipientId passed in:" + RecipientId);
+    // from ItemId find the seller ID and put in model
+    UserID recipientID = new UserID();
+    recipientID.setUserID(RecipientId);
+    model.put("recipientID", recipientID);
+    // Get recipient name and put in model
+    ResultSet rs1 = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + recipientID.getUserID());
+    if(rs1.next()){
+      Account recipientAccount = new Account();
+      recipientAccount.setUsername(rs1.getString("Username"));
+      model.put("recipientAccount", recipientAccount);
+      System.out.println("The found recipientName:" + recipientAccount.getUsername());
+    }
+    UserID senderID = new UserID();
+    senderID.setUserID(UserId);
+    model.put("senderID", senderID);
+    // Get sender name and put in model
+    ResultSet rs2 = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + senderID.getUserID());
+    if(rs2.next()){
+      Account senderAccount = new Account();
+      senderAccount.setUsername(rs2.getString("Username"));
+      model.put("senderAccount", senderAccount);
+      System.out.println("The found senderName:" + senderAccount.getUsername());
+    }
+    return "Message";
+  }
+  catch (Exception e) {
+    model.put("message", e.getMessage());
+    return "error";
+  }
+}
+
+@Autowired
+private SimpMessagingTemplate simpMessagingTemplate;
+
+@MessageMapping("/chat")
+public void processMessage(@Payload ChatMessage chatMessage) {
+  ChatMessage message = new ChatMessage(chatMessage.getSenderName(), chatMessage.getSenderID(), chatMessage.getContent());
+  simpMessagingTemplate.convertAndSendToUser(chatMessage.getRecipientID(), "/queue/messages", message);
+}
+ 
   @Bean
   public DataSource dataSource() throws SQLException {
     if (dbUrl == null || dbUrl.isEmpty()) {

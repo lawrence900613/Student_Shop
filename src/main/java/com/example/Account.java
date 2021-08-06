@@ -7,6 +7,7 @@ public class Account {
     private Integer ID;
     private Integer[] SellingList;
     private Integer[] ShoppingList; 
+    private Integer[] MessagingList;
 
     public String getUsername() {
         return username;
@@ -56,6 +57,12 @@ public class Account {
         this.SellingList = in;
     }
 
+    public void setMessagingList(Integer[] messagingList){
+        this.MessagingList = messagingList;
+    }
 
+    public Integer[] getMessagingListNames() {
+        return this.MessagingList;
+    }
 
 }

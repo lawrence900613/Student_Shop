@@ -1,8 +1,10 @@
 com/example/App.class
 com/example/ItemID.class
+com/example/WebSocketConfig.class
 com/example/Account.class
 com/example/UserID.class
 com/example/User.class
 com/example/Searchname.class
 com/example/Main.class
 com/example/Item.class
+com/example/ChatMessage.class

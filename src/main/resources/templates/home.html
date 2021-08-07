@@ -4,7 +4,7 @@
 <head>
     <link rel="stylesheet" href="../stylesheets/home.css">
     <script type="text/javascript" src="../logout.js"> defer</script>
-    <title>Rectangle Store</title>
+    <title>Home</title>
 </head>
 
 <body>
@@ -18,18 +18,8 @@
           <li><a th:href="@{/ShoppingList/{uid}(uid=${UserID.getUserID()})}">Shoppinglist</a></li>
           <li><a id="log" th:href="@{/Login/{uid}(uid=${UserID.getUserID()})}">Login</a></li>
           <li><a th:href="@{/Search/{uid}(uid=${UserID.getUserID()})}">Search</a></li>
-          <li>
-            <div class="dropdown">
-                <button class="dropbtn">More
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a th:href="@{/PopularTime/{uid}(uid=${UserID.getUserID()})}">Search Store</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
-                </div>
-              </div>
-          </li>
+          <li><a th:href="@{/Messages/{uid}(uid=${UserID.getUserID()})}">Messages</a></li>
+          <li><a th:href="@{/PopularTime/{uid}(uid=${UserID.getUserID()})}">Search Store</a></li>
         </ul>
       </nav>
     </div>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lan="en">
+
+<head>
+    <link rel="stylesheet" href="../../stylesheets/message.css"/>
+    <script type="text/javascript" src="../../logout.js"> defer</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
+    <title>Message</title>
+</head>
+
+<body>
+  <header>
+    <div class="container" >
+      <h1 class="logo" th:each="senderID : ${senderID}"></h1>
+      <nav >
+        <ul >
+          <li><a th:href="@{/Home/{uid}(uid=${senderID.getUserID()})}" >Home</a></li>
+          <li><a th:href="@{/About/{uid}(uid=${senderID.getUserID()})}">About</a></li>
+          <li><a th:href="@{/ShoppingList/{uid}(uid=${senderID.getUserID()})}">Shoppinglist</a></li>
+          <li><a id="log" th:href="@{/Login/{uid}(uid=${senderID.getUserID()})}">Login</a></li>
+          <li><a th:href="@{/Search/{uid}(uid=${senderID.getUserID()})}">Search</a></li>
+          <li><a th:href="@{/Messages/{uid}(uid=${senderID.getUserID()})}">Messages</a></li>
+          <li><a th:href="@{/PopularTime/{uid}(uid=${senderID.getUserID()})}">Search Store</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="WhiteBox">
+    <div class="GreyBox">
+      <input type="hidden" th:value="${senderAccount.getUsername()}" id="senderName" />
+      <input type="hidden" th:value="${senderID.getUserID()}" id="senderID" />
+      <input type="hidden" th:value="${recipientAccount.getUsername()}" id="recipientName" />
+      <input type="hidden" th:value="${recipientID.getUserID()}" id="recipientID" />
+
+      <input type="text" id="message" placeholder="Write a message..."/>
+      <button id="sendMessage">Send</button>
+      <div id="recievedMessage"></div>
+    </div>
+  </div>
+
+  <script>
+    var stompClient = null;
+    var senderName = String(document.getElementById('senderName').value);
+    var senderID = String(document.getElementById('senderID').value);
+    var recipientName = String(document.getElementById('recipientName').value);
+    var recipientID = String(document.getElementById('recipientID').value);
+    console.log("sendername: " + senderName);
+    console.log("senderID: " + senderID);
+    console.log("recipientName: " + recipientName);
+    console.log("recipientID: " + recipientID);
+
+    $(document).ready(function() {
+
+      createConnection();
+
+      $('#sendMessage').click(function() {
+        var content = $('#message').val();
+        console.log("content: " + content);
+
+        sendMessage(content);
+
+        $('#recievedMessage').append('<span> You: ' + content + '</span><br>');
+        // clear text box
+        $('#message').val('');
+      })
+
+      function createConnection() {
+        var socket = new SockJS("http://localhost:5000/ws");
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(connectionData){
+          console.log(connectionData);
+          stompClient.subscribe("/user/" + senderID + "/queue/messages", function(data){
+            console.log(data.body);
+            var messageOutput = JSON.parse(data.body);
+            console.log("The senderID of the sent message: " + messageOutput.senderID)
+            console.log("The ID of the current recipient: " + recipientID)
+            if(messageOutput.senderID == recipientID){
+              $('#recievedMessage').append('<span>'  + messageOutput.senderName + ': ' + messageOutput.content + '</span><br>')
+            }
+          })
+        })
+      }
+
+      function sendMessage(content) {
+        stompClient.send("/app/chat", {}, 
+            JSON.stringify({'senderName':senderName,'senderID':senderID,'recipientName':recipientName,'recipientID':recipientID,'content':content}));
+      }
+
+    })
+  </script>
+</body>

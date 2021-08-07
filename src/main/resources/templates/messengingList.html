@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lan="en">
+
+<head>
+    <link rel="stylesheet" href="../stylesheets/messengingList.css"/>
+    <script type="text/javascript" src="../logout.js"> defer</script>
+    <title>Messages</title>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+          <h1 class="logo" th:each="UserID : ${UserID}"></h1>
+          <nav>
+            <ul>
+              <li><a th:href="@{/Home/{uid}(uid=${UserID.getUserID()})}" >Home</a></li>
+              <li><a th:href="@{/About/{uid}(uid=${UserID.getUserID()})}">About</a></li>
+              <li><a th:href="@{/ShoppingList/{uid}(uid=${UserID.getUserID()})}">Shoppinglist</a></li>
+              <li><a id="log" th:href="@{/Login/{uid}(uid=${UserID.getUserID()})}">Login</a></li>
+              <li><a th:href="@{/Search/{uid}(uid=${UserID.getUserID()})}">Search</a></li>
+              <li><a th:href="@{/Messages/{uid}(uid=${UserID.getUserID()})}">Messages</a></li>
+              <li><a th:href="@{/PopularTime/{uid}(uid=${UserID.getUserID()})}">Search Store</a></li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+    <div class="WhiteBox">
+
+        <div class="GreyBox">
+
+                <table class="AddTable" id="Table" >
+                    <tbody >
+                        <tr th:each="records : ${records}" id="thisrow">
+                            <!-- <td><a th:each="UserId : ${UserID}" id="gettext" th:href="@{/Messaging/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}" th:utext="${records.getUsername()}"></a></td>            -->
+                            <td><a th:each="UserId : ${UserID}" id="gettext" th:utext="${records.getUsername()}"></a></td>    
+                            <form action="#" th:each="UserId : ${UserID}" method="post" th:action="@{/Messaging/{pid}/{uid}(uid=${records.getID()},pid=${UserId.getUserID()})}">
+                                <td><input type="submit" class="btnChat" value="Chat"></td>
+                            </form>  
+                        </tr>
+                    </tbody>
+                       
+                </table>
+        </div>
+    </div>
+    
+
+</body>
+</html>

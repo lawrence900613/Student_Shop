@@ -67,7 +67,7 @@
       })
 
       function createConnection() {
-        var socket = new SockJS("http://localhost:5000/ws");
+        var socket = new SockJS("https://find-all.herokuapp.com/ws");
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function(connectionData){
           console.log(connectionData);

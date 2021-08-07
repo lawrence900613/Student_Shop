@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class simpleUserID {
+class simpleUserIDTest {
     static UserID user;
 
     @BeforeAll

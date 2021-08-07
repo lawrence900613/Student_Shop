@@ -12,7 +12,7 @@ async function myScript(){
   console.log(address);
 
   const params = new URLSearchParams({ 
-    'api_key_private': 'pri_f533f6109c124cf386b1101869d995e2',
+    'api_key_private': 'pri_6c87a5b42c61433cb350fbd5666bee7d',
      'venue_name': name,
      'venue_address': address
    });

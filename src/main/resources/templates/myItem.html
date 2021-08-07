@@ -17,19 +17,8 @@
               <li><a th:href="@{/ShoppingList/{uid}(uid=${retUserId.getUserID()})}">Shoppinglist</a></li>
               <li><a id ="log" th:href="@{/Login/{uid}(uid=${retUserId.getUserID()})}">Login</a></li>
               <li><a th:href="@{/Search/{uid}(uid=${retUserId.getUserID()})}">Search</a></li>
-              <li>
-                <div class="dropdown">
-                    <button class="dropbtn">More
-                        <i class="fa fa-caret-down"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a th:href="@{/PopularTime/{uid}(uid=${retUserId.getUserID()})}">Search Store</a>
-                        <a href="#">Link 2</a>
-                        <a href="#">Link 3</a>
-                    </div>
-                    </li>
-              <li>
-            </li>
+              <li><a th:href="@{/Messages/{uid}(uid=${retUserId.getUserID()})}">Messages</a></li>
+              <li><a th:href="@{/PopularTime/{uid}(uid=${retUserId.getUserID()})}">Search Store</a></li>
             </ul>
           </nav>
         </div>
@@ -75,6 +64,9 @@
                 </form>
                 <form action="#" method="post" th:each="id : ${retUserId}" th:action="@{/AddToShoppingListMyItem/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}" target = "votar">
                     <input type="submit" class="btnAdd" value="Add to Shopping List"></td>
+                </form>
+                <form action="#" method="post" th:each="id : ${retUserId}" th:action="@{/ContactSeller/{pid}/{uid}(uid=${record.getID()},pid=${id.getUserID()})}">
+                    <input type="submit" class="btnAdd" value="Contact Seller"></td>
                 </form>
             </div>
             

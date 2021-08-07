@@ -1011,6 +1011,13 @@ public String ContactSeller(Map<String, Object> model, @PathVariable ("Userid") 
       recipientID.setUserID(rs1.getInt("SellerID"));
       model.put("recipientID", recipientID);
       System.out.println("The found recipientId:" + recipientID.getUserID());
+      // If sender and recipient are same person do not make the chatbox
+      if(recipientID.getUserID() == UserId){
+        UserID tempID = new UserID();
+        tempID.setUserID(UserId);
+        model.put("UserID", tempID);
+        return "deniedChatbox";
+      }
       // Get recipient name and put in model
       ResultSet rs2 = stmt.executeQuery("SELECT * FROM Accounts WHERE id =" + recipientID.getUserID());
       if(rs2.next()){
@@ -1142,8 +1149,11 @@ private SimpMessagingTemplate simpMessagingTemplate;
 
 @MessageMapping("/chat")
 public void processMessage(@Payload ChatMessage chatMessage) {
-  ChatMessage message = new ChatMessage(chatMessage.getSenderName(), chatMessage.getSenderID(), chatMessage.getContent());
-  simpMessagingTemplate.convertAndSendToUser(chatMessage.getRecipientID(), "/queue/messages", message);
+  if(!(chatMessage.getSenderID().equals(chatMessage.getRecipientID()))){
+    System.out.println("Sender and Recipient are different");
+    ChatMessage message = new ChatMessage(chatMessage.getSenderName(), chatMessage.getSenderID(), chatMessage.getContent());
+    simpMessagingTemplate.convertAndSendToUser(chatMessage.getRecipientID(), "/queue/messages", message);
+  }
 }
  
   @Bean

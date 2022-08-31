@@ -2,7 +2,7 @@
 For more information about using Java on Heroku, see these Dev Center articles:
 
 - [Java on Heroku](https://devcenter.heroku.com/categories/java)
-# Store
+# Introduction
 
 Find-all is a web application that allows users to browse through online listing to find and purchase products at the desired price point. Additional features available for customers include messaging system, a recipe recommender based on your shopping list and a store hour and capcity tracker seracher. Find-all aims to provide a one stop online shopping experience for its users.
 

@@ -8,7 +8,7 @@ Find-all is a web application that allows users to browse through online listing
 
 Online shopping requires a lot of time and effort, especially when searching for the best deals. Each website is specific to each individual store and if a customer wants to know information such as deals, discounts or the status of the inventory of similar products across multiple stores, they must look up each individual item page to obtain that information.
 
-This webpage was developed by Jun Pin Foo, Katie (Katherine) Sun, Lawrence Hung, Kirubel Bogale, and Damanjit Heer. (276)
+This webpage was developed by Jun Pin Foo, Katie (Katherine) Sun, Lawrence Hung, Kirubel Bogale, and Damanjit Heer. (Introduction to Software Engineering)
 
-#Documentation
+# Documentation
 https://docs.google.com/document/d/1aOiStyKiLadJ7ldX710rEuIUxcnhB_6SUlfspr64ZRk/edit?usp=sharing
